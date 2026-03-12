@@ -1,429 +1,339 @@
 <p align="center">
-  <img src="public/assets/mohini-logo.png" width="160" alt="Mohini Logo" />
-</p>
-
-<h1 align="center">Mohini</h1>
-<h3 align="center">The Agent Operating System</h3>
-
-<p align="center">
-  Open-source Agent OS built in Rust. 137K LOC. 14 crates. 1,767+ tests. Zero clippy warnings.<br/>
-  <strong>One binary. Battle-tested. Agents that actually work for you.</strong>
+  <h1 align="center">Mohini</h1>
+  <h3 align="center">The Agent Operating System</h3>
 </p>
 
 <p align="center">
-  <a href="https://mohini.sh/docs">Documentation</a> &bull;
-  <a href="https://mohini.sh/docs/getting-started">Quick Start</a> &bull;
-  <a href="https://x.com/mohinig">Twitter / X</a>
+  Open-source Agent OS built in Rust. 14 crates. 2,285+ tests. Zero clippy warnings.<br/>
+  <strong>One binary. 104 skills. 40 channels. 188 models. Agents that actually work.</strong>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/language-Rust-orange?style=flat-square" alt="Rust" />
-  <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT" />
-  <img src="https://img.shields.io/badge/version-0.3.30-green?style=flat-square" alt="v0.3.30" />
-  <img src="https://img.shields.io/badge/tests-1,767%2B%20passing-brightgreen?style=flat-square" alt="Tests" />
+  <img src="https://img.shields.io/badge/license-Apache--2.0%20%2F%20MIT-blue?style=flat-square" alt="License" />
+  <img src="https://img.shields.io/badge/version-0.3.49-green?style=flat-square" alt="v0.3.49" />
+  <img src="https://img.shields.io/badge/tests-2,285%2B%20passing-brightgreen?style=flat-square" alt="Tests" />
   <img src="https://img.shields.io/badge/clippy-0%20warnings-brightgreen?style=flat-square" alt="Clippy" />
-  <a href="https://www.buymeacoffee.com/mohini" target="_blank"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?style=flat-square&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" /></a>
 </p>
-
----
-
-> **v0.3.30 — Security Hardening Release (March 2026)**
->
-> Mohini is feature-complete but still pre-1.0. You may encounter rough edges or breaking changes between minor versions. We ship fast and fix fast. Pin to a specific commit for production use until v1.0. [Report issues here.](https://github.com/mohini-ai/mohini/issues)
 
 ---
 
 ## What is Mohini?
 
-Mohini is an **open-source Agent Operating System** — not a chatbot framework, not a Python wrapper around an LLM, not a "multi-agent orchestrator." It is a full operating system for autonomous agents, built from scratch in Rust.
+Mohini is a **single Rust binary** that gives AI models the ability to act autonomously — browsing the web, managing files, sending messages, running code, and more. Think of it as an operating system where the "user" is an AI agent.
 
-Traditional agent frameworks wait for you to type something. Mohini runs **autonomous agents that work for you** — on schedules, 24/7, building knowledge graphs, monitoring targets, generating leads, managing your social media, and reporting results to your dashboard.
+### Key Features
 
-The entire system compiles to a **single ~32MB binary**. One install, one command, your agents are live.
+- **104 bundled skills** + 109 community skills across 30 categories
+- **40 channel adapters** — WhatsApp, Telegram, Discord, Slack, Signal, iMessage, Email, Matrix, IRC, and more
+- **8 autonomous Hands** — Researcher, Browser, Trader, Collector, Predictor, Lead, Clip, Twitter
+- **188 model catalog** — OpenAI, Anthropic, Google Gemini, Groq, Mistral, NVIDIA NIM, Moonshot/Kimi, Ollama, vLLM, LM Studio, and any OpenAI-compatible endpoint
+- **WebSocket gateway** — real-time multiplexed connections with presence tracking
+- **Voice wake** — configurable wake word detection
+- **A2UI Canvas** — interactive visual canvas for agent output
+- **Media pipeline** — MIME detection, image optimization, audio transcription hooks
+- **WASM sandbox** — secure skill execution via Wasmtime
+- **SQLite + Qdrant** — dual-backend vector memory for semantic recall
+- **Web dashboard** — Alpine.js SPA at `http://127.0.0.1:4200/`
+- **Agent-to-Agent protocol** — MMP network for multi-agent coordination
+
+---
+
+## Quick Install (from GitHub)
+
+### Prerequisites
+
+| Tool | Version | Install |
+|------|---------|---------|
+| **Rust** | 1.75+ | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
+| **C toolchain** | gcc/clang | Ubuntu: `sudo apt install build-essential pkg-config libssl-dev` |
+| | | macOS: `xcode-select --install` |
+| | | Windows: Install Visual Studio Build Tools |
+
+### Step 1: Clone
 
 ```bash
-curl -fsSL https://mohini.sh/install | sh
-mohini init
-mohini start
-# Dashboard live at http://localhost:4200
+git clone https://github.com/darshjme/mohini.git
+cd mohini
 ```
+
+### Step 2: Build
+
+```bash
+cargo build --release -p mohini-cli
+```
+
+This takes ~10 minutes on first build (compiles 826 dependencies). The binary lands at `target/release/mohini`.
+
+**Optional:** Add to PATH:
+```bash
+# Linux/macOS
+sudo cp target/release/mohini /usr/local/bin/
+
+# Or add to shell profile
+echo 'export PATH="$PATH:/path/to/mohini/target/release"' >> ~/.bashrc
+```
+
+### Step 3: Initialize
+
+```bash
+mohini init
+```
+
+Creates `~/.mohini/` with default configuration.
+
+### Step 4: Configure a Provider
+
+Edit `~/.mohini/config.toml` with your preferred LLM provider:
 
 <details>
-<summary><strong>Windows</strong></summary>
+<summary><b>NVIDIA NIM (Kimi K2.5 — free tier)</b></summary>
 
-```powershell
-irm https://mohini.sh/install.ps1 | iex
-mohini init
+Get key at: https://build.nvidia.com/
+
+```toml
+[default_model]
+provider = "nvidia"
+model = "moonshotai/kimi-k2-instruct"
+base_url = "https://integrate.api.nvidia.com/v1"
+api_key_env = "NVIDIA_API_KEY"
+```
+```bash
+export NVIDIA_API_KEY="nvapi-your-key-here"
+```
+</details>
+
+<details>
+<summary><b>OpenAI (GPT-4o)</b></summary>
+
+```toml
+[default_model]
+provider = "openai"
+model = "gpt-4o"
+api_key_env = "OPENAI_API_KEY"
+```
+```bash
+export OPENAI_API_KEY="sk-..."
+```
+</details>
+
+<details>
+<summary><b>Anthropic (Claude)</b></summary>
+
+```toml
+[default_model]
+provider = "anthropic"
+model = "claude-sonnet-4-20250514"
+api_key_env = "ANTHROPIC_API_KEY"
+```
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+```
+</details>
+
+<details>
+<summary><b>Groq (free tier — Llama 3.3 70B)</b></summary>
+
+Get key at: https://console.groq.com/
+
+```toml
+[default_model]
+provider = "groq"
+model = "llama-3.3-70b-versatile"
+api_key_env = "GROQ_API_KEY"
+```
+```bash
+export GROQ_API_KEY="gsk_..."
+```
+</details>
+
+<details>
+<summary><b>Ollama (fully local — no API key needed)</b></summary>
+
+Install Ollama: https://ollama.com/
+
+```bash
+ollama pull llama3.2
+ollama serve
+```
+
+```toml
+[default_model]
+provider = "ollama"
+model = "llama3.2"
+```
+</details>
+
+<details>
+<summary><b>Google Gemini</b></summary>
+
+```toml
+[default_model]
+provider = "google"
+model = "gemini-2.0-flash"
+api_key_env = "GOOGLE_API_KEY"
+```
+```bash
+export GOOGLE_API_KEY="..."
+```
+</details>
+
+### Step 5: Start
+
+```bash
 mohini start
 ```
 
-</details>
+Output:
+```
+✔ Kernel booted (nvidia/moonshotai/kimi-k2-instruct)
+✔ 188 models available
+✔ 1 agent(s) loaded
+✔ 104 bundled skills loaded
 
----
+API:         http://127.0.0.1:4200
+Dashboard:   http://127.0.0.1:4200/
+```
 
-## Hands: Agents That Actually Do Things
-
-<p align="center"><em>"Traditional agents wait for you to type. Hands work <strong>for</strong> you."</em></p>
-
-**Hands** are Mohini's core innovation — pre-built autonomous capability packages that run independently, on schedules, without you having to prompt them. This is not a chatbot. This is an agent that wakes up at 6 AM, researches your competitors, builds a knowledge graph, scores the findings, and delivers a report to your Telegram before you've had coffee.
-
-Each Hand bundles:
-- **HAND.toml** — Manifest declaring tools, settings, requirements, and dashboard metrics
-- **System Prompt** — Multi-phase operational playbook (not a one-liner — these are 500+ word expert procedures)
-- **SKILL.md** — Domain expertise reference injected into context at runtime
-- **Guardrails** — Approval gates for sensitive actions (e.g. Browser Hand requires approval before any purchase)
-
-All compiled into the binary. No downloading, no pip install, no Docker pull.
-
-### The 7 Bundled Hands
-
-| Hand | What It Actually Does |
-|------|----------------------|
-| **Clip** | Takes a YouTube URL, downloads it, identifies the best moments, cuts them into vertical shorts with captions and thumbnails, optionally adds AI voice-over, and publishes to Telegram and WhatsApp. 8-phase pipeline. FFmpeg + yt-dlp + 5 STT backends. |
-| **Lead** | Runs daily. Discovers prospects matching your ICP, enriches them with web research, scores 0-100, deduplicates against your existing database, and delivers qualified leads in CSV/JSON/Markdown. Builds ICP profiles over time. |
-| **Collector** | OSINT-grade intelligence. You give it a target (company, person, topic). It monitors continuously — change detection, sentiment tracking, knowledge graph construction, and critical alerts when something important shifts. |
-| **Predictor** | Superforecasting engine. Collects signals from multiple sources, builds calibrated reasoning chains, makes predictions with confidence intervals, and tracks its own accuracy using Brier scores. Has a contrarian mode that deliberately argues against consensus. |
-| **Researcher** | Deep autonomous researcher. Cross-references multiple sources, evaluates credibility using CRAAP criteria (Currency, Relevance, Authority, Accuracy, Purpose), generates cited reports with APA formatting, supports multiple languages. |
-| **Twitter** | Autonomous Twitter/X account manager. Creates content in 7 rotating formats, schedules posts for optimal engagement, responds to mentions, tracks performance metrics. Has an approval queue — nothing posts without your OK. |
-| **Browser** | Web automation agent. Navigates sites, fills forms, clicks buttons, handles multi-step workflows. Uses Playwright bridge with session persistence. **Mandatory purchase approval gate** — it will never spend your money without explicit confirmation. |
+### Step 6: Chat
 
 ```bash
-# Activate the Researcher Hand — it starts working immediately
-mohini hand activate researcher
+# Interactive CLI chat
+mohini chat
 
-# Check its progress anytime
-mohini hand status researcher
+# Single message
+mohini agent --message "What is the Rust ownership model?"
 
-# Activate lead generation on a daily schedule
-mohini hand activate lead
-
-# Pause without losing state
-mohini hand pause lead
-
-# See all available Hands
-mohini hand list
+# Via API
+curl -X POST "http://127.0.0.1:4200/api/agents/$(curl -s http://127.0.0.1:4200/api/agents | python3 -c 'import sys,json;print(json.load(sys.stdin)[0]["id"])')/message" \
+  -H "Content-Type: application/json" \
+  -d '{"message":"Hello!"}'
 ```
-
-**Build your own.** Define a `HAND.toml` with tools, settings, and a system prompt. Publish to SkillHub.
 
 ---
 
-## Mohini vs The Landscape
+## CLI Reference
 
-<p align="center">
-  <img src="public/assets/mohini-vs-claws.png" width="600" alt="Mohini vs LegacyImport vs ZeroClaw" />
-</p>
+```bash
+mohini init                          # Initialize ~/.mohini/
+mohini start                         # Start the daemon
+mohini stop                          # Stop the daemon
+mohini chat                          # Interactive chat
+mohini doctor                        # Run diagnostics
 
-### Benchmarks: Measured, Not Marketed
+# Agents
+mohini agent list                    # List agents
+mohini agent new coder               # Create agent
+mohini agent chat coder              # Chat with agent
 
-All data from official documentation and public repositories — February 2026.
+# Skills
+mohini skill list                    # List all 213+ skills
+mohini skill search "docker"         # Search skills
+mohini skill install <name>          # Install from SkillHub
+mohini skill new my-skill            # Create custom skill
 
-#### Cold Start Time (lower is better)
+# Channels
+mohini channel list                  # List channels
+mohini channel setup telegram        # Configure channel
+mohini channel test telegram         # Test channel
 
+# Hands
+mohini hand list                     # List hands
+mohini hand activate researcher      # Activate hand
+
+# Workflows
+mohini workflow list                 # List workflows
+mohini workflow run <name>           # Run workflow
+
+# Migration
+mohini migrate --source openclaw     # Import from OpenClaw
 ```
-ZeroClaw   ██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   10 ms
-Mohini   ██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  180 ms    ★
-LangGraph  █████████████████░░░░░░░░░░░░░░░░░░░░░░░░░  2.5 sec
-CrewAI     ████████████████████░░░░░░░░░░░░░░░░░░░░░░  3.0 sec
-AutoGen    ██████████████████████████░░░░░░░░░░░░░░░░░  4.0 sec
-LegacyImport   █████████████████████████████████████████░░  5.98 sec
-```
-
-#### Idle Memory Usage (lower is better)
-
-```
-ZeroClaw   █░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    5 MB
-Mohini   ████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   40 MB    ★
-LangGraph  ██████████████████░░░░░░░░░░░░░░░░░░░░░░░░░  180 MB
-CrewAI     ████████████████████░░░░░░░░░░░░░░░░░░░░░░░  200 MB
-AutoGen    █████████████████████████░░░░░░░░░░░░░░░░░░  250 MB
-LegacyImport   ████████████████████████████████████████░░░░  394 MB
-```
-
-#### Install Size (lower is better)
-
-```
-ZeroClaw   █░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  8.8 MB
-Mohini   ███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   32 MB    ★
-CrewAI     ████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  100 MB
-LangGraph  ████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  150 MB
-AutoGen    ████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░  200 MB
-LegacyImport   ████████████████████████████████████████░░░░  500 MB
-```
-
-#### Security Systems (higher is better)
-
-```
-Mohini   ████████████████████████████████████████████   16      ★
-ZeroClaw   ███████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░    6
-LegacyImport   ████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    3
-AutoGen    █████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    2
-LangGraph  █████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    2
-CrewAI     ███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    1
-```
-
-#### Channel Adapters (higher is better)
-
-```
-Mohini   ████████████████████████████████████████████   40      ★
-ZeroClaw   ███████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░   15
-LegacyImport   █████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   13
-CrewAI     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0
-AutoGen    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0
-LangGraph  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0
-```
-
-#### LLM Providers (higher is better)
-
-```
-ZeroClaw   ████████████████████████████████████████████   28
-Mohini   ██████████████████████████████████████████░░   27      ★
-LangGraph  ██████████████████████░░░░░░░░░░░░░░░░░░░░░   15
-CrewAI     ██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   10
-LegacyImport   ██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   10
-AutoGen    ███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    8
-```
-
-### Feature-by-Feature Comparison
-
-| Feature | Mohini | LegacyImport | ZeroClaw | CrewAI | AutoGen | LangGraph |
-|---------|----------|----------|----------|--------|---------|-----------|
-| **Language** | **Rust** | TypeScript | **Rust** | Python | Python | Python |
-| **Autonomous Hands** | **7 built-in** | None | None | None | None | None |
-| **Security Layers** | **16 discrete** | 3 basic | 6 layers | 1 basic | Docker | AES enc. |
-| **Agent Sandbox** | **WASM dual-metered** | None | Allowlists | None | Docker | None |
-| **Channel Adapters** | **40** | 13 | 15 | 0 | 0 | 0 |
-| **Built-in Tools** | **53 + MCP + A2A** | 50+ | 12 | Plugins | MCP | LC tools |
-| **Memory** | **SQLite + vector** | File-based | SQLite FTS5 | 4-layer | External | Checkpoints |
-| **Desktop App** | **Tauri 2.0** | None | None | None | Studio | None |
-| **Audit Trail** | **Merkle hash-chain** | Logs | Logs | Tracing | Logs | Checkpoints |
-| **Cold Start** | **<200ms** | ~6s | ~10ms | ~3s | ~4s | ~2.5s |
-| **Install Size** | **~32 MB** | ~500 MB | ~8.8 MB | ~100 MB | ~200 MB | ~150 MB |
-| **License** | MIT | MIT | MIT | MIT | Apache 2.0 | MIT |
 
 ---
 
-## 16 Security Systems — Defense in Depth
+## API Endpoints
 
-Mohini doesn't bolt security on after the fact. Every layer is independently testable and operates without a single point of failure.
-
-| # | System | What It Does |
-|---|--------|-------------|
-| 1 | **WASM Dual-Metered Sandbox** | Tool code runs in WebAssembly with fuel metering + epoch interruption. A watchdog thread kills runaway code. |
-| 2 | **Merkle Hash-Chain Audit Trail** | Every action is cryptographically linked to the previous one. Tamper with one entry and the entire chain breaks. |
-| 3 | **Information Flow Taint Tracking** | Labels propagate through execution — secrets are tracked from source to sink. |
-| 4 | **Ed25519 Signed Agent Manifests** | Every agent identity and capability set is cryptographically signed. |
-| 5 | **SSRF Protection** | Blocks private IPs, cloud metadata endpoints, and DNS rebinding attacks. |
-| 6 | **Secret Zeroization** | `Zeroizing<String>` auto-wipes API keys from memory the instant they're no longer needed. |
-| 7 | **MMP Mutual Authentication** | HMAC-SHA256 nonce-based, constant-time verification for P2P networking. |
-| 8 | **Capability Gates** | Role-based access control — agents declare required tools, the kernel enforces it. |
-| 9 | **Security Headers** | CSP, X-Frame-Options, HSTS, X-Content-Type-Options on every response. |
-| 10 | **Health Endpoint Redaction** | Public health check returns minimal info. Full diagnostics require authentication. |
-| 11 | **Subprocess Sandbox** | `env_clear()` + selective variable passthrough. Process tree isolation with cross-platform kill. |
-| 12 | **Prompt Injection Scanner** | Detects override attempts, data exfiltration patterns, and shell reference injection in skills. |
-| 13 | **Loop Guard** | SHA256-based tool call loop detection with circuit breaker. Handles ping-pong patterns. |
-| 14 | **Session Repair** | 7-phase message history validation and automatic recovery from corruption. |
-| 15 | **Path Traversal Prevention** | Canonicalization with symlink escape prevention. `../` doesn't work here. |
-| 16 | **GCRA Rate Limiter** | Cost-aware token bucket rate limiting with per-IP tracking and stale cleanup. |
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/api/health` | GET | Health check |
+| `/api/agents` | GET | List all agents |
+| `/api/agents/{id}/message` | POST | Send message |
+| `/api/agents/{id}/ws` | WS | WebSocket streaming |
+| `/api/budget` | GET/PUT | Budget tracking |
+| `/api/skills` | GET | List skills |
+| `/api/network/status` | GET | Network status |
 
 ---
 
 ## Architecture
 
-14 Rust crates. 137,728 lines of code. Modular kernel design.
-
 ```
-mohini-kernel      Orchestration, workflows, metering, RBAC, scheduler, budget tracking
-mohini-runtime     Agent loop, 3 LLM drivers, 53 tools, WASM sandbox, MCP, A2A
-mohini-api         140+ REST/WS/SSE endpoints, OpenAI-compatible API, dashboard
-mohini-channels    40 messaging adapters with rate limiting, DM/group policies
-mohini-memory      SQLite persistence, vector embeddings, canonical sessions, compaction
-mohini-types       Core types, taint tracking, Ed25519 manifest signing, model catalog
-mohini-skills      60 bundled skills, SKILL.md parser, SkillHub marketplace
-mohini-hands       7 autonomous Hands, HAND.toml parser, lifecycle management
-mohini-extensions  25 MCP templates, AES-256-GCM credential vault, OAuth2 PKCE
-mohini-wire        MMP P2P protocol with HMAC-SHA256 mutual authentication
-mohini-cli         CLI with daemon management, TUI dashboard, MCP server mode
-mohini-desktop     Tauri 2.0 native app (system tray, notifications, global shortcuts)
-mohini-migrate     LegacyImport, LangChain, AutoGPT migration engine
-xtask                Build automation
+mohini/
+├── crates/
+│   ├── mohini-types/       # Shared types, config, errors
+│   ├── mohini-memory/      # SQLite + Qdrant vector memory
+│   ├── mohini-runtime/     # Agent loop, LLM drivers, tools
+│   ├── mohini-wire/        # MMP wire protocol
+│   ├── mohini-api/         # Axum REST/WS/SSE server + dashboard
+│   ├── mohini-kernel/      # Orchestration engine
+│   ├── mohini-cli/         # CLI entry point
+│   ├── mohini-channels/    # 40 messaging adapters
+│   ├── mohini-skills/      # Skill registry + 104 bundled skills
+│   ├── mohini-hands/       # 8 autonomous hands
+│   ├── mohini-migrate/     # Migration from other frameworks
+│   ├── mohini-extensions/  # Extension system
+│   └── mohini-desktop/     # Tauri desktop app
+├── agents/                 # Agent TOML definitions
+├── deploy/                 # systemd, Docker configs
+├── scripts/                # Install scripts
+└── sdk/                    # Python SDK
 ```
 
 ---
 
-## 40 Channel Adapters
-
-Connect your agents to every platform your users are on.
-
-**Core:** Telegram, Discord, Slack, WhatsApp, Signal, Matrix, Email (IMAP/SMTP)
-**Enterprise:** Microsoft Teams, Mattermost, Google Chat, Webex, Feishu/Lark, Zulip
-**Social:** LINE, Viber, Facebook Messenger, Mastodon, Bluesky, Reddit, LinkedIn, Twitch
-**Community:** IRC, XMPP, Guilded, Revolt, Keybase, Discourse, Gitter
-**Privacy:** Threema, Nostr, Mumble, Nextcloud Talk, Rocket.Chat, Ntfy, Gotify
-**Workplace:** Pumble, Flock, Twist, DingTalk, Zalo, Webhooks
-
-Each adapter supports per-channel model overrides, DM/group policies, rate limiting, and output formatting.
-
----
-
-## 27 LLM Providers — 123+ Models
-
-3 native drivers (Anthropic, Gemini, OpenAI-compatible) route to 27 providers:
-
-Anthropic, Gemini, OpenAI, Groq, DeepSeek, OpenRouter, Together, Mistral, Fireworks, Cohere, Perplexity, xAI, AI21, Cerebras, SambaNova, HuggingFace, Replicate, Ollama, vLLM, LM Studio, Qwen, MiniMax, Zhipu, Moonshot, Qianfan, Bedrock, and more.
-
-Intelligent routing with task complexity scoring, automatic fallback, cost tracking, and per-model pricing.
-
----
-
-## Migrate from LegacyImport
-
-Already running LegacyImport? One command:
+## Docker
 
 ```bash
-# Migrate everything — agents, memory, skills, configs
-mohini migrate --from legacy_import
-
-# Migrate from a specific path
-mohini migrate --from legacy_import --path ~/.legacy_import
-
-# Dry run first to see what would change
-mohini migrate --from legacy_import --dry-run
+docker build -t mohini .
+docker run -d -p 4200:4200 -e NVIDIA_API_KEY="your-key" -v mohini-data:/data mohini
 ```
 
-The migration engine imports your agents, conversation history, skills, and configuration. Mohini reads SKILL.md natively and is compatible with the SkillHub marketplace.
-
----
-
-## OpenAI-Compatible API
-
-Drop-in replacement. Point your existing tools at Mohini:
-
+Or with docker-compose:
 ```bash
-curl -X POST localhost:4200/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "researcher",
-    "messages": [{"role": "user", "content": "Analyze Q4 market trends"}],
-    "stream": true
-  }'
-```
-
-140+ REST/WS/SSE endpoints covering agents, memory, workflows, channels, models, skills, A2A, Hands, and more.
-
----
-
-## Quick Start
-
-```bash
-# 1. Install (macOS/Linux)
-curl -fsSL https://mohini.sh/install | sh
-
-# 2. Initialize — walks you through provider setup
-mohini init
-
-# 3. Start the daemon
-mohini start
-
-# 4. Dashboard is live at http://localhost:4200
-
-# 5. Activate a Hand — it starts working for you
-mohini hand activate researcher
-
-# 6. Chat with an agent
-mohini chat researcher
-> "What are the emerging trends in AI agent frameworks?"
-
-# 7. Spawn a pre-built agent
-mohini agent spawn coder
-```
-
-<details>
-<summary><strong>Windows (PowerShell)</strong></summary>
-
-```powershell
-irm https://mohini.sh/install.ps1 | iex
-mohini init
-mohini start
-```
-
-</details>
-
----
-
-## Development
-
-```bash
-# Build the workspace
-cargo build --workspace --lib
-
-# Run all tests (1,767+)
-cargo test --workspace
-
-# Lint (must be 0 warnings)
-cargo clippy --workspace --all-targets -- -D warnings
-
-# Format
-cargo fmt --all -- --check
+docker-compose up -d
 ```
 
 ---
 
-## Stability Notice
+## Configuration
 
-Mohini v0.3.30 is pre-1.0. The architecture is solid, the test suite is comprehensive, and the security model is comprehensive. That said:
+Full `~/.mohini/config.toml` example:
 
-- **Breaking changes** may occur between minor versions until v1.0
-- **Some Hands** are more mature than others (Browser and Researcher are the most battle-tested)
-- **Edge cases** exist — if you find one, [open an issue](https://github.com/mohini-ai/mohini/issues)
-- **Pin to a specific commit** for production deployments until v1.0
+```toml
+api_listen = "127.0.0.1:4200"
+log_level = "info"
 
-We ship fast and fix fast. The goal is a rock-solid v1.0 by mid-2026.
+[default_model]
+provider = "nvidia"
+model = "moonshotai/kimi-k2-instruct"
+base_url = "https://integrate.api.nvidia.com/v1"
+api_key_env = "NVIDIA_API_KEY"
 
----
+[memory]
+decay_rate = 0.05
 
-## Security
+# Optional: Qdrant vector DB for scalable memory
+# [memory.vector_store]
+# backend = "qdrant"
+# qdrant_url = "http://localhost:6334"
 
-To report a security vulnerability, email **jaber@rightnowai.co**. We take all reports seriously and will respond within 48 hours.
+[budget]
+enabled = true
+daily_limit_usd = 10.0
+```
 
 ---
 
 ## License
 
-MIT — use it however you want.
-
----
-
-## Links
-
-- [Website & Documentation](https://mohini.sh)
-- [Quick Start Guide](https://mohini.sh/docs/getting-started)
-- [GitHub](https://github.com/mohini-ai/mohini)
-- [Discord](https://discord.gg/sSJqgNnq6X)
-- [Twitter / X](https://x.com/mohinig)
-
----
-
-## Built by RightNow
-
-<p align="center">
-  <a href="https://www.rightnowai.co/">
-    <img src="public/assets/rightnow-logo.webp" width="60" alt="RightNow Logo" />
-  </a>
-</p>
-
-<p align="center">
-  Mohini is built and maintained by <a href="https://x.com/Akashi203"><strong>Jaber</strong></a>, Founder of <a href="https://www.rightnowai.co/"><strong>RightNow</strong></a>.
-</p>
-
-<p align="center">
-  <a href="https://www.rightnowai.co/">Website</a> &bull;
-  <a href="https://x.com/Akashi203">Twitter / X</a> &bull;
-  <a href="https://www.buymeacoffee.com/mohini" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
-</p>
-
----
-
-<p align="center">
-  <strong>Built with Rust. Secured with 16 layers. Agents that actually work for you.</strong>
-</p>
+Dual-licensed under [Apache 2.0](LICENSE-APACHE) and [MIT](LICENSE-MIT).
