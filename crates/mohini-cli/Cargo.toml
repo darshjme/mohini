@@ -1,0 +1,33 @@
+[package]
+name = "mohini-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "CLI tool for the Mohini Agent OS"
+
+[[bin]]
+name = "mohini"
+path = "src/main.rs"
+
+[dependencies]
+mohini-types = { path = "../mohini-types" }
+mohini-kernel = { path = "../mohini-kernel" }
+mohini-api = { path = "../mohini-api" }
+mohini-migrate = { path = "../mohini-migrate" }
+mohini-skills = { path = "../mohini-skills" }
+mohini-extensions = { path = "../mohini-extensions" }
+zeroize = { workspace = true }
+tokio = { workspace = true }
+clap = { workspace = true }
+clap_complete = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = { workspace = true }
+dirs = { workspace = true }
+reqwest = { workspace = true, features = ["blocking"] }
+mohini-runtime = { path = "../mohini-runtime" }
+uuid = { workspace = true }
+ratatui = { workspace = true }
+colored = { workspace = true }

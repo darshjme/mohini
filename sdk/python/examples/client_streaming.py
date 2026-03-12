@@ -10,9 +10,9 @@ import sys
 import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from openfang_client import OpenFang
+from mohini_client import Mohini
 
-client = OpenFang("http://localhost:3000")
+client = Mohini("http://localhost:3000")
 
 # Create an agent
 agent = client.agents.create(template="assistant")
