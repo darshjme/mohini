@@ -91,6 +91,7 @@ function loadAcl() {
         enabled: data.enabled !== false,              // default: enabled
         mode: data.mode || 'allowlist',               // 'allowlist' or 'blocklist'
         allowlist: new Set(data.allowlist || []),      // phone numbers like "+1234567890"
+        superusers: new Set(data.superusers || []),    // phone numbers with admin command access
         blocklist: new Set(data.blocklist || []),
         deny_message: data.deny_message || '',        // optional message to send to blocked users (empty = silent)
       };
@@ -99,7 +100,7 @@ function loadAcl() {
     console.error('[gateway] Failed to load ACL:', e.message);
   }
   // Default: ACL disabled (open to all) until configured
-  return { enabled: false, mode: 'allowlist', allowlist: new Set(), blocklist: new Set(), deny_message: '' };
+  return { enabled: false, mode: 'allowlist', allowlist: new Set(), superusers: new Set(), blocklist: new Set(), deny_message: '' };
 }
 
 function saveAcl(acl) {
@@ -107,6 +108,7 @@ function saveAcl(acl) {
     enabled: acl.enabled,
     mode: acl.mode,
     allowlist: [...acl.allowlist],
+    superusers: [...acl.superusers],
     blocklist: [...acl.blocklist],
     deny_message: acl.deny_message,
   };
@@ -249,11 +251,12 @@ async function startConnection() {
       const pushName = msg.pushName || phone;
 
       // ---------------------------------------------------------------
-      // Admin commands (owner only, processed before ACL check)
+      // Admin commands (superusers only, processed before ACL check)
       // ---------------------------------------------------------------
       const rawText = content.conversation || content.extendedTextMessage?.text || '';
-      if (phone === OWNER_PHONE && rawText.startsWith('/')) {
-        const adminResult = await handleAdminCommand(rawText.trim(), sender);
+      const isSuperuser = acl.superusers.has(phone) || phone === OWNER_PHONE;
+      if (isSuperuser && rawText.startsWith('/')) {
+        const adminResult = await handleAdminCommand(rawText.trim(), sender, phone);
         if (adminResult) {
           // Admin command was handled — send response and skip normal processing
           if (sock) await sock.sendMessage(sender, { text: adminResult }).catch(() => {});
@@ -410,18 +413,84 @@ async function startConnection() {
 // ---------------------------------------------------------------------------
 // Admin commands — owner can manage ACL and agents via WhatsApp
 // ---------------------------------------------------------------------------
-async function handleAdminCommand(text, sender) {
+// Sync allowed users into Mohini agent workspaces so agents know who can interact
+function syncUserToWorkspaces(phoneNumber, role, name) {
+  const WORKSPACES_DIR = path.join(process.env.HOME || '/root', '.mohini', 'workspaces');
+  try {
+    if (!fs.existsSync(WORKSPACES_DIR)) return;
+    const dirs = fs.readdirSync(WORKSPACES_DIR, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+
+    for (const dir of dirs) {
+      const userFile = path.join(WORKSPACES_DIR, dir, 'USER.md');
+      if (!fs.existsSync(userFile)) continue;
+
+      const content = fs.readFileSync(userFile, 'utf8');
+      // Check if this phone is already in the file
+      if (content.includes(phoneNumber)) continue;
+
+      // Append the new user entry
+      const entry = `- Phone: ${phoneNumber} | Role: ${role} | Name: ${name || 'Unknown'}\n`;
+      fs.appendFileSync(userFile, entry);
+      console.log(`[gateway] Synced user ${phoneNumber} to ${dir}/USER.md`);
+    }
+  } catch (e) {
+    console.error(`[gateway] Failed to sync user to workspaces:`, e.message);
+  }
+}
+
+// Remove user from all workspace USER.md files
+function removeUserFromWorkspaces(phoneNumber) {
+  const WORKSPACES_DIR = path.join(process.env.HOME || '/root', '.mohini', 'workspaces');
+  try {
+    if (!fs.existsSync(WORKSPACES_DIR)) return;
+    const dirs = fs.readdirSync(WORKSPACES_DIR, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+
+    for (const dir of dirs) {
+      const userFile = path.join(WORKSPACES_DIR, dir, 'USER.md');
+      if (!fs.existsSync(userFile)) continue;
+
+      const content = fs.readFileSync(userFile, 'utf8');
+      if (!content.includes(phoneNumber)) continue;
+
+      // Remove lines containing this phone number
+      const lines = content.split('\n').filter(line => !line.includes(phoneNumber));
+      fs.writeFileSync(userFile, lines.join('\n'));
+      console.log(`[gateway] Removed user ${phoneNumber} from ${dir}/USER.md`);
+    }
+  } catch (e) {
+    console.error(`[gateway] Failed to remove user from workspaces:`, e.message);
+  }
+}
+
+async function handleAdminCommand(text, sender, phone) {
   const parts = text.split(/\s+/);
   const cmd = parts[0].toLowerCase();
 
+  // Check if the last arg is "su" — means grant superuser along with allow
+  const hasSuFlag = parts[parts.length - 1]?.toLowerCase() === 'su' && parts.length > 2;
+
   switch (cmd) {
     case '/allow': {
-      const phones = parts.slice(1).filter(p => p.startsWith('+'));
-      if (phones.length === 0) return 'Usage: /allow +1234567890 [+another...]';
-      for (const p of phones) acl.allowlist.add(p);
+      const phonesRaw = hasSuFlag ? parts.slice(1, -1) : parts.slice(1);
+      const phones = phonesRaw.filter(p => p.startsWith('+'));
+      if (phones.length === 0) return 'Usage: /allow +1234567890 [su]';
+      for (const p of phones) {
+        acl.allowlist.add(p);
+        if (hasSuFlag) acl.superusers.add(p);
+      }
       saveAcl(acl);
-      console.log(`[gateway] ACL: owner allowed ${phones.join(', ')}`);
-      return `Allowed: ${phones.join(', ')}\nCurrent allowlist: ${[...acl.allowlist].join(', ')}`;
+      // Sync to Mohini workspaces — agents now know these users
+      for (const p of phones) {
+        const role = hasSuFlag ? 'Superuser — full system permissions' : 'Allowed user';
+        syncUserToWorkspaces(p, role);
+      }
+      const suLabel = hasSuFlag ? ' (+ superuser)' : '';
+      console.log(`[gateway] ACL: ${phone} allowed ${phones.join(', ')}${suLabel}`);
+      return `Allowed${suLabel}: ${phones.join(', ')}\nAllowlist: ${[...acl.allowlist].join(', ')}\nSuperusers: ${[...acl.superusers].join(', ')}`;
     }
 
     case '/deny':
@@ -431,18 +500,42 @@ async function handleAdminCommand(text, sender) {
       if (phones.length === 0) return 'Usage: /deny +1234567890';
       for (const p of phones) {
         acl.allowlist.delete(p);
+        acl.superusers.delete(p);
         if (acl.mode === 'blocklist') acl.blocklist.add(p);
+        removeUserFromWorkspaces(p);
       }
       saveAcl(acl);
-      console.log(`[gateway] ACL: owner denied ${phones.join(', ')}`);
-      return `Denied: ${phones.join(', ')}\nCurrent allowlist: ${[...acl.allowlist].join(', ')}`;
+      console.log(`[gateway] ACL: ${phone} denied ${phones.join(', ')}`);
+      return `Denied: ${phones.join(', ')}\nAllowlist: ${[...acl.allowlist].join(', ')}`;
+    }
+
+    case '/su': {
+      const phones = parts.slice(1).filter(p => p.startsWith('+'));
+      if (phones.length === 0) return 'Usage: /su +1234567890 — grant superuser privileges';
+      for (const p of phones) {
+        acl.allowlist.add(p);
+        acl.superusers.add(p);
+        syncUserToWorkspaces(p, 'Superuser — full system permissions');
+      }
+      saveAcl(acl);
+      console.log(`[gateway] ACL: ${phone} granted su to ${phones.join(', ')}`);
+      return `Superuser granted: ${phones.join(', ')}\nSuperusers: ${[...acl.superusers].join(', ')}`;
+    }
+
+    case '/rmsu': {
+      const phones = parts.slice(1).filter(p => p.startsWith('+'));
+      if (phones.length === 0) return 'Usage: /rmsu +1234567890 — revoke superuser privileges';
+      for (const p of phones) acl.superusers.delete(p);
+      saveAcl(acl);
+      return `Superuser revoked: ${phones.join(', ')}\nSuperusers: ${[...acl.superusers].join(', ')}`;
     }
 
     case '/allowlist':
     case '/acl':
     case '/users': {
       const list = [...acl.allowlist];
-      return `ACL: ${acl.enabled ? 'enabled' : 'disabled'} (${acl.mode})\nAllowlist (${list.length}): ${list.join(', ') || '(empty)'}`;
+      const sus = [...acl.superusers];
+      return `ACL: ${acl.enabled ? 'enabled' : 'disabled'} (${acl.mode})\nAllowlist (${list.length}): ${list.join(', ') || '(empty)'}\nSuperusers (${sus.length}): ${sus.join(', ') || '(none)'}`;
     }
 
     case '/agents': {
@@ -459,14 +552,16 @@ async function handleAdminCommand(text, sender) {
     case '/status': {
       const health = await fetchJson(`${MOHINI_URL}/api/health`).catch(() => null);
       const connected = connStatus === 'connected';
-      return `Mohini Status:\n- WhatsApp: ${connected ? 'connected' : connStatus}\n- Daemon: ${health ? 'running' : 'down'}\n- Model tier: ${currentTier}\n- ACL: ${acl.enabled ? 'enabled' : 'disabled'} (${[...acl.allowlist].length} allowed)`;
+      return `Mohini Status:\n- WhatsApp: ${connected ? 'connected' : connStatus}\n- Daemon: ${health ? 'running' : 'down'}\n- Model tier: ${currentTier}\n- ACL: ${acl.enabled ? 'enabled' : 'disabled'} (${[...acl.allowlist].length} allowed, ${[...acl.superusers].length} su)`;
     }
 
     case '/help': {
       return `*Mohini Admin Commands:*\n\n` +
-        `/allow +number — Add user to allowlist\n` +
-        `/deny +number — Remove user from allowlist\n` +
-        `/acl — View current allowlist\n` +
+        `/allow +number [su] — Add user (optionally as superuser)\n` +
+        `/deny +number — Remove user + revoke su\n` +
+        `/su +number — Grant superuser privileges\n` +
+        `/rmsu +number — Revoke superuser privileges\n` +
+        `/acl — View allowlist & superusers\n` +
         `/agents — List active agents\n` +
         `/status — System status\n` +
         `/help — This message\n\n` +
@@ -815,6 +910,7 @@ const server = http.createServer(async (req, res) => {
         enabled: acl.enabled,
         mode: acl.mode,
         allowlist: [...acl.allowlist],
+        superusers: [...acl.superusers],
         blocklist: [...acl.blocklist],
         deny_message: acl.deny_message,
       });
