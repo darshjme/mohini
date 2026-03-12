@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="1200" height="500">
+  <defs>
+    <linearGradient id="mem-layer1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1b4b"/>
+      <stop offset="100%" style="stop-color:#4c1d95"/>
+    </linearGradient>
+    <linearGradient id="mem-layer2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a3a6b"/>
+      <stop offset="100%" style="stop-color:#2563eb"/>
+    </linearGradient>
+    <linearGradient id="mem-layer3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0e3a2e"/>
+      <stop offset="100%" style="stop-color:#065f46"/>
+    </linearGradient>
+    <linearGradient id="mem-side" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1c1917"/>
+      <stop offset="100%" style="stop-color:#292524"/>
+    </linearGradient>
+    <marker id="mem-arrow-up" viewBox="0 0 10 10" refX="5" refY="0" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 10 L 5 0 L 10 10 z" fill="#06b6d4"/>
+    </marker>
+    <marker id="mem-arrow-down" viewBox="0 0 10 10" refX="5" refY="10" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 5 10 L 10 0 z" fill="#8b5cf6"/>
+    </marker>
+    <marker id="mem-arrow-right" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/>
+    </marker>
+    <filter id="mem-shadow">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="mem-glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="500" fill="#0a0e27"/>
+
+  <!-- Subtle grid pattern -->
+  <g style="opacity:0.03">
+    <pattern id="mem-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="15" cy="15" r="0.5" fill="#06b6d4"/>
+    </pattern>
+    <rect width="1200" height="500" fill="url(#mem-grid)"/>
+  </g>
+
+  <!-- Title -->
+  <text x="420" y="36" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;font-weight:600;fill:#475569;letter-spacing:4px;text-transform:uppercase">Memory Architecture</text>
+
+  <!-- ===== LAYER 1: Semantic Memory (Top) ===== -->
+  <g filter="url(#mem-shadow)">
+    <rect x="100" y="65" width="640" height="110" rx="14" fill="url(#mem-layer1)" stroke="#8b5cf6" stroke-width="1.5"/>
+  </g>
+  <!-- Layer badge -->
+  <rect x="115" y="75" width="80" height="22" rx="6" fill="#8b5cf6" style="opacity:0.25"/>
+  <text x="155" y="90" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;font-weight:700;fill:#c4b5fd;letter-spacing:1px">LAYER 1</text>
+
+  <text x="420" y="100" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:18px;font-weight:700;fill:#ffffff">Semantic Memory</text>
+  <text x="420" y="122" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;fill:#c4b5fd">Vector Embeddings  |  Cosine Similarity  |  ANN Search</text>
+
+  <!-- Embedding visualization dots -->
+  <g style="opacity:0.4">
+    <circle cx="200" cy="148" r="3" fill="#8b5cf6"/><circle cx="215" cy="152" r="2.5" fill="#a78bfa"/>
+    <circle cx="228" cy="145" r="3" fill="#7c3aed"/><circle cx="245" cy="150" r="2" fill="#c4b5fd"/>
+    <circle cx="260" cy="143" r="3.5" fill="#8b5cf6"/><circle cx="278" cy="149" r="2" fill="#a78bfa"/>
+    <circle cx="295" cy="146" r="3" fill="#7c3aed"/><circle cx="310" cy="151" r="2.5" fill="#c4b5fd"/>
+    <circle cx="330" cy="144" r="2" fill="#8b5cf6"/><circle cx="345" cy="148" r="3" fill="#a78bfa"/>
+    <circle cx="365" cy="142" r="2.5" fill="#7c3aed"/><circle cx="380" cy="150" r="3" fill="#8b5cf6"/>
+    <circle cx="400" cy="145" r="2" fill="#c4b5fd"/><circle cx="418" cy="149" r="3.5" fill="#a78bfa"/>
+    <circle cx="438" cy="143" r="2" fill="#7c3aed"/><circle cx="455" cy="151" r="3" fill="#8b5cf6"/>
+    <circle cx="475" cy="146" r="2.5" fill="#a78bfa"/><circle cx="495" cy="148" r="2" fill="#c4b5fd"/>
+    <circle cx="515" cy="144" r="3" fill="#8b5cf6"/><circle cx="535" cy="150" r="2.5" fill="#7c3aed"/>
+    <circle cx="555" cy="142" r="3" fill="#a78bfa"/><circle cx="575" cy="149" r="2" fill="#8b5cf6"/>
+    <circle cx="595" cy="145" r="3.5" fill="#c4b5fd"/><circle cx="615" cy="151" r="2" fill="#7c3aed"/>
+    <circle cx="635" cy="147" r="3" fill="#a78bfa"/>
+  </g>
+
+  <!-- remember() label (left side) -->
+  <text x="60" y="106" text-anchor="middle" style="font-family:'Courier New',monospace;font-size:11px;font-weight:700;fill:#06b6d4" transform="rotate(-90,60,106)">remember()</text>
+
+  <!-- ===== Arrow between Layer 1 and 2 ===== -->
+  <line x1="380" y1="175" x2="380" y2="205" stroke="#06b6d4" stroke-width="1.5" marker-end="url(#mem-arrow-down)" style="opacity:0.5"/>
+  <line x1="460" y1="205" x2="460" y2="175" stroke="#8b5cf6" stroke-width="1.5" marker-end="url(#mem-arrow-up)" style="opacity:0.5"/>
+  <text x="420" y="196" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:8px;fill:#475569">embed / retrieve</text>
+
+  <!-- ===== LAYER 2: Structured Memory (Middle) ===== -->
+  <g filter="url(#mem-shadow)">
+    <rect x="100" y="210" width="640" height="110" rx="14" fill="url(#mem-layer2)" stroke="#3b82f6" stroke-width="1.5"/>
+  </g>
+  <rect x="115" y="220" width="80" height="22" rx="6" fill="#3b82f6" style="opacity:0.25"/>
+  <text x="155" y="235" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;font-weight:700;fill:#93c5fd;letter-spacing:1px">LAYER 2</text>
+
+  <text x="420" y="248" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:18px;font-weight:700;fill:#ffffff">Structured Memory</text>
+  <text x="420" y="270" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;fill:#93c5fd">SQLite FTS5  |  Entities  |  Relations  |  Facts</text>
+
+  <!-- Table representation -->
+  <g style="opacity:0.3" transform="translate(160,280)">
+    <rect x="0" y="0" width="520" height="24" rx="4" fill="#1e40af" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="130" y1="0" x2="130" y2="24" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="260" y1="0" x2="260" y2="24" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="390" y1="0" x2="390" y2="24" stroke="#3b82f6" stroke-width="0.5"/>
+    <text x="65" y="16" text-anchor="middle" style="font-family:'Courier New',monospace;font-size:9px;fill:#93c5fd">entity_id</text>
+    <text x="195" y="16" text-anchor="middle" style="font-family:'Courier New',monospace;font-size:9px;fill:#93c5fd">name</text>
+    <text x="325" y="16" text-anchor="middle" style="font-family:'Courier New',monospace;font-size:9px;fill:#93c5fd">relation</text>
+    <text x="455" y="16" text-anchor="middle" style="font-family:'Courier New',monospace;font-size:9px;fill:#93c5fd">metadata</text>
+  </g>
+
+  <!-- recall() label -->
+  <text x="60" y="255" text-anchor="middle" style="font-family:'Courier New',monospace;font-size:11px;font-weight:700;fill:#06b6d4" transform="rotate(-90,60,255)">recall()</text>
+
+  <!-- ===== Arrow between Layer 2 and 3 ===== -->
+  <line x1="380" y1="320" x2="380" y2="350" stroke="#06b6d4" stroke-width="1.5" marker-end="url(#mem-arrow-down)" style="opacity:0.5"/>
+  <line x1="460" y1="350" x2="460" y2="320" stroke="#8b5cf6" stroke-width="1.5" marker-end="url(#mem-arrow-up)" style="opacity:0.5"/>
+  <text x="420" y="341" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:8px;fill:#475569">index / query</text>
+
+  <!-- ===== LAYER 3: Session Memory (Bottom) ===== -->
+  <g filter="url(#mem-shadow)">
+    <rect x="100" y="355" width="640" height="110" rx="14" fill="url(#mem-layer3)" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <rect x="115" y="365" width="80" height="22" rx="6" fill="#10b981" style="opacity:0.25"/>
+  <text x="155" y="380" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;font-weight:700;fill:#6ee7b7;letter-spacing:1px">LAYER 3</text>
+
+  <text x="420" y="395" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:18px;font-weight:700;fill:#ffffff">Session Memory</text>
+  <text x="420" y="417" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;fill:#6ee7b7">JSONL Conversation Logs  |  Turn History  |  Context Window</text>
+
+  <!-- Log lines representation -->
+  <g style="opacity:0.3" transform="translate(180,428)">
+    <text x="0" y="0" style="font-family:'Courier New',monospace;font-size:9px;fill:#6ee7b7">{"role":"user","content":"..."}</text>
+    <text x="0" y="13" style="font-family:'Courier New',monospace;font-size:9px;fill:#6ee7b7">{"role":"assistant","content":"...","tool_calls":[...]}</text>
+    <text x="0" y="26" style="font-family:'Courier New',monospace;font-size:9px;fill:#6ee7b7">{"role":"tool","name":"web_search","output":"..."}</text>
+  </g>
+
+  <!-- consolidate() label -->
+  <text x="60" y="400" text-anchor="middle" style="font-family:'Courier New',monospace;font-size:11px;font-weight:700;fill:#06b6d4" transform="rotate(-90,60,400)">consolidate()</text>
+
+  <!-- ===== SIDE PANEL: Vector Backend ===== -->
+  <g filter="url(#mem-shadow)">
+    <rect x="820" y="65" width="320" height="400" rx="14" fill="#0f1629" stroke="#334155" stroke-width="1.5"/>
+  </g>
+
+  <!-- Side panel header -->
+  <rect x="820" y="65" width="320" height="45" rx="14" fill="#1e293b"/>
+  <rect x="820" y="96" width="320" height="14" fill="#1e293b"/>
+  <text x="980" y="93" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;font-weight:700;fill:#f59e0b;letter-spacing:2px">VECTOR BACKEND</text>
+
+  <!-- Connection from Layer 1 to Side Panel -->
+  <line x1="740" y1="120" x2="815" y2="120" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mem-arrow-right)" style="opacity:0.5" filter="url(#mem-glow)"/>
+
+  <!-- SQLite BLOB (Default) -->
+  <g filter="url(#mem-shadow)">
+    <rect x="855" y="130" width="250" height="100" rx="10" fill="#1a1a2e" stroke="#f59e0b" stroke-width="1.2"/>
+  </g>
+  <rect x="870" y="140" width="65" height="20" rx="5" fill="#f59e0b" style="opacity:0.2"/>
+  <text x="902" y="154" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;font-weight:700;fill:#f59e0b">DEFAULT</text>
+  <text x="980" y="170" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:16px;font-weight:700;fill:#ffffff">SQLite BLOB</text>
+  <text x="980" y="190" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:11px;fill:#94a3b8">Zero-dependency vector storage</text>
+  <text x="980" y="208" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#64748b">Brute-force cosine  |  Up to ~100K vectors</text>
+
+  <!-- Qdrant ANN -->
+  <g filter="url(#mem-shadow)">
+    <rect x="855" y="255" width="250" height="100" rx="10" fill="#1a1a2e" stroke="#475569" stroke-width="1.2"/>
+  </g>
+  <rect x="870" y="265" width="70" height="20" rx="5" fill="#475569" style="opacity:0.3"/>
+  <text x="905" y="279" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;font-weight:700;fill:#94a3b8">OPTIONAL</text>
+  <text x="980" y="298" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:16px;font-weight:700;fill:#ffffff">Qdrant ANN</text>
+  <text x="980" y="318" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:11px;fill:#94a3b8">High-scale approximate search</text>
+  <text x="980" y="336" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#64748b">HNSW index  |  Millions of vectors</text>
+
+  <!-- OR divider -->
+  <line x1="880" y1="242" x2="1080" y2="242" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+  <rect x="960" y="234" width="40" height="16" rx="4" fill="#0f1629"/>
+  <text x="980" y="246" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;font-weight:600;fill:#475569">OR</text>
+
+  <!-- Performance comparison -->
+  <g transform="translate(855,375)">
+    <text x="125" y="15" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;font-weight:600;fill:#64748b;letter-spacing:1px">COMPARISON</text>
+    <line x1="0" y1="25" x2="250" y2="25" stroke="#1e293b" stroke-width="1"/>
+    <text x="0" y="42" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#94a3b8">Latency</text>
+    <rect x="80" y="33" width="80" height="12" rx="3" fill="#f59e0b" style="opacity:0.3"/>
+    <text x="125" y="43" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:8px;fill:#f59e0b">~5ms</text>
+    <rect x="170" y="33" width="40" height="12" rx="3" fill="#475569" style="opacity:0.3"/>
+    <text x="193" y="43" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:8px;fill:#94a3b8">~2ms</text>
+
+    <text x="0" y="62" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#94a3b8">Scale</text>
+    <rect x="80" y="53" width="40" height="12" rx="3" fill="#f59e0b" style="opacity:0.3"/>
+    <text x="103" y="63" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:8px;fill:#f59e0b">100K</text>
+    <rect x="130" y="53" width="80" height="12" rx="3" fill="#475569" style="opacity:0.3"/>
+    <text x="173" y="63" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:8px;fill:#94a3b8">Millions</text>
+
+    <text x="0" y="82" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#94a3b8">Deps</text>
+    <rect x="80" y="73" width="50" height="12" rx="3" fill="#10b981" style="opacity:0.3"/>
+    <text x="108" y="83" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:8px;fill:#10b981">None</text>
+    <rect x="140" y="73" width="70" height="12" rx="3" fill="#ef4444" style="opacity:0.3"/>
+    <text x="178" y="83" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:8px;fill:#ef4444">Qdrant server</text>
+  </g>
+</svg>

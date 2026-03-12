@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300">
+  <defs>
+    <linearGradient id="ban-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0e27"/>
+      <stop offset="50%" style="stop-color:#0f1438"/>
+      <stop offset="100%" style="stop-color:#1a1a4e"/>
+    </linearGradient>
+    <linearGradient id="ban-title-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="50%" style="stop-color:#e0f2fe"/>
+      <stop offset="100%" style="stop-color:#ffffff"/>
+    </linearGradient>
+    <radialGradient id="ban-center-glow" cx="50%" cy="45%" r="40%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:0.08"/>
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0"/>
+    </radialGradient>
+    <filter id="ban-text-glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="ban-subtle-glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="ban-circuit" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 0 30 L 20 30 M 30 0 L 30 20 M 40 30 L 60 30 M 30 40 L 30 60" stroke="#06b6d4" stroke-width="0.3" fill="none" style="opacity:0.15"/>
+      <circle cx="30" cy="30" r="1.5" fill="#06b6d4" style="opacity:0.1"/>
+      <circle cx="20" cy="30" r="1" fill="#06b6d4" style="opacity:0.08"/>
+      <circle cx="40" cy="30" r="1" fill="#06b6d4" style="opacity:0.08"/>
+      <circle cx="30" cy="20" r="1" fill="#06b6d4" style="opacity:0.08"/>
+      <circle cx="30" cy="40" r="1" fill="#06b6d4" style="opacity:0.08"/>
+    </pattern>
+    <clipPath id="ban-edges-left">
+      <rect x="0" y="0" width="200" height="300"/>
+    </clipPath>
+    <clipPath id="ban-edges-right">
+      <rect x="1000" y="0" width="200" height="300"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background gradient -->
+  <rect width="1200" height="300" fill="url(#ban-bg)"/>
+
+  <!-- Center glow -->
+  <rect width="1200" height="300" fill="url(#ban-center-glow)"/>
+
+  <!-- Subtle grid lines -->
+  <g style="opacity:0.04">
+    <line x1="0" y1="50" x2="1200" y2="50" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="0" y1="150" x2="1200" y2="150" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="0" y1="250" x2="1200" y2="250" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="100" y1="0" x2="100" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="300" y1="0" x2="300" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="500" y1="0" x2="500" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="700" y1="0" x2="700" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="800" y1="0" x2="800" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="900" y1="0" x2="900" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="1000" y1="0" x2="1000" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+    <line x1="1100" y1="0" x2="1100" y2="300" stroke="#06b6d4" stroke-width="0.5"/>
+  </g>
+
+  <!-- Circuit board pattern at edges -->
+  <g clip-path="url(#ban-edges-left)">
+    <rect x="0" y="0" width="200" height="300" fill="url(#ban-circuit)"/>
+  </g>
+  <g clip-path="url(#ban-edges-right)">
+    <rect x="1000" y="0" width="200" height="300" fill="url(#ban-circuit)"/>
+  </g>
+
+  <!-- Decorative glowing dots -->
+  <g style="opacity:0.6">
+    <!-- Left cluster -->
+    <circle cx="80" cy="60" r="1.5" fill="#06b6d4">
+      <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="150" cy="45" r="1" fill="#8b5cf6">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="120" cy="90" r="1.2" fill="#06b6d4">
+      <animate attributeName="opacity" values="0.2;0.7;0.2" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="50" cy="140" r="1" fill="#8b5cf6">
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="170" cy="200" r="1.5" fill="#06b6d4">
+      <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="90" cy="230" r="1" fill="#8b5cf6">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="140" cy="260" r="1.3" fill="#06b6d4">
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="4.2s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Right cluster -->
+    <circle cx="1120" cy="55" r="1.5" fill="#06b6d4">
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1060" cy="85" r="1" fill="#8b5cf6">
+      <animate attributeName="opacity" values="0.3;0.7;0.3" dur="2.7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1150" cy="120" r="1.2" fill="#06b6d4">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1080" cy="180" r="1" fill="#8b5cf6">
+      <animate attributeName="opacity" values="0.2;0.6;0.2" dur="3.1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1130" cy="220" r="1.5" fill="#06b6d4">
+      <animate attributeName="opacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1050" cy="250" r="1.3" fill="#8b5cf6">
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1160" cy="270" r="1" fill="#06b6d4">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Horizontal decorative lines -->
+  <line x1="250" y1="100" x2="950" y2="100" stroke="#06b6d4" stroke-width="0.5" style="opacity:0.06"/>
+  <line x1="300" y1="200" x2="900" y2="200" stroke="#06b6d4" stroke-width="0.5" style="opacity:0.06"/>
+
+  <!-- Main title: MOHINI -->
+  <g filter="url(#ban-text-glow)">
+    <text x="600" y="140" text-anchor="middle" style="font-family:'Segoe UI',system-ui,-apple-system,sans-serif;font-size:72px;font-weight:800;fill:url(#ban-title-glow);letter-spacing:16px">MOHINI</text>
+  </g>
+
+  <!-- Subtle underline accent -->
+  <line x1="420" y1="155" x2="780" y2="155" stroke="#06b6d4" stroke-width="1" style="opacity:0.3"/>
+  <line x1="470" y1="158" x2="730" y2="158" stroke="#8b5cf6" stroke-width="0.5" style="opacity:0.2"/>
+
+  <!-- Subtitle -->
+  <text x="600" y="190" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:20px;font-weight:300;fill:#06b6d4;letter-spacing:6px">The Agent Operating System</text>
+
+  <!-- Bottom tagline -->
+  <g filter="url(#ban-subtle-glow)">
+    <text x="600" y="255" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;font-weight:500;fill:#64748b;letter-spacing:3px">One Binary</text>
+  </g>
+
+  <!-- Separator dots -->
+  <circle cx="490" cy="252" r="2" fill="#06b6d4" style="opacity:0.5"/>
+  <circle cx="710" cy="252" r="2" fill="#06b6d4" style="opacity:0.5"/>
+
+  <!-- Stats in the tagline -->
+  <text x="600" y="255" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;font-weight:500;fill:#64748b;letter-spacing:2px">
+    <tspan fill="#94a3b8">One Binary</tspan>
+    <tspan fill="#1e293b">  </tspan>
+    <tspan dx="8" fill="#475569">·</tspan>
+    <tspan dx="8" fill="#06b6d4">104</tspan>
+    <tspan fill="#94a3b8"> Skills</tspan>
+    <tspan dx="8" fill="#475569">·</tspan>
+    <tspan dx="8" fill="#06b6d4">40</tspan>
+    <tspan fill="#94a3b8"> Channels</tspan>
+    <tspan dx="8" fill="#475569">·</tspan>
+    <tspan dx="8" fill="#06b6d4">188</tspan>
+    <tspan fill="#94a3b8"> Models</tspan>
+  </text>
+
+  <!-- Top border accent -->
+  <rect x="0" y="0" width="1200" height="2" fill="#06b6d4" style="opacity:0.3"/>
+  <rect x="0" y="298" width="1200" height="2" fill="#1a1a4e" style="opacity:0.5"/>
+</svg>
