@@ -3719,7 +3719,7 @@ dependencies = [
  "reqwest 0.12.28",
  "serde",
  "serde_json",
- "socket2 0.5.10",
+ "socket2 0.6.3",
  "subtle",
  "tempfile",
  "tokio",
