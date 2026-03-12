@@ -7,9 +7,58 @@ const { randomUUID } = require('node:crypto');
 // ---------------------------------------------------------------------------
 // Config from environment
 // ---------------------------------------------------------------------------
+const fs = require('node:fs');
+const path = require('node:path');
+
 const PORT = parseInt(process.env.WHATSAPP_GATEWAY_PORT || '3009', 10);
 const MOHINI_URL = (process.env.MOHINI_URL || 'http://127.0.0.1:4200').replace(/\/+$/, '');
 const DEFAULT_AGENT = process.env.MOHINI_DEFAULT_AGENT || 'assistant';
+
+// ---------------------------------------------------------------------------
+// Access control — only allowed phone numbers can interact with Mohini
+// ---------------------------------------------------------------------------
+const ACL_FILE = path.join(__dirname, 'acl.json');
+
+function loadAcl() {
+  try {
+    if (fs.existsSync(ACL_FILE)) {
+      const data = JSON.parse(fs.readFileSync(ACL_FILE, 'utf8'));
+      return {
+        enabled: data.enabled !== false,              // default: enabled
+        mode: data.mode || 'allowlist',               // 'allowlist' or 'blocklist'
+        allowlist: new Set(data.allowlist || []),      // phone numbers like "+1234567890"
+        blocklist: new Set(data.blocklist || []),
+        deny_message: data.deny_message || '',        // optional message to send to blocked users (empty = silent)
+      };
+    }
+  } catch (e) {
+    console.error('[gateway] Failed to load ACL:', e.message);
+  }
+  // Default: ACL disabled (open to all) until configured
+  return { enabled: false, mode: 'allowlist', allowlist: new Set(), blocklist: new Set(), deny_message: '' };
+}
+
+function saveAcl(acl) {
+  const data = {
+    enabled: acl.enabled,
+    mode: acl.mode,
+    allowlist: [...acl.allowlist],
+    blocklist: [...acl.blocklist],
+    deny_message: acl.deny_message,
+  };
+  fs.writeFileSync(ACL_FILE, JSON.stringify(data, null, 2) + '\n');
+}
+
+let acl = loadAcl();
+
+function isAllowed(phone) {
+  if (!acl.enabled) return true;
+  if (acl.mode === 'blocklist') {
+    return !acl.blocklist.has(phone);
+  }
+  // allowlist mode (default)
+  return acl.allowlist.has(phone);
+}
 
 // ---------------------------------------------------------------------------
 // State
@@ -28,8 +77,9 @@ const MAX_RECONNECT_DELAY = 60_000; // cap at 60s
 // ---------------------------------------------------------------------------
 async function startConnection() {
   // Dynamic imports — Baileys is ESM-only in v6+
-  const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } =
-    await import('@whiskeysockets/baileys');
+  const baileys = await import('@whiskeysockets/baileys');
+  const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = baileys;
+  const { downloadMediaMessage } = baileys;
   const QRCode = (await import('qrcode')).default || await import('qrcode');
   const pino = (await import('pino')).default || await import('pino');
 
@@ -127,22 +177,132 @@ async function startConnection() {
       if (msg.key.remoteJid === 'status@broadcast') continue;
 
       const sender = msg.key.remoteJid || '';
-      const text = msg.message?.conversation
-        || msg.message?.extendedTextMessage?.text
-        || msg.message?.imageMessage?.caption
-        || '';
-
-      if (!text) continue;
+      const content = msg.message;
+      if (!content) continue;
 
       // Extract phone number from JID (e.g. "1234567890@s.whatsapp.net" → "+1234567890")
       const phone = '+' + sender.replace(/@.*$/, '');
       const pushName = msg.pushName || phone;
 
-      console.log(`[gateway] Incoming from ${pushName} (${phone}): ${text.substring(0, 80)}`);
+      // ---------------------------------------------------------------
+      // Access control — reject unauthorized senders
+      // ---------------------------------------------------------------
+      if (!isAllowed(phone)) {
+        console.log(`[gateway] BLOCKED message from ${pushName} (${phone}) — not in allowlist`);
+        if (acl.deny_message && sock) {
+          await sock.sendMessage(sender, { text: acl.deny_message }).catch(() => {});
+        }
+        continue;
+      }
+
+      // ---------------------------------------------------------------
+      // Detect media messages
+      // ---------------------------------------------------------------
+      const MEDIA_TYPES = {
+        imageMessage:    { mime: 'image/jpeg',       ext: 'jpg',  label: 'image'    },
+        videoMessage:    { mime: 'video/mp4',        ext: 'mp4',  label: 'video'    },
+        audioMessage:    { mime: 'audio/ogg',        ext: 'ogg',  label: 'audio'    },
+        documentMessage: { mime: 'application/octet-stream', ext: 'bin', label: 'document' },
+        stickerMessage:  { mime: 'image/webp',       ext: 'webp', label: 'sticker'  },
+      };
+
+      let mediaType = null;   // key from MEDIA_TYPES
+      let mediaInfo = null;   // the sub-message object (e.g. content.imageMessage)
+      for (const [key, info] of Object.entries(MEDIA_TYPES)) {
+        if (content[key]) {
+          mediaType = key;
+          mediaInfo = content[key];
+          break;
+        }
+      }
+
+      // Extract text: plain text, extended text, or media caption
+      const text = content.conversation
+        || content.extendedTextMessage?.text
+        || mediaInfo?.caption
+        || '';
+
+      // If there is no text AND no media, skip
+      if (!text && !mediaType) continue;
+
+      // ---------------------------------------------------------------
+      // Handle media: download, upload to Mohini, build attachments
+      // ---------------------------------------------------------------
+      const attachments = [];
+
+      if (mediaType && mediaInfo) {
+        const info = MEDIA_TYPES[mediaType];
+        const actualMime = mediaInfo.mimetype || info.mime;
+        const filename = mediaInfo.fileName
+          || `whatsapp_${info.label}_${Date.now()}.${extensionFromMime(actualMime, info.ext)}`;
+
+        console.log(`[gateway] Incoming ${info.label} from ${pushName} (${phone}), mime=${actualMime}, file=${filename}`);
+
+        try {
+          // Download media buffer from WhatsApp servers
+          const buffer = await downloadMediaMessage(msg, 'buffer', {});
+          console.log(`[gateway] Downloaded ${info.label}: ${buffer.length} bytes`);
+
+          // Upload to Mohini's upload endpoint
+          const uploadResult = await uploadToMohini(buffer, actualMime, filename);
+          if (uploadResult) {
+            attachments.push({
+              file_id: uploadResult.file_id,
+              filename: uploadResult.filename,
+              content_type: uploadResult.content_type,
+            });
+            console.log(`[gateway] Uploaded ${info.label} to Mohini: file_id=${uploadResult.file_id}`);
+          }
+        } catch (err) {
+          console.error(`[gateway] Failed to download/upload ${info.label}:`, err.message);
+          // Continue — we'll still forward the text/caption if any
+        }
+      }
+
+      // Build the message text to forward
+      const messageText = text
+        || (mediaType ? `[${MEDIA_TYPES[mediaType].label}]` : '');
+
+      if (!messageText && attachments.length === 0) continue;
+
+      console.log(`[gateway] Incoming from ${pushName} (${phone}): ${messageText.substring(0, 80)}${attachments.length ? ` [+${attachments.length} attachment(s)]` : ''}`);
 
       // Forward to Mohini agent
       try {
-        const response = await forwardToMohini(text, phone, pushName);
+        // Show "typing..." indicator while Mohini processes
+        if (sock) {
+          await sock.sendPresenceUpdate('composing', sender);
+        }
+
+        // Keep typing indicator alive with periodic pings (WhatsApp auto-clears after ~25s)
+        const typingInterval = setInterval(async () => {
+          try {
+            if (sock) await sock.sendPresenceUpdate('composing', sender);
+          } catch (_) {}
+        }, 20_000);
+
+        // Smart model routing based on task complexity
+        const tier = classifyComplexity(messageText, attachments);
+        await switchModel(tier);
+
+        // Try primary (Anthropic), fall back to Kimi K2 on failure
+        let response;
+        try {
+          response = await forwardToMohini(messageText, phone, pushName, attachments);
+        } catch (primaryErr) {
+          console.log(`[gateway] Primary model failed (${primaryErr.message}), falling back to Kimi K2...`);
+          await switchModel('kimi-k2');
+          response = await forwardToMohini(messageText, phone, pushName, attachments);
+          // Switch back to anthropic for next message
+          await switchModel(tier).catch(() => {});
+        }
+
+        // Stop typing indicator
+        clearInterval(typingInterval);
+        if (sock) {
+          await sock.sendPresenceUpdate('paused', sender).catch(() => {});
+        }
+
         if (response && sock) {
           // Send agent response back to WhatsApp
           await sock.sendMessage(sender, { text: response });
@@ -150,18 +310,91 @@ async function startConnection() {
         }
       } catch (err) {
         console.error(`[gateway] Forward/reply failed:`, err.message);
+        // Clear typing on error too
+        if (sock) {
+          sock.sendPresenceUpdate('paused', sender).catch(() => {});
+        }
       }
     }
   });
 }
 
 // ---------------------------------------------------------------------------
+// Helper: extract file extension from MIME type
+// ---------------------------------------------------------------------------
+function extensionFromMime(mime, fallback) {
+  const map = {
+    'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif',
+    'video/mp4': 'mp4', 'video/3gpp': '3gp',
+    'audio/ogg': 'ogg', 'audio/mpeg': 'mp3', 'audio/mp4': 'm4a', 'audio/aac': 'aac',
+    'audio/ogg; codecs=opus': 'ogg',
+    'application/pdf': 'pdf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+    'text/plain': 'txt',
+  };
+  // Strip parameters (e.g. "audio/ogg; codecs=opus" → "audio/ogg")
+  const base = mime.split(';')[0].trim();
+  return map[mime] || map[base] || fallback || 'bin';
+}
+
+// ---------------------------------------------------------------------------
+// Upload media buffer to Mohini's /api/agents/{id}/upload endpoint
+// ---------------------------------------------------------------------------
+function uploadToMohini(buffer, contentType, filename) {
+  return new Promise((resolve, reject) => {
+    const url = new URL(
+      `${MOHINI_URL}/api/agents/${encodeURIComponent(DEFAULT_AGENT)}/upload`
+    );
+
+    const req = http.request(
+      {
+        hostname: url.hostname,
+        port: url.port || 4200,
+        path: url.pathname,
+        method: 'POST',
+        headers: {
+          'Content-Type': contentType,
+          'Content-Length': buffer.length,
+          'X-Filename': filename,
+        },
+        timeout: 30_000,
+      },
+      (res) => {
+        let body = '';
+        res.on('data', (chunk) => (body += chunk));
+        res.on('end', () => {
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            try {
+              resolve(JSON.parse(body));
+            } catch {
+              reject(new Error(`Upload returned invalid JSON: ${body.substring(0, 200)}`));
+            }
+          } else {
+            reject(new Error(`Upload failed (${res.statusCode}): ${body.substring(0, 200)}`));
+          }
+        });
+      },
+    );
+
+    req.on('error', reject);
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error('Mohini upload timeout'));
+    });
+    req.write(buffer);
+    req.end();
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Forward incoming message to Mohini API, return agent response
 // ---------------------------------------------------------------------------
-function forwardToMohini(text, phone, pushName) {
+function forwardToMohini(text, phone, pushName, attachments) {
   return new Promise((resolve, reject) => {
     const payload = JSON.stringify({
       message: text,
+      attachments: attachments || [],
       metadata: {
         channel: 'whatsapp',
         sender: phone,
@@ -181,7 +414,7 @@ function forwardToMohini(text, phone, pushName) {
           'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(payload),
         },
-        timeout: 120_000, // LLM calls can be slow
+        timeout: 300_000, // LLM calls can be slow, especially with PDF/media context
       },
       (res) => {
         let body = '';
@@ -203,6 +436,88 @@ function forwardToMohini(text, phone, pushName) {
       req.destroy();
       reject(new Error('Mohini API timeout'));
     });
+    req.write(payload);
+    req.end();
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Smart model routing — pick Haiku/Sonnet/Opus based on task complexity
+// ---------------------------------------------------------------------------
+const MODEL_MAP = {
+  'haiku':   { provider: 'anthropic', model: 'claude-haiku-4-5-20251001' },
+  'sonnet':  { provider: 'anthropic', model: 'claude-sonnet-4-20250514' },
+  'opus':    { provider: 'anthropic', model: 'claude-opus-4-20250514' },
+  'kimi-k2': { provider: 'nvidia',   model: 'moonshotai/kimi-k2-instruct' },
+};
+
+let currentTier = 'haiku';
+
+function classifyComplexity(text, attachments) {
+  const lower = (text || '').toLowerCase();
+  const len = lower.length;
+  const hasAttachments = attachments && attachments.length > 0;
+
+  // Opus — deep analysis, coding, multi-step reasoning, long documents
+  const opusPatterns = [
+    /\b(implement|architect|design|refactor|debug|analyze in detail|write.*code|build.*system)\b/,
+    /\b(compare.*and.*contrast|evaluate|critique|comprehensive|thorough|in-depth)\b/,
+    /\b(step.by.step|multi.step|complex|advanced|research)\b/,
+    /\b(create.*plan|strategy|proposal|specification|technical.*doc)\b/,
+  ];
+  if (opusPatterns.some(p => p.test(lower)) || (hasAttachments && len > 200) || len > 1000) {
+    return 'opus';
+  }
+
+  // Sonnet — moderate tasks, summaries, explanations, creative writing
+  const sonnetPatterns = [
+    /\b(explain|summarize|describe|translate|rewrite|improve|suggest|help.*with)\b/,
+    /\b(write|draft|compose|create|generate)\b/,
+    /\b(how.*does|what.*is|why.*does|can.*you)\b/,
+    /\b(list|outline|review|check)\b/,
+  ];
+  if (sonnetPatterns.some(p => p.test(lower)) || hasAttachments || len > 200) {
+    return 'sonnet';
+  }
+
+  // Haiku — quick replies, greetings, simple questions, short messages
+  return 'haiku';
+}
+
+function switchModel(tier) {
+  const target = MODEL_MAP[tier];
+  if (!target) return Promise.resolve();
+  if (tier === currentTier) return Promise.resolve();
+
+  return new Promise((resolve, reject) => {
+    const payload = JSON.stringify(target);
+    const url = new URL(
+      `${MOHINI_URL}/api/agents/${encodeURIComponent(DEFAULT_AGENT)}/model`
+    );
+    const req = http.request({
+      hostname: url.hostname,
+      port: url.port || 4200,
+      path: url.pathname,
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload),
+      },
+      timeout: 5000,
+    }, (res) => {
+      let body = '';
+      res.on('data', (c) => (body += c));
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          const prev = currentTier;
+          currentTier = tier;
+          console.log(`[gateway] Model switched: ${prev} → ${tier} (${target.provider}/${target.model})`);
+        }
+        resolve();
+      });
+    });
+    req.on('error', (e) => { console.error(`[gateway] Model switch failed:`, e.message); resolve(); });
+    req.on('timeout', () => { req.destroy(); resolve(); });
     req.write(payload);
     req.end();
   });
@@ -324,6 +639,66 @@ const server = http.createServer(async (req, res) => {
         connected: connStatus === 'connected',
         session_id: sessionId || null,
       });
+    }
+
+    // =====================================================================
+    // Access Control List (ACL) management endpoints
+    // =====================================================================
+
+    // GET /acl — view current ACL config
+    if (req.method === 'GET' && path === '/acl') {
+      return jsonResponse(res, 200, {
+        enabled: acl.enabled,
+        mode: acl.mode,
+        allowlist: [...acl.allowlist],
+        blocklist: [...acl.blocklist],
+        deny_message: acl.deny_message,
+      });
+    }
+
+    // PUT /acl — replace entire ACL config
+    if (req.method === 'PUT' && path === '/acl') {
+      const body = await parseBody(req);
+      if (body.enabled !== undefined) acl.enabled = !!body.enabled;
+      if (body.mode) acl.mode = body.mode;
+      if (Array.isArray(body.allowlist)) acl.allowlist = new Set(body.allowlist);
+      if (Array.isArray(body.blocklist)) acl.blocklist = new Set(body.blocklist);
+      if (body.deny_message !== undefined) acl.deny_message = body.deny_message;
+      saveAcl(acl);
+      console.log(`[gateway] ACL updated: enabled=${acl.enabled} mode=${acl.mode} allowlist=[${[...acl.allowlist]}] blocklist=[${[...acl.blocklist]}]`);
+      return jsonResponse(res, 200, { status: 'ok', ...body });
+    }
+
+    // POST /acl/allow — add phone number(s) to allowlist
+    if (req.method === 'POST' && path === '/acl/allow') {
+      const body = await parseBody(req);
+      const phones = Array.isArray(body.phones) ? body.phones : (body.phone ? [body.phone] : []);
+      for (const p of phones) acl.allowlist.add(p);
+      saveAcl(acl);
+      console.log(`[gateway] ACL: added to allowlist: ${phones.join(', ')}`);
+      return jsonResponse(res, 200, { status: 'ok', allowlist: [...acl.allowlist] });
+    }
+
+    // POST /acl/deny — remove phone number(s) from allowlist (or add to blocklist)
+    if (req.method === 'POST' && path === '/acl/deny') {
+      const body = await parseBody(req);
+      const phones = Array.isArray(body.phones) ? body.phones : (body.phone ? [body.phone] : []);
+      for (const p of phones) {
+        acl.allowlist.delete(p);
+        if (acl.mode === 'blocklist') acl.blocklist.add(p);
+      }
+      saveAcl(acl);
+      console.log(`[gateway] ACL: denied: ${phones.join(', ')}`);
+      return jsonResponse(res, 200, { status: 'ok', allowlist: [...acl.allowlist], blocklist: [...acl.blocklist] });
+    }
+
+    // DELETE /acl/allow — remove phone from allowlist
+    if (req.method === 'DELETE' && path === '/acl/allow') {
+      const body = await parseBody(req);
+      const phones = Array.isArray(body.phones) ? body.phones : (body.phone ? [body.phone] : []);
+      for (const p of phones) acl.allowlist.delete(p);
+      saveAcl(acl);
+      return jsonResponse(res, 200, { status: 'ok', allowlist: [...acl.allowlist] });
     }
 
     // 404

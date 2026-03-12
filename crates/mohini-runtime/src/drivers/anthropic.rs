@@ -19,18 +19,36 @@ pub struct AnthropicDriver {
     api_key: Zeroizing<String>,
     base_url: String,
     client: reqwest::Client,
+    /// True when the key is an OAuth Access Token (sk-ant-oat*).
+    /// Uses `Authorization: Bearer` + beta header instead of `x-api-key`.
+    is_oauth: bool,
 }
 
 impl AnthropicDriver {
     /// Create a new Anthropic driver.
     pub fn new(api_key: String, base_url: String) -> Self {
+        let is_oauth = api_key.starts_with("sk-ant-oat");
+        if is_oauth {
+            debug!("Anthropic driver: detected OAuth token — using Bearer auth with beta header");
+        }
         Self {
+            is_oauth,
             api_key: Zeroizing::new(api_key),
             base_url,
             client: reqwest::Client::builder()
                 .user_agent(crate::USER_AGENT)
                 .build()
                 .unwrap_or_default(),
+        }
+    }
+
+    /// Build the auth headers appropriate for the token type.
+    fn apply_auth(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
+        if self.is_oauth {
+            req.header("authorization", format!("Bearer {}", self.api_key.as_str()))
+               .header("anthropic-beta", "oauth-2025-04-20")
+        } else {
+            req.header("x-api-key", self.api_key.as_str())
         }
     }
 }
@@ -204,13 +222,14 @@ impl LlmDriver for AnthropicDriver {
             let url = format!("{}/v1/messages", self.base_url);
             debug!(url = %url, attempt, "Sending Anthropic API request");
 
-            let resp = self
+            let req_builder = self
                 .client
                 .post(&url)
-                .header("x-api-key", self.api_key.as_str())
                 .header("anthropic-version", "2023-06-01")
                 .header("content-type", "application/json")
-                .json(&api_request)
+                .json(&api_request);
+            let req_builder = self.apply_auth(req_builder);
+            let resp = req_builder
                 .send()
                 .await
                 .map_err(|e| LlmError::Http(e.to_string()))?;
@@ -311,13 +330,14 @@ impl LlmDriver for AnthropicDriver {
             let url = format!("{}/v1/messages", self.base_url);
             debug!(url = %url, attempt, "Sending Anthropic streaming request");
 
-            let resp = self
+            let req_builder = self
                 .client
                 .post(&url)
-                .header("x-api-key", self.api_key.as_str())
                 .header("anthropic-version", "2023-06-01")
                 .header("content-type", "application/json")
-                .json(&api_request)
+                .json(&api_request);
+            let req_builder = self.apply_auth(req_builder);
+            let resp = req_builder
                 .send()
                 .await
                 .map_err(|e| LlmError::Http(e.to_string()))?;
