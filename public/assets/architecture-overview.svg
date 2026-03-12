@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <radialGradient id="ao-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:0.4"/>
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0"/>
+    </radialGradient>
+    <radialGradient id="ao-kernel-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:0.6"/>
+      <stop offset="60%" style="stop-color:#06b6d4;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0"/>
+    </radialGradient>
+    <linearGradient id="ao-line1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#06b6d4"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="ao-line2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="ao-line3" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="ao-node-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a3a6b"/>
+      <stop offset="100%" style="stop-color:#0f2447"/>
+    </linearGradient>
+    <linearGradient id="ao-kernel-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0e4d5e"/>
+      <stop offset="100%" style="stop-color:#0a2a3a"/>
+    </linearGradient>
+    <filter id="ao-glow-filter">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="ao-glow-strong">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="ao-shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="600" fill="#0a0e27"/>
+
+  <!-- Subtle grid -->
+  <g style="opacity:0.04">
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(60,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(120,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(180,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(240,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(300,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(360,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(420,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(480,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(540,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(600,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(660,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(720,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(780,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(840,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(900,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(960,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(1020,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(1080,0)"/>
+    <line x1="0" y1="0" x2="0" y2="600" stroke="#06b6d4" stroke-width="0.5" transform="translate(1140,0)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#06b6d4" stroke-width="0.5" transform="translate(0,60)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#06b6d4" stroke-width="0.5" transform="translate(0,120)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#06b6d4" stroke-width="0.5" transform="translate(0,180)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#06b6d4" stroke-width="0.5" transform="translate(0,240)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#06b6d4" stroke-width="0.5" transform="translate(0,300)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#06b6d4" stroke-width="0.5" transform="translate(0,360)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#06b6d4" stroke-width="0.5" transform="translate(0,420)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#06b6d4" stroke-width="0.5" transform="translate(0,480)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#06b6d4" stroke-width="0.5" transform="translate(0,540)"/>
+  </g>
+
+  <!-- Central glow -->
+  <ellipse cx="600" cy="300" rx="200" ry="200" fill="url(#ao-kernel-glow)"/>
+
+  <!-- Connection lines from kernel to outer nodes -->
+  <!-- To 40 Channels (top-left: 200, 140) -->
+  <line x1="600" y1="300" x2="200" y2="140" stroke="url(#ao-line3)" stroke-width="2" style="opacity:0.6" filter="url(#ao-glow-filter)"/>
+  <!-- To 104 Skills (top-center: 600, 80) -->
+  <line x1="600" y1="300" x2="600" y2="100" stroke="url(#ao-line1)" stroke-width="2" style="opacity:0.6" filter="url(#ao-glow-filter)"/>
+  <!-- To 8 Hands (top-right: 1000, 140) -->
+  <line x1="600" y1="300" x2="1000" y2="140" stroke="url(#ao-line2)" stroke-width="2" style="opacity:0.6" filter="url(#ao-glow-filter)"/>
+  <!-- To 188 Models (bottom-left: 200, 460) -->
+  <line x1="600" y1="300" x2="200" y2="460" stroke="url(#ao-line3)" stroke-width="2" style="opacity:0.6" filter="url(#ao-glow-filter)"/>
+  <!-- To Memory (bottom-center: 600, 520) -->
+  <line x1="600" y1="300" x2="600" y2="500" stroke="url(#ao-line1)" stroke-width="2" style="opacity:0.6" filter="url(#ao-glow-filter)"/>
+  <!-- To API + Dashboard (bottom-right: 1000, 460) -->
+  <line x1="600" y1="300" x2="1000" y2="460" stroke="url(#ao-line2)" stroke-width="2" style="opacity:0.6" filter="url(#ao-glow-filter)"/>
+
+  <!-- Animated pulse dots on lines -->
+  <circle r="3" fill="#06b6d4" style="opacity:0.8">
+    <animateMotion dur="3s" repeatCount="indefinite" path="M600,300 L200,140"/>
+  </circle>
+  <circle r="3" fill="#06b6d4" style="opacity:0.8">
+    <animateMotion dur="2.5s" repeatCount="indefinite" path="M600,300 L600,100"/>
+  </circle>
+  <circle r="3" fill="#8b5cf6" style="opacity:0.8">
+    <animateMotion dur="3.2s" repeatCount="indefinite" path="M600,300 L1000,140"/>
+  </circle>
+  <circle r="3" fill="#8b5cf6" style="opacity:0.8">
+    <animateMotion dur="2.8s" repeatCount="indefinite" path="M600,300 L200,460"/>
+  </circle>
+  <circle r="3" fill="#06b6d4" style="opacity:0.8">
+    <animateMotion dur="3.5s" repeatCount="indefinite" path="M600,300 L600,500"/>
+  </circle>
+  <circle r="3" fill="#8b5cf6" style="opacity:0.8">
+    <animateMotion dur="2.7s" repeatCount="indefinite" path="M600,300 L1000,460"/>
+  </circle>
+
+  <!-- Central Kernel Node -->
+  <g filter="url(#ao-glow-strong)">
+    <circle cx="600" cy="300" r="72" fill="url(#ao-kernel-fill)" stroke="#06b6d4" stroke-width="2"/>
+    <circle cx="600" cy="300" r="72" fill="none" stroke="#06b6d4" stroke-width="1" style="opacity:0.3">
+      <animate attributeName="r" values="72;82;72" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  <text x="600" y="293" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;font-weight:700;fill:#06b6d4;letter-spacing:2px">MOHINI</text>
+  <text x="600" y="313" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:400;fill:#94a3b8">Kernel</text>
+
+  <!-- Node: 40 Channels -->
+  <g filter="url(#ao-shadow)">
+    <rect x="120" y="100" width="160" height="80" rx="12" fill="url(#ao-node-fill)" stroke="#1e40af" stroke-width="1.5"/>
+  </g>
+  <text x="200" y="133" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;font-weight:600;fill:#ffffff">40 Channels</text>
+  <!-- Small dots representing platforms -->
+  <circle cx="168" cy="155" r="4" fill="#25D366" style="opacity:0.8"/>
+  <circle cx="183" cy="155" r="4" fill="#0088cc" style="opacity:0.8"/>
+  <circle cx="198" cy="155" r="4" fill="#5865F2" style="opacity:0.8"/>
+  <circle cx="213" cy="155" r="4" fill="#E1306C" style="opacity:0.8"/>
+  <circle cx="228" cy="155" r="4" fill="#FF4500" style="opacity:0.8"/>
+  <text x="200" y="172" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#64748b">WhatsApp, Telegram, Discord...</text>
+
+  <!-- Node: 104 Skills -->
+  <g filter="url(#ao-shadow)">
+    <rect x="520" y="52" width="160" height="80" rx="12" fill="url(#ao-node-fill)" stroke="#1e40af" stroke-width="1.5"/>
+  </g>
+  <text x="600" y="88" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;font-weight:600;fill:#ffffff">104 Skills</text>
+  <text x="600" y="108" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#8b5cf6">SkillHub Marketplace</text>
+  <text x="600" y="122" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#64748b">Built-in + Extensible</text>
+
+  <!-- Node: 8 Hands -->
+  <g filter="url(#ao-shadow)">
+    <rect x="920" y="100" width="160" height="80" rx="12" fill="url(#ao-node-fill)" stroke="#1e40af" stroke-width="1.5"/>
+  </g>
+  <text x="1000" y="133" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;font-weight:600;fill:#ffffff">8 Hands</text>
+  <text x="1000" y="153" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#8b5cf6">Autonomous Agents</text>
+  <text x="1000" y="167" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#64748b">Background Workers</text>
+
+  <!-- Node: 188 Models -->
+  <g filter="url(#ao-shadow)">
+    <rect x="120" y="420" width="160" height="80" rx="12" fill="url(#ao-node-fill)" stroke="#1e40af" stroke-width="1.5"/>
+  </g>
+  <text x="200" y="455" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;font-weight:600;fill:#ffffff">188 Models</text>
+  <text x="200" y="475" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#8b5cf6">LLM Providers</text>
+  <text x="200" y="489" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#64748b">OpenAI, Anthropic, Google...</text>
+
+  <!-- Node: Memory -->
+  <g filter="url(#ao-shadow)">
+    <rect x="520" y="468" width="160" height="80" rx="12" fill="url(#ao-node-fill)" stroke="#1e40af" stroke-width="1.5"/>
+  </g>
+  <text x="600" y="503" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;font-weight:600;fill:#ffffff">Memory</text>
+  <text x="600" y="523" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#8b5cf6">SQLite + Qdrant</text>
+  <text x="600" y="537" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#64748b">Semantic + Structured</text>
+
+  <!-- Node: API + Dashboard -->
+  <g filter="url(#ao-shadow)">
+    <rect x="920" y="420" width="160" height="80" rx="12" fill="url(#ao-node-fill)" stroke="#1e40af" stroke-width="1.5"/>
+  </g>
+  <text x="1000" y="455" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;font-weight:600;fill:#ffffff">API + Dashboard</text>
+  <text x="1000" y="475" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#8b5cf6">REST / WS / SSE</text>
+  <text x="1000" y="489" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#64748b">Alpine.js SPA</text>
+
+  <!-- Title -->
+  <text x="600" y="34" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;font-weight:600;fill:#475569;letter-spacing:4px;text-transform:uppercase">Architecture Overview</text>
+</svg>

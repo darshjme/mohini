@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="1200" height="500">
+  <defs>
+    <linearGradient id="orch-node" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a3a6b"/>
+      <stop offset="100%" style="stop-color:#2563eb"/>
+    </linearGradient>
+    <linearGradient id="orch-node-alt" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1b4b"/>
+      <stop offset="100%" style="stop-color:#4c1d95"/>
+    </linearGradient>
+    <linearGradient id="orch-node-mem" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0e3a2e"/>
+      <stop offset="100%" style="stop-color:#065f46"/>
+    </linearGradient>
+    <marker id="orch-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#06b6d4"/>
+    </marker>
+    <marker id="orch-arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5cf6"/>
+    </marker>
+    <marker id="orch-arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981"/>
+    </marker>
+    <filter id="orch-shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="orch-glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="500" fill="#0a0e27"/>
+
+  <!-- Subtle grid -->
+  <g style="opacity:0.03">
+    <pattern id="orch-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#06b6d4" stroke-width="0.5"/>
+    </pattern>
+    <rect width="1200" height="500" fill="url(#orch-grid)"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="32" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;font-weight:600;fill:#475569;letter-spacing:4px;text-transform:uppercase">Agent Orchestration Flow</text>
+
+  <!-- ===== MAIN FLOW (y=130) ===== -->
+
+  <!-- User Message -->
+  <g filter="url(#orch-shadow)">
+    <rect x="30" y="105" width="120" height="50" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  </g>
+  <text x="90" y="134" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#e2e8f0">User Message</text>
+
+  <!-- Arrow -->
+  <line x1="150" y1="130" x2="185" y2="130" stroke="#06b6d4" stroke-width="2" marker-end="url(#orch-arrow)" filter="url(#orch-glow)"/>
+
+  <!-- Channel Adapter -->
+  <g filter="url(#orch-shadow)">
+    <rect x="190" y="105" width="130" height="50" rx="10" fill="url(#orch-node)" stroke="#3b82f6" stroke-width="1.5"/>
+  </g>
+  <text x="255" y="128" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#ffffff">Channel</text>
+  <text x="255" y="143" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:11px;fill:#93c5fd">Adapter</text>
+
+  <!-- Arrow -->
+  <line x1="320" y1="130" x2="355" y2="130" stroke="#06b6d4" stroke-width="2" marker-end="url(#orch-arrow)" filter="url(#orch-glow)"/>
+
+  <!-- Kernel Router -->
+  <g filter="url(#orch-shadow)">
+    <rect x="360" y="105" width="130" height="50" rx="10" fill="url(#orch-node)" stroke="#3b82f6" stroke-width="1.5"/>
+  </g>
+  <text x="425" y="128" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#ffffff">Kernel</text>
+  <text x="425" y="143" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:11px;fill:#93c5fd">Router</text>
+
+  <!-- Arrow -->
+  <line x1="490" y1="130" x2="525" y2="130" stroke="#06b6d4" stroke-width="2" marker-end="url(#orch-arrow)" filter="url(#orch-glow)"/>
+
+  <!-- Agent Loop (highlighted) -->
+  <g filter="url(#orch-shadow)">
+    <rect x="530" y="97" width="140" height="66" rx="12" fill="url(#orch-node)" stroke="#06b6d4" stroke-width="2"/>
+    <rect x="530" y="97" width="140" height="66" rx="12" fill="none" stroke="#06b6d4" stroke-width="1" style="opacity:0.3">
+      <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+  <text x="600" y="126" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;font-weight:700;fill:#06b6d4">Agent Loop</text>
+  <text x="600" y="144" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;fill:#64748b">Plan / Act / Observe</text>
+
+  <!-- Arrow -->
+  <line x1="670" y1="130" x2="715" y2="130" stroke="#06b6d4" stroke-width="2" marker-end="url(#orch-arrow)" filter="url(#orch-glow)"/>
+
+  <!-- LLM Driver -->
+  <g filter="url(#orch-shadow)">
+    <rect x="720" y="105" width="130" height="50" rx="10" fill="url(#orch-node)" stroke="#3b82f6" stroke-width="1.5"/>
+  </g>
+  <text x="785" y="128" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#ffffff">LLM Driver</text>
+  <text x="785" y="143" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:11px;fill:#93c5fd">188 Models</text>
+
+  <!-- Arrow -->
+  <line x1="850" y1="130" x2="885" y2="130" stroke="#06b6d4" stroke-width="2" marker-end="url(#orch-arrow)" filter="url(#orch-glow)"/>
+
+  <!-- Tool Executor -->
+  <g filter="url(#orch-shadow)">
+    <rect x="890" y="97" width="130" height="66" rx="12" fill="url(#orch-node-alt)" stroke="#8b5cf6" stroke-width="1.5"/>
+  </g>
+  <text x="955" y="126" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#ffffff">Tool Executor</text>
+  <text x="955" y="144" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;fill:#c4b5fd">Dispatch + Sandbox</text>
+
+  <!-- Arrow to Response -->
+  <line x1="1020" y1="130" x2="1055" y2="130" stroke="#06b6d4" stroke-width="2" marker-end="url(#orch-arrow)" filter="url(#orch-glow)"/>
+
+  <!-- Response -->
+  <g filter="url(#orch-shadow)">
+    <rect x="1060" y="105" width="110" height="50" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  </g>
+  <text x="1115" y="134" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#10b981">Response</text>
+
+  <!-- ===== MEMORY BRANCH (from Agent Loop downward) ===== -->
+
+  <!-- Vertical arrow from Agent Loop -->
+  <line x1="600" y1="163" x2="600" y2="220" stroke="#10b981" stroke-width="2" marker-end="url(#orch-arrow-green)" filter="url(#orch-glow)"/>
+
+  <!-- Memory (recall) -->
+  <g filter="url(#orch-shadow)">
+    <rect x="530" y="225" width="140" height="50" rx="10" fill="url(#orch-node-mem)" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="600" y="248" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#ffffff">Memory</text>
+  <text x="600" y="264" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#6ee7b7">recall()</text>
+
+  <!-- Arrow down -->
+  <line x1="600" y1="275" x2="600" y2="310" stroke="#10b981" stroke-width="2" marker-end="url(#orch-arrow-green)" filter="url(#orch-glow)"/>
+
+  <!-- Vector Search -->
+  <g filter="url(#orch-shadow)">
+    <rect x="530" y="315" width="140" height="50" rx="10" fill="url(#orch-node-mem)" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="600" y="338" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#ffffff">Vector Search</text>
+  <text x="600" y="354" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#6ee7b7">Cosine Similarity</text>
+
+  <!-- Arrow down -->
+  <line x1="600" y1="365" x2="600" y2="400" stroke="#10b981" stroke-width="2" marker-end="url(#orch-arrow-green)" filter="url(#orch-glow)"/>
+
+  <!-- Context Assembly -->
+  <g filter="url(#orch-shadow)">
+    <rect x="530" y="405" width="140" height="50" rx="10" fill="url(#orch-node-mem)" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="600" y="428" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#ffffff">Context</text>
+  <text x="600" y="444" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:11px;fill:#6ee7b7">Assembly</text>
+
+  <!-- Return arrow from Context Assembly back up to Agent Loop (curved) -->
+  <path d="M 530,430 Q 470,430 470,280 Q 470,130 530,130" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#orch-arrow-green)" style="opacity:0.5"/>
+  <text x="450" y="285" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;fill:#6ee7b7;opacity:0.7" transform="rotate(-90,450,285)">inject context</text>
+
+  <!-- ===== TOOL BRANCHES (from Tool Executor downward) ===== -->
+
+  <!-- Vertical line from Tool Executor -->
+  <line x1="955" y1="163" x2="955" y2="210" stroke="#8b5cf6" stroke-width="2" marker-end="url(#orch-arrow-purple)" filter="url(#orch-glow)"/>
+
+  <!-- Horizontal branch line -->
+  <line x1="860" y1="230" x2="1050" y2="230" stroke="#8b5cf6" stroke-width="1.5" style="opacity:0.4"/>
+
+  <!-- Skills -->
+  <line x1="870" y1="210" x2="870" y2="230" stroke="#8b5cf6" stroke-width="1.5" style="opacity:0.6"/>
+  <line x1="870" y1="230" x2="870" y2="260" stroke="#8b5cf6" stroke-width="1.5" marker-end="url(#orch-arrow-purple)" style="opacity:0.6"/>
+  <g filter="url(#orch-shadow)">
+    <rect x="810" y="265" width="120" height="46" rx="10" fill="url(#orch-node-alt)" stroke="#7c3aed" stroke-width="1.2"/>
+  </g>
+  <text x="870" y="286" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#ffffff">Skills</text>
+  <text x="870" y="301" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;fill:#c4b5fd">104 Built-in</text>
+
+  <!-- Hands -->
+  <line x1="955" y1="230" x2="955" y2="260" stroke="#8b5cf6" stroke-width="1.5" marker-end="url(#orch-arrow-purple)" style="opacity:0.6"/>
+  <g filter="url(#orch-shadow)">
+    <rect x="895" y="265" width="120" height="46" rx="10" fill="url(#orch-node-alt)" stroke="#7c3aed" stroke-width="1.2" transform="translate(0,60)"/>
+  </g>
+  <text x="955" y="340" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#ffffff">Hands</text>
+  <text x="955" y="355" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;fill:#c4b5fd">8 Autonomous</text>
+  <line x1="955" y1="260" x2="955" y2="320" stroke="#8b5cf6" stroke-width="1.5" marker-end="url(#orch-arrow-purple)" style="opacity:0.6"/>
+
+  <!-- WASM Sandbox -->
+  <line x1="1040" y1="210" x2="1040" y2="230" stroke="#8b5cf6" stroke-width="1.5" style="opacity:0.6"/>
+  <line x1="1040" y1="230" x2="1040" y2="260" stroke="#8b5cf6" stroke-width="1.5" marker-end="url(#orch-arrow-purple)" style="opacity:0.6"/>
+  <g filter="url(#orch-shadow)">
+    <rect x="980" y="265" width="120" height="46" rx="10" fill="url(#orch-node-alt)" stroke="#7c3aed" stroke-width="1.2"/>
+  </g>
+  <text x="1040" y="286" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:600;fill:#ffffff">WASM</text>
+  <text x="1040" y="301" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;fill:#c4b5fd">Sandbox</text>
+
+  <!-- Section labels -->
+  <text x="600" y="478" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#10b981;letter-spacing:2px;opacity:0.6">MEMORY PIPELINE</text>
+  <text x="955" y="400" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;fill:#8b5cf6;letter-spacing:2px;opacity:0.6">TOOL DISPATCH</text>
+
+  <!-- Flow label -->
+  <text x="90" y="85" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;fill:#475569;letter-spacing:1px">INPUT</text>
+  <text x="1115" y="85" text-anchor="middle" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;fill:#475569;letter-spacing:1px">OUTPUT</text>
+</svg>
