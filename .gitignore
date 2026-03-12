@@ -44,3 +44,4 @@ Thumbs.db
 *.swo
 *~
 packages/whatsapp-gateway/acl.json
+.github/workflows/
