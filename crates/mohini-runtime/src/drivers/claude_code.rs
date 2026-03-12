@@ -8,6 +8,29 @@
 use crate::llm_driver::{CompletionRequest, CompletionResponse, LlmDriver, LlmError, StreamEvent};
 use async_trait::async_trait;
 use mohini_types::message::{ContentBlock, Role, StopReason, TokenUsage};
+
+/// Check if running as root via /proc (Linux) or uid check fallback.
+fn nix_is_root() -> bool {
+    #[cfg(unix)]
+    {
+        // SAFETY: getuid is a simple syscall with no side effects
+        unsafe { libc_getuid() == 0 }
+    }
+    #[cfg(not(unix))]
+    {
+        false
+    }
+}
+
+#[cfg(unix)]
+extern "C" {
+    fn geteuid() -> u32;
+}
+
+#[cfg(unix)]
+unsafe fn libc_getuid() -> u32 {
+    unsafe { geteuid() }
+}
 use serde::Deserialize;
 use tokio::io::AsyncBufReadExt;
 use tracing::{debug, warn};
@@ -205,7 +228,12 @@ impl LlmDriver for ClaudeCodeDriver {
             .arg("--output-format")
             .arg("json");
 
-        if self.skip_permissions {
+        // --dangerously-skip-permissions is rejected when running as root;
+        // `-p` (print mode) is already non-interactive so it's safe to omit.
+        let is_root = std::env::var("USER").map(|u| u == "root").unwrap_or(false)
+            || std::env::var("EUID").map(|e| e == "0").unwrap_or(false)
+            || nix_is_root();
+        if self.skip_permissions && !is_root {
             cmd.arg("--dangerously-skip-permissions");
         }
 
@@ -309,7 +337,10 @@ impl LlmDriver for ClaudeCodeDriver {
             .arg("stream-json")
             .arg("--verbose");
 
-        if self.skip_permissions {
+        let is_root = std::env::var("USER").map(|u| u == "root").unwrap_or(false)
+            || std::env::var("EUID").map(|e| e == "0").unwrap_or(false)
+            || nix_is_root();
+        if self.skip_permissions && !is_root {
             cmd.arg("--dangerously-skip-permissions");
         }
 

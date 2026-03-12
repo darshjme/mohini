@@ -252,17 +252,69 @@ pub fn resolve_attachments(
             continue; // Skip unknown attachments
         };
 
-        // Only process image types
-        if !content_type.starts_with("image/") {
-            continue;
-        }
-
         // Validate file_id is a UUID to prevent path traversal
         if uuid::Uuid::parse_str(&att.file_id).is_err() {
             continue;
         }
 
         let file_path = upload_dir.join(&att.file_id);
+
+        // Handle PDFs: extract text via pdftotext
+        if content_type == "application/pdf" {
+            let filename = if !att.filename.is_empty() {
+                att.filename.clone()
+            } else {
+                "document.pdf".to_string()
+            };
+            match std::process::Command::new("pdftotext")
+                .arg(&file_path)
+                .arg("-")
+                .output()
+            {
+                Ok(output) if output.status.success() => {
+                    let text = String::from_utf8_lossy(&output.stdout);
+                    let trimmed = text.trim();
+                    if !trimmed.is_empty() {
+                        blocks.push(mohini_types::message::ContentBlock::Text {
+                            text: format!(
+                                "[Attached PDF: {filename}]\n\n{trimmed}"
+                            ),
+                            provider_metadata: None,
+                        });
+                        tracing::info!(file_id = %att.file_id, filename = %filename, chars = trimmed.len(), "Extracted text from PDF attachment");
+                    } else {
+                        blocks.push(mohini_types::message::ContentBlock::Text {
+                            text: format!(
+                                "[Attached PDF: {filename}] (no extractable text — may be scanned/image-only)"
+                            ),
+                            provider_metadata: None,
+                        });
+                    }
+                }
+                Ok(output) => {
+                    let stderr = String::from_utf8_lossy(&output.stderr);
+                    tracing::warn!(file_id = %att.file_id, stderr = %stderr, "pdftotext failed for attachment");
+                    blocks.push(mohini_types::message::ContentBlock::Text {
+                        text: format!("[Attached PDF: {filename}] (text extraction failed)"),
+                        provider_metadata: None,
+                    });
+                }
+                Err(e) => {
+                    tracing::warn!(file_id = %att.file_id, error = %e, "pdftotext not available for PDF attachment");
+                    blocks.push(mohini_types::message::ContentBlock::Text {
+                        text: format!("[Attached PDF: {filename}] (pdftotext not installed — install poppler-utils)"),
+                        provider_metadata: None,
+                    });
+                }
+            }
+            continue;
+        }
+
+        // Handle images: base64-encode and send as image blocks
+        if !content_type.starts_with("image/") {
+            continue;
+        }
+
         match std::fs::read(&file_path) {
             Ok(data) => {
                 let b64 = base64::engine::general_purpose::STANDARD.encode(&data);

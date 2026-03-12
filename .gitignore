@@ -43,3 +43,4 @@ Thumbs.db
 *.swp
 *.swo
 *~
+packages/whatsapp-gateway/acl.json
