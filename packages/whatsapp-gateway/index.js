@@ -138,6 +138,9 @@ let statusMessage = 'Not started';
 let reconnectAttempt = 0; // exponential backoff counter
 const MAX_RECONNECT_DELAY = 60_000; // cap at 60s
 
+// LID → phone number cache (WhatsApp v6 uses @lid JIDs instead of @s.whatsapp.net)
+const lidToPhone = new Map();
+
 // ---------------------------------------------------------------------------
 // Baileys connection
 // ---------------------------------------------------------------------------
@@ -173,6 +176,16 @@ async function startConnection() {
 
   // Save credentials whenever they update
   sock.ev.on('creds.update', saveCreds);
+
+  // Map LID → real phone number when WhatsApp shares it
+  sock.ev.on('chats.phoneNumberShare', ({ lid, jid }) => {
+    if (lid && jid) {
+      const lidUser = lid.replace(/@.*$/, '');
+      const phone = '+' + jid.replace(/@.*$/, '');
+      lidToPhone.set(lidUser, phone);
+      console.log(`[gateway] LID mapping: ${lidUser} → ${phone}`);
+    }
+  });
 
   // Connection state changes (QR code, connected, disconnected)
   sock.ev.on('connection.update', async (update) => {
@@ -246,8 +259,27 @@ async function startConnection() {
       const content = msg.message;
       if (!content) continue;
 
-      // Extract phone number from JID (e.g. "1234567890@s.whatsapp.net" → "+1234567890")
-      const phone = '+' + sender.replace(/@.*$/, '');
+      // Extract phone number from JID
+      // Baileys v6 uses LID JIDs (@lid) which are internal IDs, not real phone numbers.
+      // The real phone JID is in msg.key.senderPn (e.g. "919001009040@s.whatsapp.net")
+      // or msg.key.participantPn for group messages.
+      let phone;
+      const isLid = sender.endsWith('@lid');
+      if (isLid) {
+        // Try to get real phone from senderPn / participantPn
+        const pnJid = msg.key.senderPn || msg.key.participantPn || '';
+        if (pnJid) {
+          phone = '+' + pnJid.replace(/@.*$/, '');
+          // Cache LID → phone mapping for future use
+          lidToPhone.set(sender.replace(/@.*$/, ''), phone);
+        } else {
+          // Check our cache
+          const lidUser = sender.replace(/@.*$/, '');
+          phone = lidToPhone.get(lidUser) || ('+' + lidUser);
+        }
+      } else {
+        phone = '+' + sender.replace(/@.*$/, '');
+      }
       const pushName = msg.pushName || phone;
 
       // ---------------------------------------------------------------
