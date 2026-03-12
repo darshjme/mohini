@@ -13,6 +13,70 @@ const path = require('node:path');
 const PORT = parseInt(process.env.WHATSAPP_GATEWAY_PORT || '3009', 10);
 const MOHINI_URL = (process.env.MOHINI_URL || 'http://127.0.0.1:4200').replace(/\/+$/, '');
 const DEFAULT_AGENT = process.env.MOHINI_DEFAULT_AGENT || 'assistant';
+const OWNER_PHONE = process.env.OWNER_PHONE || '+47227493949570';
+
+// ---------------------------------------------------------------------------
+// Agent routing — map @mentions to agent IDs (populated on startup)
+// ---------------------------------------------------------------------------
+const AGENT_ALIASES = {
+  '@designer': 'gsd-designer',
+  '@design': 'gsd-designer',
+  '@gsd': 'gsd-designer',
+  '@marketer': 'marketing-strategist',
+  '@marketing': 'marketing-strategist',
+  '@market': 'marketing-strategist',
+  '@mohini': null,    // null = use DEFAULT_AGENT
+  '@assistant': null,
+};
+
+// Cache: agent name → agent UUID (populated from /api/agents)
+const agentIdCache = {};
+
+async function resolveAgentId(nameOrId) {
+  // If it's already a UUID, return it
+  if (/^[0-9a-f-]{36}$/.test(nameOrId)) return nameOrId;
+  // Check cache
+  if (agentIdCache[nameOrId]) return agentIdCache[nameOrId];
+  // Fetch from API
+  try {
+    const agents = await fetchJson(`${MOHINI_URL}/api/agents`);
+    if (Array.isArray(agents)) {
+      for (const a of agents) {
+        agentIdCache[a.name] = a.id;
+      }
+    }
+  } catch (e) {
+    console.error('[gateway] Failed to fetch agents:', e.message);
+  }
+  return agentIdCache[nameOrId] || nameOrId;
+}
+
+function fetchJson(url) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(url);
+    http.get({ hostname: u.hostname, port: u.port, path: u.pathname, timeout: 5000 }, (res) => {
+      let body = '';
+      res.on('data', c => body += c);
+      res.on('end', () => { try { resolve(JSON.parse(body)); } catch { reject(new Error('Bad JSON')); } });
+    }).on('error', reject);
+  });
+}
+
+// Parse agent mention from message: "@designer fix the logo" → { agent: "gsd-designer", text: "fix the logo" }
+function parseAgentMention(text) {
+  if (!text) return { agent: null, text };
+  const match = text.match(/^(@\w+)\s*([\s\S]*)/);
+  if (match) {
+    const alias = match[1].toLowerCase();
+    if (alias in AGENT_ALIASES) {
+      return {
+        agent: AGENT_ALIASES[alias],  // null means default
+        text: match[2].trim() || match[1],  // if no text after mention, send the mention itself
+      };
+    }
+  }
+  return { agent: null, text };
+}
 
 // ---------------------------------------------------------------------------
 // Access control — only allowed phone numbers can interact with Mohini
@@ -185,6 +249,19 @@ async function startConnection() {
       const pushName = msg.pushName || phone;
 
       // ---------------------------------------------------------------
+      // Admin commands (owner only, processed before ACL check)
+      // ---------------------------------------------------------------
+      const rawText = content.conversation || content.extendedTextMessage?.text || '';
+      if (phone === OWNER_PHONE && rawText.startsWith('/')) {
+        const adminResult = await handleAdminCommand(rawText.trim(), sender);
+        if (adminResult) {
+          // Admin command was handled — send response and skip normal processing
+          if (sock) await sock.sendMessage(sender, { text: adminResult }).catch(() => {});
+          continue;
+        }
+      }
+
+      // ---------------------------------------------------------------
       // Access control — reject unauthorized senders
       // ---------------------------------------------------------------
       if (!isAllowed(phone)) {
@@ -281,20 +358,31 @@ async function startConnection() {
           } catch (_) {}
         }, 20_000);
 
+        // Agent routing — check for @mention prefix
+        const parsed = parseAgentMention(messageText);
+        const targetAgentName = parsed.agent || null;  // null = default
+        const routedText = parsed.agent !== null ? parsed.text : messageText;
+        let targetAgent = DEFAULT_AGENT;
+
+        if (targetAgentName) {
+          targetAgent = await resolveAgentId(targetAgentName);
+          console.log(`[gateway] Routed to agent: ${targetAgentName} (${targetAgent})`);
+        }
+
         // Smart model routing based on task complexity
-        const tier = classifyComplexity(messageText, attachments);
-        await switchModel(tier);
+        const tier = classifyComplexity(routedText, attachments);
+        await switchModel(tier, targetAgent);
 
         // Try primary (Anthropic), fall back to Kimi K2 on failure
         let response;
         try {
-          response = await forwardToMohini(messageText, phone, pushName, attachments);
+          response = await forwardToMohini(routedText, phone, pushName, attachments, targetAgent);
         } catch (primaryErr) {
           console.log(`[gateway] Primary model failed (${primaryErr.message}), falling back to Kimi K2...`);
-          await switchModel('kimi-k2');
-          response = await forwardToMohini(messageText, phone, pushName, attachments);
+          await switchModel('kimi-k2', targetAgent);
+          response = await forwardToMohini(routedText, phone, pushName, attachments, targetAgent);
           // Switch back to anthropic for next message
-          await switchModel(tier).catch(() => {});
+          await switchModel(tier, targetAgent).catch(() => {});
         }
 
         // Stop typing indicator
@@ -317,6 +405,80 @@ async function startConnection() {
       }
     }
   });
+}
+
+// ---------------------------------------------------------------------------
+// Admin commands — owner can manage ACL and agents via WhatsApp
+// ---------------------------------------------------------------------------
+async function handleAdminCommand(text, sender) {
+  const parts = text.split(/\s+/);
+  const cmd = parts[0].toLowerCase();
+
+  switch (cmd) {
+    case '/allow': {
+      const phones = parts.slice(1).filter(p => p.startsWith('+'));
+      if (phones.length === 0) return 'Usage: /allow +1234567890 [+another...]';
+      for (const p of phones) acl.allowlist.add(p);
+      saveAcl(acl);
+      console.log(`[gateway] ACL: owner allowed ${phones.join(', ')}`);
+      return `Allowed: ${phones.join(', ')}\nCurrent allowlist: ${[...acl.allowlist].join(', ')}`;
+    }
+
+    case '/deny':
+    case '/remove':
+    case '/block': {
+      const phones = parts.slice(1).filter(p => p.startsWith('+'));
+      if (phones.length === 0) return 'Usage: /deny +1234567890';
+      for (const p of phones) {
+        acl.allowlist.delete(p);
+        if (acl.mode === 'blocklist') acl.blocklist.add(p);
+      }
+      saveAcl(acl);
+      console.log(`[gateway] ACL: owner denied ${phones.join(', ')}`);
+      return `Denied: ${phones.join(', ')}\nCurrent allowlist: ${[...acl.allowlist].join(', ')}`;
+    }
+
+    case '/allowlist':
+    case '/acl':
+    case '/users': {
+      const list = [...acl.allowlist];
+      return `ACL: ${acl.enabled ? 'enabled' : 'disabled'} (${acl.mode})\nAllowlist (${list.length}): ${list.join(', ') || '(empty)'}`;
+    }
+
+    case '/agents': {
+      try {
+        const agents = await fetchJson(`${MOHINI_URL}/api/agents`);
+        if (!Array.isArray(agents) || agents.length === 0) return 'No agents found.';
+        const lines = agents.map(a => `- *${a.name}* (${a.id.slice(0, 8)}...)`);
+        return `Active agents:\n${lines.join('\n')}\n\nUse @designer, @marketer, or @mohini to route messages.`;
+      } catch (e) {
+        return `Failed to list agents: ${e.message}`;
+      }
+    }
+
+    case '/status': {
+      const health = await fetchJson(`${MOHINI_URL}/api/health`).catch(() => null);
+      const connected = connStatus === 'connected';
+      return `Mohini Status:\n- WhatsApp: ${connected ? 'connected' : connStatus}\n- Daemon: ${health ? 'running' : 'down'}\n- Model tier: ${currentTier}\n- ACL: ${acl.enabled ? 'enabled' : 'disabled'} (${[...acl.allowlist].length} allowed)`;
+    }
+
+    case '/help': {
+      return `*Mohini Admin Commands:*\n\n` +
+        `/allow +number — Add user to allowlist\n` +
+        `/deny +number — Remove user from allowlist\n` +
+        `/acl — View current allowlist\n` +
+        `/agents — List active agents\n` +
+        `/status — System status\n` +
+        `/help — This message\n\n` +
+        `*Agent Routing:*\n` +
+        `@designer <msg> — Harvard GSD design expert\n` +
+        `@marketer <msg> — Harvard HBS marketing strategist\n` +
+        `@mohini <msg> — Default assistant (or just send normally)`;
+    }
+
+    default:
+      return null;  // Not an admin command — continue normal processing
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -390,7 +552,8 @@ function uploadToMohini(buffer, contentType, filename) {
 // ---------------------------------------------------------------------------
 // Forward incoming message to Mohini API, return agent response
 // ---------------------------------------------------------------------------
-function forwardToMohini(text, phone, pushName, attachments) {
+function forwardToMohini(text, phone, pushName, attachments, agentId) {
+  const agent = agentId || DEFAULT_AGENT;
   return new Promise((resolve, reject) => {
     const payload = JSON.stringify({
       message: text,
@@ -402,7 +565,7 @@ function forwardToMohini(text, phone, pushName, attachments) {
       },
     });
 
-    const url = new URL(`${MOHINI_URL}/api/agents/${encodeURIComponent(DEFAULT_AGENT)}/message`);
+    const url = new URL(`${MOHINI_URL}/api/agents/${encodeURIComponent(agent)}/message`);
 
     const req = http.request(
       {
@@ -484,7 +647,8 @@ function classifyComplexity(text, attachments) {
   return 'haiku';
 }
 
-function switchModel(tier) {
+function switchModel(tier, agentId) {
+  const agent = agentId || DEFAULT_AGENT;
   const target = MODEL_MAP[tier];
   if (!target) return Promise.resolve();
   if (tier === currentTier) return Promise.resolve();
@@ -492,7 +656,7 @@ function switchModel(tier) {
   return new Promise((resolve, reject) => {
     const payload = JSON.stringify(target);
     const url = new URL(
-      `${MOHINI_URL}/api/agents/${encodeURIComponent(DEFAULT_AGENT)}/model`
+      `${MOHINI_URL}/api/agents/${encodeURIComponent(agent)}/model`
     );
     const req = http.request({
       hostname: url.hostname,
