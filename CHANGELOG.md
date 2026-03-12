@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to OpenFang will be documented in this file.
+All notable changes to Mohini will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -81,14 +81,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Canvas rendering with iframe sandbox and CSP support
 - Session switcher dropdown in chat header
 - 6-step first-run setup wizard with provider API key help (12 providers)
-- Skill marketplace with 4 tabs (Installed, ClawHub, MCP Servers, Quick Start)
+- Skill marketplace with 4 tabs (Installed, SkillHub, MCP Servers, Quick Start)
 - Copy-to-clipboard on messages, message timestamps
 - Visual workflow builder with drag-and-drop canvas
 
 #### Client SDKs
-- JavaScript SDK (`@openfang/sdk`): full REST API client with streaming, TypeScript declarations
-- Python client SDK (`openfang_client`): zero-dependency stdlib client with SSE streaming
-- Python agent SDK (`openfang_sdk`): decorator-based framework for writing Python agents
+- JavaScript SDK (`@mohini/sdk`): full REST API client with streaming, TypeScript declarations
+- Python client SDK (`mohini_client`): zero-dependency stdlib client with SSE streaming
+- Python agent SDK (`mohini_sdk`): decorator-based framework for writing Python agents
 - Usage examples for both languages (basic + streaming)
 
 #### CLI
@@ -101,8 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 60 bundled skills across 14 categories
 - Skill registry with TOML manifests
 - 4 runtimes: Python, Node.js, WASM, PromptOnly
-- FangHub marketplace with search/install
-- ClawHub client for OpenClaw skill compatibility
+- SkillHub marketplace with search/install
+- SkillHub client for LegacyImport skill compatibility
 - SKILL.md parser with auto-conversion
 - SHA256 checksum verification
 - Prompt injection scanning on skill content
@@ -134,11 +134,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Quota enforcement with hourly windows
 
 #### Interoperability
-- OpenClaw migration engine (YAML/JSON5 to TOML)
+- LegacyImport migration engine (YAML/JSON5 to TOML)
 - MCP client (JSON-RPC 2.0 over stdio/SSE, tool namespacing)
-- MCP server (exposes OpenFang tools via MCP protocol)
+- MCP server (exposes Mohini tools via MCP protocol)
 - A2A protocol client and server
-- Tool name compatibility mappings (21 OpenClaw tool names)
+- Tool name compatibility mappings (21 LegacyImport tool names)
 
 #### Infrastructure
 - Multi-stage Dockerfile (debian:bookworm-slim runtime)
@@ -163,4 +163,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prometheus metrics for monitoring
 - Config hot-reload without restart
 
-[0.1.0]: https://github.com/RightNow-AI/openfang/releases/tag/v0.1.0
+[0.1.0]: https://github.com/mohini-ai/mohini/releases/tag/v0.1.0

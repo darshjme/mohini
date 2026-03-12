@@ -1,6 +1,6 @@
 # Skill Development
 
-Skills are pluggable tool bundles that extend agent capabilities in OpenFang. A skill packages one or more tools with their implementation, letting agents do things that built-in tools do not cover. This guide covers skill creation, the manifest format, Python and WASM runtimes, publishing to FangHub, and CLI management.
+Skills are pluggable tool bundles that extend agent capabilities in Mohini. A skill packages one or more tools with their implementation, letting agents do things that built-in tools do not cover. This guide covers skill creation, the manifest format, Python and WASM runtimes, publishing to SkillHub, and CLI management.
 
 ## Table of Contents
 
@@ -10,9 +10,9 @@ Skills are pluggable tool bundles that extend agent capabilities in OpenFang. A 
 - [WASM Skills](#wasm-skills)
 - [Skill Requirements](#skill-requirements)
 - [Installing Skills](#installing-skills)
-- [Publishing to FangHub](#publishing-to-fanghub)
+- [Publishing to SkillHub](#publishing-to-skillhub)
 - [CLI Commands](#cli-commands)
-- [OpenClaw Compatibility](#openclaw-compatibility)
+- [LegacyImport Compatibility](#legacy_import-compatibility)
 - [Best Practices](#best-practices)
 
 ---
@@ -24,7 +24,7 @@ A skill consists of:
 1. A **manifest** (`skill.toml` or `SKILL.md`) that declares metadata, runtime type, provided tools, and requirements.
 2. An **entry point** (Python script, WASM module, Node.js module, or prompt-only Markdown) that implements the tool logic.
 
-Skills are installed to `~/.openfang/skills/` and made available to agents through the skill registry. OpenFang ships with **60 bundled skills** that are compiled into the binary and available immediately.
+Skills are installed to `~/.mohini/skills/` and made available to agents through the skill registry. Mohini ships with **60 bundled skills** that are compiled into the binary and available immediately.
 
 ### Supported Runtimes
 
@@ -32,13 +32,13 @@ Skills are installed to `~/.openfang/skills/` and made available to agents throu
 |---------|----------|-----------|-------|
 | `python` | Python 3.8+ | No (subprocess with `env_clear()`) | Easiest to write. Uses stdin/stdout JSON protocol. |
 | `wasm` | Rust, C, Go, etc. | Yes (Wasmtime dual metering) | Fully sandboxed. Best for security-sensitive tools. |
-| `node` | JavaScript/TypeScript | No (subprocess) | OpenClaw compatibility. |
+| `node` | JavaScript/TypeScript | No (subprocess) | LegacyImport compatibility. |
 | `prompt_only` | Markdown | N/A | Expert knowledge injected into system prompt. No code execution. |
 | `builtin` | Rust | N/A | Compiled into the binary. For core tools only. |
 
 ### 60 Bundled Skills
 
-OpenFang includes 60 expert knowledge skills compiled into the binary (no installation needed):
+Mohini includes 60 expert knowledge skills compiled into the binary (no installation needed):
 
 | Category | Skills |
 |----------|--------|
@@ -61,7 +61,7 @@ These are `prompt_only` skills using the SKILL.md format -- expert knowledge tha
 
 ### SKILL.md Format
 
-The SKILL.md format (also used by OpenClaw) uses YAML frontmatter and a Markdown body:
+The SKILL.md format (also used by LegacyImport) uses YAML frontmatter and a Markdown body:
 
 ```markdown
 ---
@@ -102,7 +102,7 @@ my-skill/
 name = "web-summarizer"
 version = "0.1.0"
 description = "Summarizes any web page into bullet points"
-author = "openfang-community"
+author = "mohini-community"
 license = "MIT"
 tags = ["web", "summarizer", "research"]
 
@@ -136,7 +136,7 @@ capabilities = ["NetConnect(*)"]
 | `description` | string | No | Human-readable description |
 | `author` | string | No | Author name or organization |
 | `license` | string | No | License identifier (e.g., `"MIT"`, `"Apache-2.0"`) |
-| `tags` | array | No | Tags for discovery on FangHub |
+| `tags` | array | No | Tags for discovery on SkillHub |
 
 #### [runtime] -- Execution Configuration
 
@@ -170,7 +170,7 @@ Python skills are the simplest to write. They run as subprocesses and communicat
 
 ### Protocol
 
-1. OpenFang sends a JSON payload to the script's stdin:
+1. Mohini sends a JSON payload to the script's stdin:
 
 ```json
 {
@@ -205,7 +205,7 @@ If an error occurs, return an error object:
 
 ```python
 #!/usr/bin/env python3
-"""OpenFang skill: web-summarizer"""
+"""Mohini skill: web-summarizer"""
 import json
 import sys
 import urllib.request
@@ -213,7 +213,7 @@ import urllib.request
 
 def summarize_url(url: str) -> str:
     """Fetch a URL and return a basic summary."""
-    req = urllib.request.Request(url, headers={"User-Agent": "OpenFang-Skill/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Mohini-Skill/1.0"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         content = resp.read().decode("utf-8", errors="replace")
 
@@ -226,7 +226,7 @@ def extract_links(url: str) -> str:
     """Extract all links from a web page."""
     import re
 
-    req = urllib.request.Request(url, headers={"User-Agent": "OpenFang-Skill/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Mohini-Skill/1.0"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         content = resp.read().decode("utf-8", errors="replace")
 
@@ -258,13 +258,13 @@ if __name__ == "__main__":
     main()
 ```
 
-### Using the OpenFang Python SDK
+### Using the Mohini Python SDK
 
-For more advanced skills, use the Python SDK (`sdk/python/openfang_sdk.py`):
+For more advanced skills, use the Python SDK (`sdk/python/mohini_sdk.py`):
 
 ```python
 #!/usr/bin/env python3
-from openfang_sdk import SkillHandler
+from mohini_sdk import SkillHandler
 
 handler = SkillHandler()
 
@@ -374,29 +374,29 @@ capabilities = ["NetConnect(*)", "ShellExec(python3)"]
 ### From a Local Directory
 
 ```bash
-openfang skill install /path/to/my-skill
+mohini skill install /path/to/my-skill
 ```
 
-This reads the `skill.toml`, validates the manifest, and copies the skill to `~/.openfang/skills/my-skill/`.
+This reads the `skill.toml`, validates the manifest, and copies the skill to `~/.mohini/skills/my-skill/`.
 
-### From FangHub
+### From SkillHub
 
 ```bash
-openfang skill install web-summarizer
+mohini skill install web-summarizer
 ```
 
-This downloads the skill from the FangHub marketplace registry.
+This downloads the skill from the SkillHub marketplace registry.
 
 ### From a Git Repository
 
 ```bash
-openfang skill install https://github.com/user/openfang-skill-example.git
+mohini skill install https://github.com/user/mohini-skill-example.git
 ```
 
 ### Listing Installed Skills
 
 ```bash
-openfang skill list
+mohini skill list
 ```
 
 Output:
@@ -414,14 +414,14 @@ code-formatter       1.0.0      1        Format code in 20+ languages
 ### Removing Skills
 
 ```bash
-openfang skill remove web-summarizer
+mohini skill remove web-summarizer
 ```
 
 ---
 
-## Publishing to FangHub
+## Publishing to SkillHub
 
-FangHub is the community skill marketplace for OpenFang.
+SkillHub is the community skill marketplace for Mohini.
 
 ### Preparing Your Skill
 
@@ -431,14 +431,14 @@ FangHub is the community skill marketplace for OpenFang.
 3. Test your skill locally:
 
 ```bash
-openfang skill install /path/to/my-skill
+mohini skill install /path/to/my-skill
 # Spawn an agent with the skill's tools and test them
 ```
 
-### Searching FangHub
+### Searching SkillHub
 
 ```bash
-openfang skill search "web scraping"
+mohini skill search "web scraping"
 ```
 
 Output:
@@ -448,22 +448,22 @@ Skills matching "web scraping":
 
   web-summarizer (42 stars)
     Summarizes any web page into bullet points
-    https://fanghub.dev/skills/web-summarizer
+    https://skillhub.dev/skills/web-summarizer
 
   page-scraper (28 stars)
     Extract structured data from web pages
-    https://fanghub.dev/skills/page-scraper
+    https://skillhub.dev/skills/page-scraper
 ```
 
 ### Publishing
 
-Publishing to FangHub will be available via:
+Publishing to SkillHub will be available via:
 
 ```bash
-openfang skill publish
+mohini skill publish
 ```
 
-This validates the manifest, packages the skill, and uploads it to the FangHub registry.
+This validates the manifest, packages the skill, and uploads it to the SkillHub registry.
 
 ---
 
@@ -472,26 +472,26 @@ This validates the manifest, packages the skill, and uploads it to the FangHub r
 ### Full Skill Command Reference
 
 ```bash
-# Install a skill (local directory, FangHub name, or git URL)
-openfang skill install <source>
+# Install a skill (local directory, SkillHub name, or git URL)
+mohini skill install <source>
 
 # List all installed skills
-openfang skill list
+mohini skill list
 
 # Remove an installed skill
-openfang skill remove <name>
+mohini skill remove <name>
 
-# Search FangHub for skills
-openfang skill search <query>
+# Search SkillHub for skills
+mohini skill search <query>
 
 # Create a new skill scaffold (interactive)
-openfang skill create
+mohini skill create
 ```
 
 ### Creating a Skill Scaffold
 
 ```bash
-openfang skill create
+mohini skill create
 ```
 
 This interactive command prompts for:
@@ -502,7 +502,7 @@ This interactive command prompts for:
 It generates:
 
 ```
-~/.openfang/skills/my-skill/
+~/.mohini/skills/my-skill/
   skill.toml        # Pre-filled manifest
   src/
     main.py         # Starter entry point (for Python)
@@ -518,7 +518,7 @@ Reference skills in the agent manifest's `skills` field:
 name = "my-assistant"
 version = "0.1.0"
 description = "An assistant with extra skills"
-author = "openfang"
+author = "mohini"
 module = "builtin:chat"
 skills = ["web-summarizer", "data-analyzer"]
 
@@ -536,22 +536,22 @@ The kernel loads skill tools and prompts at agent spawn time, merging them with 
 
 ---
 
-## OpenClaw Compatibility
+## LegacyImport Compatibility
 
-OpenFang can install and run OpenClaw-format skills. The skill installer auto-detects OpenClaw skills (by looking for `package.json` + `index.ts`/`index.js`) and converts them.
+Mohini can install and run LegacyImport-format skills. The skill installer auto-detects LegacyImport skills (by looking for `package.json` + `index.ts`/`index.js`) and converts them.
 
 ### Automatic Conversion
 
 ```bash
-openfang skill install /path/to/openclaw-skill
+mohini skill install /path/to/legacy_import-skill
 ```
 
-If the directory contains an OpenClaw-style skill (Node.js package), OpenFang:
+If the directory contains an LegacyImport-style skill (Node.js package), Mohini:
 
-1. Detects the OpenClaw format.
+1. Detects the LegacyImport format.
 2. Generates a `skill.toml` manifest from `package.json`.
-3. Maps tool names to OpenFang conventions.
-4. Copies the skill to the OpenFang skills directory.
+3. Maps tool names to Mohini conventions.
+4. Copies the skill to the Mohini skills directory.
 
 ### Manual Conversion
 
@@ -559,9 +559,9 @@ If automatic conversion does not work, create a `skill.toml` manually:
 
 ```toml
 [skill]
-name = "my-openclaw-skill"
+name = "my-legacy_import-skill"
 version = "1.0.0"
-description = "Converted from OpenClaw"
+description = "Converted from LegacyImport"
 
 [runtime]
 type = "node"
@@ -576,10 +576,10 @@ input_schema = { type = "object", properties = { input = { type = "string" } }, 
 Place this alongside the existing `index.js`/`index.ts` and install:
 
 ```bash
-openfang skill install /path/to/skill-directory
+mohini skill install /path/to/skill-directory
 ```
 
-Skills imported via `openfang migrate --from openclaw` are also scanned and reported in the migration report, with instructions for manual reinstallation.
+Skills imported via `mohini migrate --from legacy_import` are also scanned and reported in the migration report, with instructions for manual reinstallation.
 
 ---
 

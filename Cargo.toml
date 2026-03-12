@@ -1,19 +1,19 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/openfang-types",
-    "crates/openfang-memory",
-    "crates/openfang-runtime",
-    "crates/openfang-wire",
-    "crates/openfang-api",
-    "crates/openfang-kernel",
-    "crates/openfang-cli",
-    "crates/openfang-channels",
-    "crates/openfang-migrate",
-    "crates/openfang-skills",
-    "crates/openfang-desktop",
-    "crates/openfang-hands",
-    "crates/openfang-extensions",
+    "crates/mohini-types",
+    "crates/mohini-memory",
+    "crates/mohini-runtime",
+    "crates/mohini-wire",
+    "crates/mohini-api",
+    "crates/mohini-kernel",
+    "crates/mohini-cli",
+    "crates/mohini-channels",
+    "crates/mohini-migrate",
+    "crates/mohini-skills",
+    "crates/mohini-desktop",
+    "crates/mohini-hands",
+    "crates/mohini-extensions",
     "xtask",
 ]
 
@@ -21,7 +21,7 @@ members = [
 version = "0.3.49"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-repository = "https://github.com/RightNow-AI/openfang"
+repository = "https://github.com/mohini-ai/mohini"
 rust-version = "1.75"
 
 [workspace.dependencies]

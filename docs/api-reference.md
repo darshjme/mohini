@@ -1,8 +1,8 @@
 # API Reference
 
-OpenFang exposes a REST API, WebSocket endpoints, and SSE streaming when the daemon is running. The default listen address is `http://127.0.0.1:4200`.
+Mohini exposes a REST API, WebSocket endpoints, and SSE streaming when the daemon is running. The default listen address is `http://127.0.0.1:4200`.
 
-All responses include security headers (CSP, X-Frame-Options, X-Content-Type-Options, HSTS) and are protected by a GCRA cost-aware rate limiter with per-IP token bucket tracking and automatic stale entry cleanup. OpenFang implements 16 security systems including Merkle audit trails, taint tracking, WASM dual metering, Ed25519 manifest signing, SSRF protection, subprocess sandboxing, and secret zeroization.
+All responses include security headers (CSP, X-Frame-Options, X-Content-Type-Options, HSTS) and are protected by a GCRA cost-aware rate limiter with per-IP token bucket tracking and automatic stale entry cleanup. Mohini implements 16 security systems including Merkle audit trails, taint tracking, WASM dual metering, Ed25519 manifest signing, SSRF protection, subprocess sandboxing, and secret zeroization.
 
 ## Table of Contents
 
@@ -17,7 +17,7 @@ All responses include security headers (CSP, X-Frame-Options, X-Content-Type-Opt
 - [Model Catalog Endpoints](#model-catalog-endpoints)
 - [Provider Configuration Endpoints](#provider-configuration-endpoints)
 - [Skills & Marketplace Endpoints](#skills--marketplace-endpoints)
-- [ClawHub Endpoints](#clawhub-endpoints)
+- [SkillHub Endpoints](#skillhub-endpoints)
 - [MCP & A2A Protocol Endpoints](#mcp--a2a-protocol-endpoints)
 - [Audit & Security Endpoints](#audit--security-endpoints)
 - [Usage & Analytics Endpoints](#usage--analytics-endpoints)
@@ -40,7 +40,7 @@ Authorization: Bearer <your-api-key>
 
 ### Setting the API Key
 
-Add to `~/.openfang/config.toml`:
+Add to `~/.mohini/config.toml`:
 
 ```toml
 api_key = "your-secret-api-key"
@@ -578,12 +578,12 @@ List available agent templates from the agents directory.
     {
       "name": "hello-world",
       "description": "A friendly greeting agent",
-      "path": "/home/user/.openfang/agents/hello-world/agent.toml"
+      "path": "/home/user/.mohini/agents/hello-world/agent.toml"
     },
     {
       "name": "coder",
       "description": "Expert coding assistant",
-      "path": "/home/user/.openfang/agents/coder/agent.toml"
+      "path": "/home/user/.mohini/agents/coder/agent.toml"
     }
   ],
   "total": 30
@@ -666,7 +666,7 @@ Detailed kernel status including all agents.
 {
   "status": "running",
   "agent_count": 2,
-  "data_dir": "/home/user/.openfang/data",
+  "data_dir": "/home/user/.mohini/data",
   "default_provider": "groq",
   "default_model": "llama-3.3-70b-versatile",
   "uptime_seconds": 3600,
@@ -691,7 +691,7 @@ Build and version information.
 
 ```json
 {
-  "name": "openfang",
+  "name": "mohini",
   "version": "0.1.0",
   "build_date": "2025-01-15",
   "git_sha": "abc1234",
@@ -767,7 +767,7 @@ Retrieve current kernel configuration (secrets are redacted).
 
 ```json
 {
-  "data_dir": "/home/user/.openfang/data",
+  "data_dir": "/home/user/.mohini/data",
   "default_provider": "groq",
   "default_model": "llama-3.3-70b-versatile",
   "listen_addr": "127.0.0.1:4200",
@@ -779,7 +779,7 @@ Retrieve current kernel configuration (secrets are redacted).
 
 ### GET /api/peers
 
-List OFP (OpenFang Protocol) wire peers and their connection status.
+List MMP (Mohini Protocol) wire peers and their connection status.
 
 **Response** `200 OK`:
 
@@ -834,7 +834,7 @@ Delete a specific session and its conversation history.
 
 ## Model Catalog Endpoints
 
-OpenFang maintains a built-in catalog of 51+ models across 20 providers. These endpoints allow you to browse available models, check provider authentication status, and resolve model aliases.
+Mohini maintains a built-in catalog of 51+ models across 20 providers. These endpoints allow you to browse available models, check provider authentication status, and resolve model aliases.
 
 ### GET /api/models
 
@@ -1126,13 +1126,13 @@ Create a new skill from a template.
 {
   "status": "created",
   "skill": "my-skill",
-  "path": "/home/user/.openfang/skills/my-skill"
+  "path": "/home/user/.mohini/skills/my-skill"
 }
 ```
 
 ### GET /api/marketplace/search
 
-Search the FangHub marketplace for community skills.
+Search the SkillHub marketplace for community skills.
 
 **Query Parameters:**
 - `q` (required): Search query string
@@ -1158,13 +1158,13 @@ Search the FangHub marketplace for community skills.
 
 ---
 
-## ClawHub Endpoints
+## SkillHub Endpoints
 
-Browse and install skills from ClawHub (OpenClaw ecosystem compatibility). All installations go through the full security pipeline: SHA256 verification, SKILL.md security scanning, and trust boundary enforcement.
+Browse and install skills from SkillHub (LegacyImport ecosystem compatibility). All installations go through the full security pipeline: SHA256 verification, SKILL.md security scanning, and trust boundary enforcement.
 
-### GET /api/clawhub/search
+### GET /api/skillhub/search
 
-Search ClawHub for compatible skills.
+Search SkillHub for compatible skills.
 
 **Query Parameters:**
 - `q` (required): Search query
@@ -1178,7 +1178,7 @@ Search ClawHub for compatible skills.
       "slug": "data-pipeline",
       "name": "Data Pipeline",
       "description": "ETL data pipeline automation",
-      "author": "clawhub-community",
+      "author": "skillhub-community",
       "version": "1.2.0"
     }
   ],
@@ -1186,9 +1186,9 @@ Search ClawHub for compatible skills.
 }
 ```
 
-### GET /api/clawhub/browse
+### GET /api/skillhub/browse
 
-Browse ClawHub categories.
+Browse SkillHub categories.
 
 **Query Parameters:**
 - `category` (optional): Filter by category
@@ -1211,9 +1211,9 @@ Browse ClawHub categories.
 }
 ```
 
-### GET /api/clawhub/skill/{slug}
+### GET /api/skillhub/skill/{slug}
 
-Get detailed information about a specific ClawHub skill.
+Get detailed information about a specific SkillHub skill.
 
 **Response** `200 OK`:
 
@@ -1222,7 +1222,7 @@ Get detailed information about a specific ClawHub skill.
   "slug": "data-pipeline",
   "name": "Data Pipeline",
   "description": "ETL data pipeline automation",
-  "author": "clawhub-community",
+  "author": "skillhub-community",
   "version": "1.2.0",
   "runtime": "python",
   "readme": "# Data Pipeline\n\nAutomated ETL...",
@@ -1230,9 +1230,9 @@ Get detailed information about a specific ClawHub skill.
 }
 ```
 
-### POST /api/clawhub/install
+### POST /api/skillhub/install
 
-Install a skill from ClawHub. Downloads, verifies SHA256 checksum, scans for prompt injection, and converts SKILL.md format to OpenFang skill.toml automatically.
+Install a skill from SkillHub. Downloads, verifies SHA256 checksum, scans for prompt injection, and converts SKILL.md format to Mohini skill.toml automatically.
 
 **Request Body**:
 
@@ -1257,7 +1257,7 @@ Install a skill from ClawHub. Downloads, verifies SHA256 checksum, scans for pro
 
 ## MCP & A2A Protocol Endpoints
 
-OpenFang supports both Model Context Protocol (MCP) for tool interoperability and Agent-to-Agent (A2A) protocol for cross-system agent communication.
+Mohini supports both Model Context Protocol (MCP) for tool interoperability and Agent-to-Agent (A2A) protocol for cross-system agent communication.
 
 ### GET /api/mcp/servers
 
@@ -1292,7 +1292,7 @@ List configured and connected MCP servers with their available tools.
 
 ### POST /mcp
 
-MCP HTTP transport endpoint. Accepts JSON-RPC 2.0 requests and exposes OpenFang tools via the MCP protocol to external clients.
+MCP HTTP transport endpoint. Accepts JSON-RPC 2.0 requests and exposes Mohini tools via the MCP protocol to external clients.
 
 **Request Body** (JSON-RPC 2.0):
 
@@ -1335,8 +1335,8 @@ A2A agent card discovery endpoint. Returns the server's A2A agent card, which de
 
 ```json
 {
-  "name": "OpenFang",
-  "description": "OpenFang Agent Operating System",
+  "name": "Mohini",
+  "description": "Mohini Agent Operating System",
   "url": "http://127.0.0.1:4200",
   "version": "0.1.0",
   "capabilities": {
@@ -1443,7 +1443,7 @@ Cancel a running A2A task.
 
 ## Audit & Security Endpoints
 
-OpenFang maintains a Merkle hash chain audit trail for all security-relevant operations. These endpoints allow inspection and verification of the audit log integrity.
+Mohini maintains a Merkle hash chain audit trail for all security-relevant operations. These endpoints allow inspection and verification of the audit log integrity.
 
 ### GET /api/audit/recent
 
@@ -1609,11 +1609,11 @@ Get usage breakdown by model.
 
 ## Migration Endpoints
 
-Import data from OpenClaw or other agent frameworks. The migration engine handles YAML-to-TOML manifest conversion, SKILL.md parsing, and session history import.
+Import data from LegacyImport or other agent frameworks. The migration engine handles YAML-to-TOML manifest conversion, SKILL.md parsing, and session history import.
 
 ### GET /api/migrate/detect
 
-Auto-detect migration sources on the system. Scans common locations for OpenClaw installations, config files, and agent data.
+Auto-detect migration sources on the system. Scans common locations for LegacyImport installations, config files, and agent data.
 
 **Response** `200 OK`:
 
@@ -1621,8 +1621,8 @@ Auto-detect migration sources on the system. Scans common locations for OpenClaw
 {
   "sources": [
     {
-      "type": "openclaw",
-      "path": "/home/user/.openclaw",
+      "type": "legacy_import",
+      "path": "/home/user/.legacy_import",
       "version": "2.1.0",
       "agents_found": 12,
       "skills_found": 8
@@ -1639,7 +1639,7 @@ Scan a specific path for importable data.
 
 ```json
 {
-  "path": "/home/user/.openclaw"
+  "path": "/home/user/.legacy_import"
 }
 ```
 
@@ -1673,7 +1673,7 @@ Run the migration. Converts manifests, imports skills, and optionally imports se
 
 ```json
 {
-  "source": "/home/user/.openclaw",
+  "source": "/home/user/.legacy_import",
   "import_agents": true,
   "import_skills": true,
   "import_sessions": false
@@ -1962,7 +1962,7 @@ data: {"done":true,"usage":{"input_tokens":150,"output_tokens":340}}
 
 ## OpenAI-Compatible API
 
-OpenFang exposes an OpenAI-compatible API for drop-in integration with tools that support the OpenAI API format (Cursor, Continue, Open WebUI, etc.).
+Mohini exposes an OpenAI-compatible API for drop-in integration with tools that support the OpenAI API format (Cursor, Continue, Open WebUI, etc.).
 
 ### POST /v1/chat/completions
 
@@ -1972,7 +1972,7 @@ Send a chat completion request using the OpenAI message format.
 
 ```json
 {
-  "model": "openfang:coder",
+  "model": "mohini:coder",
   "messages": [
     {"role": "system", "content": "You are a helpful assistant."},
     {"role": "user", "content": "Hello!"}
@@ -1983,11 +1983,11 @@ Send a chat completion request using the OpenAI message format.
 }
 ```
 
-**Model resolution** (the `model` field maps to an OpenFang agent):
+**Model resolution** (the `model` field maps to an Mohini agent):
 
 | Format | Example | Behavior |
 |--------|---------|----------|
-| `openfang:<name>` | `openfang:coder` | Find agent by name |
+| `mohini:<name>` | `mohini:coder` | Find agent by name |
 | UUID | `a1b2c3d4-...` | Find agent by ID |
 | Plain string | `coder` | Try as agent name |
 | Any other | `gpt-4o` | Falls back to first registered agent |
@@ -1996,7 +1996,7 @@ Send a chat completion request using the OpenAI message format.
 
 ```json
 {
-  "model": "openfang:analyst",
+  "model": "mohini:analyst",
   "messages": [
     {
       "role": "user",
@@ -2058,16 +2058,16 @@ List available models (agents) in OpenAI format.
   "object": "list",
   "data": [
     {
-      "id": "openfang:coder",
+      "id": "mohini:coder",
       "object": "model",
       "created": 1708617600,
-      "owned_by": "openfang"
+      "owned_by": "mohini"
     },
     {
-      "id": "openfang:researcher",
+      "id": "mohini:researcher",
       "object": "model",
       "created": 1708617600,
-      "owned_by": "openfang"
+      "owned_by": "mohini"
     }
   ]
 }
@@ -2150,7 +2150,7 @@ The `Retry-After` header indicates the window duration in seconds.
 | GET | `/api/profiles` | List agent profiles |
 | GET | `/api/tools` | List available tools |
 | GET | `/api/config` | Configuration (secrets redacted) |
-| GET | `/api/peers` | List OFP wire peers |
+| GET | `/api/peers` | List MMP wire peers |
 | **Agents** | | |
 | GET | `/api/agents` | List agents |
 | POST | `/api/agents` | Spawn agent |
@@ -2203,12 +2203,12 @@ The `Retry-After` header indicates the window duration in seconds.
 | POST | `/api/skills/install` | Install skill |
 | POST | `/api/skills/uninstall` | Uninstall skill |
 | POST | `/api/skills/create` | Create new skill |
-| GET | `/api/marketplace/search` | Search FangHub |
-| **ClawHub** | | |
-| GET | `/api/clawhub/search` | Search ClawHub |
-| GET | `/api/clawhub/browse` | Browse ClawHub |
-| GET | `/api/clawhub/skill/{slug}` | Skill details |
-| POST | `/api/clawhub/install` | Install from ClawHub |
+| GET | `/api/marketplace/search` | Search SkillHub |
+| **SkillHub** | | |
+| GET | `/api/skillhub/search` | Search SkillHub |
+| GET | `/api/skillhub/browse` | Browse SkillHub |
+| GET | `/api/skillhub/skill/{slug}` | Skill details |
+| POST | `/api/skillhub/install` | Install from SkillHub |
 | **MCP & A2A** | | |
 | GET | `/api/mcp/servers` | MCP server connections |
 | POST | `/mcp` | MCP HTTP transport (JSON-RPC 2.0) |

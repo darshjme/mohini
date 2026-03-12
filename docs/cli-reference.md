@@ -1,41 +1,41 @@
-# OpenFang CLI Reference
+# Mohini CLI Reference
 
-Complete command-line reference for `openfang`, the CLI tool for the OpenFang Agent OS.
+Complete command-line reference for `mohini`, the CLI tool for the Mohini Agent OS.
 
 ## Overview
 
-The `openfang` binary is the primary interface for managing the OpenFang Agent OS. It supports two modes of operation:
+The `mohini` binary is the primary interface for managing the Mohini Agent OS. It supports two modes of operation:
 
-- **Daemon mode** -- When a daemon is running (`openfang start`), CLI commands communicate with it over HTTP. This is the recommended mode for production use.
+- **Daemon mode** -- When a daemon is running (`mohini start`), CLI commands communicate with it over HTTP. This is the recommended mode for production use.
 - **In-process mode** -- When no daemon is detected, commands that support it will boot an ephemeral in-process kernel. Agents spawned in this mode are not persisted and will be lost when the process exits.
 
-Running `openfang` with no subcommand launches the interactive TUI (terminal user interface) built with ratatui, which provides a full dashboard experience in the terminal.
+Running `mohini` with no subcommand launches the interactive TUI (terminal user interface) built with ratatui, which provides a full dashboard experience in the terminal.
 
 ## Installation
 
 ### From source (cargo)
 
 ```bash
-cargo install --path crates/openfang-cli
+cargo install --path crates/mohini-cli
 ```
 
 ### Build from workspace
 
 ```bash
-cargo build --release -p openfang-cli
-# Binary: target/release/openfang (or openfang.exe on Windows)
+cargo build --release -p mohini-cli
+# Binary: target/release/mohini (or mohini.exe on Windows)
 ```
 
 ### Docker
 
 ```bash
-docker run -it openfang/openfang:latest
+docker run -it mohini/mohini:latest
 ```
 
 ### Shell installer
 
 ```bash
-curl -fsSL https://get.openfang.ai | sh
+curl -fsSL https://get.mohini.ai | sh
 ```
 
 ## Global Options
@@ -44,42 +44,42 @@ These options apply to all commands.
 
 | Option | Description |
 |---|---|
-| `--config <PATH>` | Path to a custom config file. Overrides the default `~/.openfang/config.toml`. |
+| `--config <PATH>` | Path to a custom config file. Overrides the default `~/.mohini/config.toml`. |
 | `--help` | Print help information for any command or subcommand. |
-| `--version` | Print the version of the `openfang` binary. |
+| `--version` | Print the version of the `mohini` binary. |
 
 **Environment variables:**
 
 | Variable | Description |
 |---|---|
-| `RUST_LOG` | Controls log verbosity (e.g. `info`, `debug`, `openfang_kernel=trace`). |
-| `OPENFANG_AGENTS_DIR` | Override the agent templates directory. |
-| `EDITOR` / `VISUAL` | Editor used by `openfang config edit`. Falls back to `notepad` (Windows) or `vi` (Unix). |
+| `RUST_LOG` | Controls log verbosity (e.g. `info`, `debug`, `mohini_kernel=trace`). |
+| `MOHINI_AGENTS_DIR` | Override the agent templates directory. |
+| `EDITOR` / `VISUAL` | Editor used by `mohini config edit`. Falls back to `notepad` (Windows) or `vi` (Unix). |
 
 ---
 
 ## Command Reference
 
-### openfang (no subcommand)
+### mohini (no subcommand)
 
 Launch the interactive TUI dashboard.
 
 ```
-openfang [--config <PATH>]
+mohini [--config <PATH>]
 ```
 
-The TUI provides a full-screen terminal interface with panels for agents, chat, workflows, channels, skills, settings, and more. Tracing output is redirected to `~/.openfang/tui.log` to avoid corrupting the terminal display.
+The TUI provides a full-screen terminal interface with panels for agents, chat, workflows, channels, skills, settings, and more. Tracing output is redirected to `~/.mohini/tui.log` to avoid corrupting the terminal display.
 
 Press `Ctrl+C` to exit. A second `Ctrl+C` force-exits the process.
 
 ---
 
-### openfang init
+### mohini init
 
-Initialize the OpenFang workspace. Creates `~/.openfang/` with subdirectories (`data/`, `agents/`) and a default `config.toml`.
+Initialize the Mohini workspace. Creates `~/.mohini/` with subdirectories (`data/`, `agents/`) and a default `config.toml`.
 
 ```
-openfang init [--quick]
+mohini init [--quick]
 ```
 
 **Options:**
@@ -98,35 +98,35 @@ openfang init [--quick]
 
 ```bash
 # Interactive setup
-openfang init
+mohini init
 
 # Non-interactive (CI/scripts)
 export GROQ_API_KEY="gsk_..."
-openfang init --quick
+mohini init --quick
 ```
 
 ---
 
-### openfang start
+### mohini start
 
-Start the OpenFang daemon (kernel + API server).
+Start the Mohini daemon (kernel + API server).
 
 ```
-openfang start [--config <PATH>]
+mohini start [--config <PATH>]
 ```
 
 **Behavior:**
 
 - Checks if a daemon is already running; exits with an error if so.
-- Boots the OpenFang kernel (loads config, initializes SQLite database, loads agents, connects MCP servers, starts background tasks).
+- Boots the Mohini kernel (loads config, initializes SQLite database, loads agents, connects MCP servers, starts background tasks).
 - Starts the HTTP API server on the address specified in `config.toml` (default: `127.0.0.1:4200`).
-- Writes `daemon.json` to `~/.openfang/` so other CLI commands can discover the running daemon.
+- Writes `daemon.json` to `~/.mohini/` so other CLI commands can discover the running daemon.
 - Blocks until interrupted with `Ctrl+C`.
 
 **Output:**
 
 ```
-  OpenFang Agent OS v0.1.0
+  Mohini Agent OS v0.1.0
 
   Starting daemon...
 
@@ -139,7 +139,7 @@ openfang start [--config <PATH>]
   Provider:   groq
   Model:      llama-3.3-70b-versatile
 
-  hint: Open the dashboard in your browser, or run `openfang chat`
+  hint: Open the dashboard in your browser, or run `mohini chat`
   hint: Press Ctrl+C to stop the daemon
 ```
 
@@ -147,20 +147,20 @@ openfang start [--config <PATH>]
 
 ```bash
 # Start with default config
-openfang start
+mohini start
 
 # Start with custom config
-openfang start --config /path/to/config.toml
+mohini start --config /path/to/config.toml
 ```
 
 ---
 
-### openfang status
+### mohini status
 
 Show the current kernel/daemon status.
 
 ```
-openfang status [--json]
+mohini status [--json]
 ```
 
 **Options:**
@@ -177,19 +177,19 @@ openfang status [--json]
 **Example:**
 
 ```bash
-openfang status
+mohini status
 
-openfang status --json | jq '.agent_count'
+mohini status --json | jq '.agent_count'
 ```
 
 ---
 
-### openfang doctor
+### mohini doctor
 
-Run diagnostic checks on the OpenFang installation.
+Run diagnostic checks on the Mohini installation.
 
 ```
-openfang doctor [--json] [--repair]
+mohini doctor [--json] [--repair]
 ```
 
 **Options:**
@@ -201,7 +201,7 @@ openfang doctor [--json] [--repair]
 
 **Checks performed:**
 
-1. **OpenFang directory** -- `~/.openfang/` exists
+1. **Mohini directory** -- `~/.mohini/` exists
 2. **.env file** -- exists and has correct permissions (0600 on Unix)
 3. **Config TOML syntax** -- `config.toml` parses without errors
 4. **Daemon status** -- whether a daemon is running
@@ -209,7 +209,7 @@ openfang doctor [--json] [--repair]
 6. **Stale daemon.json** -- leftover `daemon.json` from a crashed daemon
 7. **Database file** -- SQLite magic bytes validation
 8. **Disk space** -- warns if less than 100MB available (Unix only)
-9. **Agent manifests** -- validates all `.toml` files in `~/.openfang/agents/`
+9. **Agent manifests** -- validates all `.toml` files in `~/.mohini/agents/`
 10. **LLM provider keys** -- checks env vars for 10 providers (Groq, OpenRouter, Anthropic, OpenAI, DeepSeek, Gemini, Google, Together, Mistral, Fireworks), performs live validation (401/403 detection)
 11. **Channel tokens** -- format validation for Telegram, Discord, Slack tokens
 12. **Config consistency** -- checks that `api_key_env` references in config match actual environment variables
@@ -218,21 +218,21 @@ openfang doctor [--json] [--repair]
 **Example:**
 
 ```bash
-openfang doctor
+mohini doctor
 
-openfang doctor --repair
+mohini doctor --repair
 
-openfang doctor --json
+mohini doctor --json
 ```
 
 ---
 
-### openfang dashboard
+### mohini dashboard
 
 Open the web dashboard in the default browser.
 
 ```
-openfang dashboard
+mohini dashboard
 ```
 
 **Behavior:**
@@ -244,17 +244,17 @@ openfang dashboard
 **Example:**
 
 ```bash
-openfang dashboard
+mohini dashboard
 ```
 
 ---
 
-### openfang completion
+### mohini completion
 
 Generate shell completion scripts.
 
 ```
-openfang completion <SHELL>
+mohini completion <SHELL>
 ```
 
 **Arguments:**
@@ -267,28 +267,28 @@ openfang completion <SHELL>
 
 ```bash
 # Bash
-openfang completion bash > ~/.bash_completion.d/openfang
+mohini completion bash > ~/.bash_completion.d/mohini
 
 # Zsh
-openfang completion zsh > ~/.zfunc/_openfang
+mohini completion zsh > ~/.zfunc/_mohini
 
 # Fish
-openfang completion fish > ~/.config/fish/completions/openfang.fish
+mohini completion fish > ~/.config/fish/completions/mohini.fish
 
 # PowerShell
-openfang completion powershell > openfang.ps1
+mohini completion powershell > mohini.ps1
 ```
 
 ---
 
 ## Agent Commands
 
-### openfang agent new
+### mohini agent new
 
 Spawn an agent from a built-in template.
 
 ```
-openfang agent new [<TEMPLATE>]
+mohini agent new [<TEMPLATE>]
 ```
 
 **Arguments:**
@@ -299,7 +299,7 @@ openfang agent new [<TEMPLATE>]
 
 **Behavior:**
 
-- Templates are discovered from: the repo `agents/` directory (dev builds), `~/.openfang/agents/` (installed), and `OPENFANG_AGENTS_DIR` (env override).
+- Templates are discovered from: the repo `agents/` directory (dev builds), `~/.mohini/agents/` (installed), and `MOHINI_AGENTS_DIR` (env override).
 - Each template is a directory containing an `agent.toml` manifest.
 - In daemon mode: sends `POST /api/agents` with the manifest. Agent is persistent.
 - In standalone mode: boots an in-process kernel. Agent is ephemeral.
@@ -308,23 +308,23 @@ openfang agent new [<TEMPLATE>]
 
 ```bash
 # Interactive picker
-openfang agent new
+mohini agent new
 
 # Spawn by name
-openfang agent new coder
+mohini agent new coder
 
 # Spawn the assistant template
-openfang agent new assistant
+mohini agent new assistant
 ```
 
 ---
 
-### openfang agent spawn
+### mohini agent spawn
 
 Spawn an agent from a custom manifest file.
 
 ```
-openfang agent spawn <MANIFEST>
+mohini agent spawn <MANIFEST>
 ```
 
 **Arguments:**
@@ -342,17 +342,17 @@ openfang agent spawn <MANIFEST>
 **Example:**
 
 ```bash
-openfang agent spawn ./my-agent/agent.toml
+mohini agent spawn ./my-agent/agent.toml
 ```
 
 ---
 
-### openfang agent list
+### mohini agent list
 
 List all running agents.
 
 ```
-openfang agent list [--json]
+mohini agent list [--json]
 ```
 
 **Options:**
@@ -366,26 +366,26 @@ openfang agent list [--json]
 **Example:**
 
 ```bash
-openfang agent list
+mohini agent list
 
-openfang agent list --json | jq '.[].name'
+mohini agent list --json | jq '.[].name'
 ```
 
 ---
 
-### openfang agent chat
+### mohini agent chat
 
 Start an interactive chat session with a specific agent.
 
 ```
-openfang agent chat <AGENT_ID>
+mohini agent chat <AGENT_ID>
 ```
 
 **Arguments:**
 
 | Argument | Description |
 |---|---|
-| `<AGENT_ID>` | Agent UUID. Obtain from `openfang agent list`. |
+| `<AGENT_ID>` | Agent UUID. Obtain from `mohini agent list`. |
 
 **Behavior:**
 
@@ -397,17 +397,17 @@ openfang agent chat <AGENT_ID>
 **Example:**
 
 ```bash
-openfang agent chat a1b2c3d4-e5f6-7890-abcd-ef1234567890
+mohini agent chat a1b2c3d4-e5f6-7890-abcd-ef1234567890
 ```
 
 ---
 
-### openfang agent kill
+### mohini agent kill
 
 Terminate a running agent.
 
 ```
-openfang agent kill <AGENT_ID>
+mohini agent kill <AGENT_ID>
 ```
 
 **Arguments:**
@@ -419,7 +419,7 @@ openfang agent kill <AGENT_ID>
 **Example:**
 
 ```bash
-openfang agent kill a1b2c3d4-e5f6-7890-abcd-ef1234567890
+mohini agent kill a1b2c3d4-e5f6-7890-abcd-ef1234567890
 ```
 
 ---
@@ -428,24 +428,24 @@ openfang agent kill a1b2c3d4-e5f6-7890-abcd-ef1234567890
 
 All workflow commands require a running daemon.
 
-### openfang workflow list
+### mohini workflow list
 
 List all registered workflows.
 
 ```
-openfang workflow list
+mohini workflow list
 ```
 
 **Output columns:** ID, NAME, STEPS, CREATED.
 
 ---
 
-### openfang workflow create
+### mohini workflow create
 
 Create a workflow from a JSON definition file.
 
 ```
-openfang workflow create <FILE>
+mohini workflow create <FILE>
 ```
 
 **Arguments:**
@@ -457,30 +457,30 @@ openfang workflow create <FILE>
 **Example:**
 
 ```bash
-openfang workflow create ./my-workflow.json
+mohini workflow create ./my-workflow.json
 ```
 
 ---
 
-### openfang workflow run
+### mohini workflow run
 
 Execute a workflow by ID.
 
 ```
-openfang workflow run <WORKFLOW_ID> <INPUT>
+mohini workflow run <WORKFLOW_ID> <INPUT>
 ```
 
 **Arguments:**
 
 | Argument | Description |
 |---|---|
-| `<WORKFLOW_ID>` | Workflow UUID. Obtain from `openfang workflow list`. |
+| `<WORKFLOW_ID>` | Workflow UUID. Obtain from `mohini workflow list`. |
 | `<INPUT>` | Input text to pass to the workflow. |
 
 **Example:**
 
 ```bash
-openfang workflow run abc123 "Analyze this code for security issues"
+mohini workflow run abc123 "Analyze this code for security issues"
 ```
 
 ---
@@ -489,12 +489,12 @@ openfang workflow run abc123 "Analyze this code for security issues"
 
 All trigger commands require a running daemon.
 
-### openfang trigger list
+### mohini trigger list
 
 List all event triggers.
 
 ```
-openfang trigger list [--agent-id <ID>]
+mohini trigger list [--agent-id <ID>]
 ```
 
 **Options:**
@@ -507,12 +507,12 @@ openfang trigger list [--agent-id <ID>]
 
 ---
 
-### openfang trigger create
+### mohini trigger create
 
 Create an event trigger for an agent.
 
 ```
-openfang trigger create <AGENT_ID> <PATTERN_JSON> [--prompt <TEMPLATE>] [--max-fires <N>]
+mohini trigger create <AGENT_ID> <PATTERN_JSON> [--prompt <TEMPLATE>] [--max-fires <N>]
 ```
 
 **Arguments:**
@@ -533,26 +533,26 @@ openfang trigger create <AGENT_ID> <PATTERN_JSON> [--prompt <TEMPLATE>] [--max-f
 
 ```bash
 # Fire on any lifecycle event
-openfang trigger create <AGENT_ID> '{"lifecycle":{}}'
+mohini trigger create <AGENT_ID> '{"lifecycle":{}}'
 
 # Fire when a specific agent is spawned
-openfang trigger create <AGENT_ID> '{"agent_spawned":{"name_pattern":"*"}}'
+mohini trigger create <AGENT_ID> '{"agent_spawned":{"name_pattern":"*"}}'
 
 # Fire on agent termination
-openfang trigger create <AGENT_ID> '{"agent_terminated":{}}'
+mohini trigger create <AGENT_ID> '{"agent_terminated":{}}'
 
 # Fire on all events (limited to 10 fires)
-openfang trigger create <AGENT_ID> '{"all":{}}' --max-fires 10
+mohini trigger create <AGENT_ID> '{"all":{}}' --max-fires 10
 ```
 
 ---
 
-### openfang trigger delete
+### mohini trigger delete
 
 Delete a trigger by ID.
 
 ```
-openfang trigger delete <TRIGGER_ID>
+mohini trigger delete <TRIGGER_ID>
 ```
 
 **Arguments:**
@@ -565,60 +565,60 @@ openfang trigger delete <TRIGGER_ID>
 
 ## Skill Commands
 
-### openfang skill list
+### mohini skill list
 
 List all installed skills.
 
 ```
-openfang skill list
+mohini skill list
 ```
 
 **Output columns:** NAME, VERSION, TOOLS, DESCRIPTION.
 
-Loads skills from `~/.openfang/skills/` plus bundled skills compiled into the binary.
+Loads skills from `~/.mohini/skills/` plus bundled skills compiled into the binary.
 
 ---
 
-### openfang skill install
+### mohini skill install
 
-Install a skill from a local directory, git URL, or FangHub marketplace.
+Install a skill from a local directory, git URL, or SkillHub marketplace.
 
 ```
-openfang skill install <SOURCE>
+mohini skill install <SOURCE>
 ```
 
 **Arguments:**
 
 | Argument | Description |
 |---|---|
-| `<SOURCE>` | Skill name (FangHub), local directory path, or git URL. |
+| `<SOURCE>` | Skill name (SkillHub), local directory path, or git URL. |
 
 **Behavior:**
 
-- **Local directory:** Looks for `skill.toml` in the directory. If not found, checks for OpenClaw-format skills (SKILL.md with YAML frontmatter) and auto-converts them.
-- **Remote (FangHub):** Fetches and installs from the FangHub marketplace. Skills pass through SHA256 verification and prompt injection scanning.
+- **Local directory:** Looks for `skill.toml` in the directory. If not found, checks for LegacyImport-format skills (SKILL.md with YAML frontmatter) and auto-converts them.
+- **Remote (SkillHub):** Fetches and installs from the SkillHub marketplace. Skills pass through SHA256 verification and prompt injection scanning.
 
 **Example:**
 
 ```bash
 # Install from local directory
-openfang skill install ./my-skill/
+mohini skill install ./my-skill/
 
-# Install from FangHub
-openfang skill install web-search
+# Install from SkillHub
+mohini skill install web-search
 
-# Install an OpenClaw-format skill
-openfang skill install ./openclaw-skill/
+# Install an LegacyImport-format skill
+mohini skill install ./legacy_import-skill/
 ```
 
 ---
 
-### openfang skill remove
+### mohini skill remove
 
 Remove an installed skill.
 
 ```
-openfang skill remove <NAME>
+mohini skill remove <NAME>
 ```
 
 **Arguments:**
@@ -630,17 +630,17 @@ openfang skill remove <NAME>
 **Example:**
 
 ```bash
-openfang skill remove web-search
+mohini skill remove web-search
 ```
 
 ---
 
-### openfang skill search
+### mohini skill search
 
-Search the FangHub marketplace for skills.
+Search the SkillHub marketplace for skills.
 
 ```
-openfang skill search <QUERY>
+mohini skill search <QUERY>
 ```
 
 **Arguments:**
@@ -652,17 +652,17 @@ openfang skill search <QUERY>
 **Example:**
 
 ```bash
-openfang skill search "docker kubernetes"
+mohini skill search "docker kubernetes"
 ```
 
 ---
 
-### openfang skill create
+### mohini skill create
 
 Interactively scaffold a new skill project.
 
 ```
-openfang skill create
+mohini skill create
 ```
 
 **Behavior:**
@@ -672,14 +672,14 @@ Prompts for:
 - Description
 - Runtime (`python`, `node`, or `wasm`; defaults to `python`)
 
-Creates a directory under `~/.openfang/skills/<name>/` with:
+Creates a directory under `~/.mohini/skills/<name>/` with:
 - `skill.toml` -- manifest file
 - `src/main.py` (or `src/index.js`) -- entry point with boilerplate
 
 **Example:**
 
 ```bash
-openfang skill create
+mohini skill create
 # Skill name: my-tool
 # Description: A custom analysis tool
 # Runtime (python/node/wasm) [python]: python
@@ -689,12 +689,12 @@ openfang skill create
 
 ## Channel Commands
 
-### openfang channel list
+### mohini channel list
 
 List configured channels and their status.
 
 ```
-openfang channel list
+mohini channel list
 ```
 
 **Output columns:** CHANNEL, ENV VAR, STATUS.
@@ -705,12 +705,12 @@ Checks `config.toml` for channel configuration sections and environment variable
 
 ---
 
-### openfang channel setup
+### mohini channel setup
 
 Interactive setup wizard for a channel integration.
 
 ```
-openfang channel setup [<CHANNEL>]
+mohini channel setup [<CHANNEL>]
 ```
 
 **Arguments:**
@@ -724,7 +724,7 @@ openfang channel setup [<CHANNEL>]
 Each wizard:
 1. Displays step-by-step instructions for obtaining credentials.
 2. Prompts for tokens/credentials.
-3. Saves tokens to `~/.openfang/.env` with owner-only permissions.
+3. Saves tokens to `~/.mohini/.env` with owner-only permissions.
 4. Appends the channel configuration block to `config.toml` (prompts for confirmation).
 5. Warns to restart the daemon if one is running.
 
@@ -732,22 +732,22 @@ Each wizard:
 
 ```bash
 # Interactive picker
-openfang channel setup
+mohini channel setup
 
 # Direct setup
-openfang channel setup telegram
-openfang channel setup discord
-openfang channel setup slack
+mohini channel setup telegram
+mohini channel setup discord
+mohini channel setup slack
 ```
 
 ---
 
-### openfang channel test
+### mohini channel test
 
 Send a test message through a configured channel.
 
 ```
-openfang channel test <CHANNEL>
+mohini channel test <CHANNEL>
 ```
 
 **Arguments:**
@@ -761,17 +761,17 @@ Requires a running daemon. Sends `POST /api/channels/<channel>/test`.
 **Example:**
 
 ```bash
-openfang channel test telegram
+mohini channel test telegram
 ```
 
 ---
 
-### openfang channel enable
+### mohini channel enable
 
 Enable a channel integration.
 
 ```
-openfang channel enable <CHANNEL>
+mohini channel enable <CHANNEL>
 ```
 
 **Arguments:**
@@ -784,12 +784,12 @@ In daemon mode: sends `POST /api/channels/<channel>/enable`. Without a daemon: p
 
 ---
 
-### openfang channel disable
+### mohini channel disable
 
 Disable a channel without removing its configuration.
 
 ```
-openfang channel disable <CHANNEL>
+mohini channel disable <CHANNEL>
 ```
 
 **Arguments:**
@@ -804,36 +804,36 @@ In daemon mode: sends `POST /api/channels/<channel>/disable`. Without a daemon: 
 
 ## Config Commands
 
-### openfang config show
+### mohini config show
 
 Display the current configuration file.
 
 ```
-openfang config show
+mohini config show
 ```
 
-Prints the contents of `~/.openfang/config.toml` with the file path as a header comment.
+Prints the contents of `~/.mohini/config.toml` with the file path as a header comment.
 
 ---
 
-### openfang config edit
+### mohini config edit
 
 Open the configuration file in your editor.
 
 ```
-openfang config edit
+mohini config edit
 ```
 
 Uses `$EDITOR`, then `$VISUAL`, then falls back to `notepad` (Windows) or `vi` (Unix).
 
 ---
 
-### openfang config get
+### mohini config get
 
 Get a single configuration value by dotted key path.
 
 ```
-openfang config get <KEY>
+mohini config get <KEY>
 ```
 
 **Arguments:**
@@ -845,24 +845,24 @@ openfang config get <KEY>
 **Example:**
 
 ```bash
-openfang config get default_model.provider
+mohini config get default_model.provider
 # groq
 
-openfang config get api_listen
+mohini config get api_listen
 # 127.0.0.1:4200
 
-openfang config get memory.decay_rate
+mohini config get memory.decay_rate
 # 0.05
 ```
 
 ---
 
-### openfang config set
+### mohini config set
 
 Set a configuration value by dotted key path.
 
 ```
-openfang config set <KEY> <VALUE>
+mohini config set <KEY> <VALUE>
 ```
 
 **Arguments:**
@@ -877,19 +877,19 @@ openfang config set <KEY> <VALUE>
 **Example:**
 
 ```bash
-openfang config set default_model.provider anthropic
-openfang config set default_model.model claude-sonnet-4-20250514
-openfang config set api_listen "0.0.0.0:4200"
+mohini config set default_model.provider anthropic
+mohini config set default_model.model claude-sonnet-4-20250514
+mohini config set api_listen "0.0.0.0:4200"
 ```
 
 ---
 
-### openfang config set-key
+### mohini config set-key
 
-Save an LLM provider API key to `~/.openfang/.env`.
+Save an LLM provider API key to `~/.mohini/.env`.
 
 ```
-openfang config set-key <PROVIDER>
+mohini config set-key <PROVIDER>
 ```
 
 **Arguments:**
@@ -901,27 +901,27 @@ openfang config set-key <PROVIDER>
 **Behavior:**
 
 - Prompts interactively for the API key.
-- Saves to `~/.openfang/.env` as `<PROVIDER_NAME>_API_KEY=<value>`.
+- Saves to `~/.mohini/.env` as `<PROVIDER_NAME>_API_KEY=<value>`.
 - Runs a live validation test against the provider's API.
 - File permissions are restricted to owner-only on Unix.
 
 **Example:**
 
 ```bash
-openfang config set-key groq
+mohini config set-key groq
 # Paste your groq API key: gsk_...
-# [ok] Saved GROQ_API_KEY to ~/.openfang/.env
+# [ok] Saved GROQ_API_KEY to ~/.mohini/.env
 # Testing key... OK
 ```
 
 ---
 
-### openfang config delete-key
+### mohini config delete-key
 
-Remove an API key from `~/.openfang/.env`.
+Remove an API key from `~/.mohini/.env`.
 
 ```
-openfang config delete-key <PROVIDER>
+mohini config delete-key <PROVIDER>
 ```
 
 **Arguments:**
@@ -933,17 +933,17 @@ openfang config delete-key <PROVIDER>
 **Example:**
 
 ```bash
-openfang config delete-key openai
+mohini config delete-key openai
 ```
 
 ---
 
-### openfang config test-key
+### mohini config test-key
 
 Test provider connectivity with the stored API key.
 
 ```
-openfang config test-key <PROVIDER>
+mohini config test-key <PROVIDER>
 ```
 
 **Arguments:**
@@ -954,7 +954,7 @@ openfang config test-key <PROVIDER>
 
 **Behavior:**
 
-- Reads the API key from the environment (loaded from `~/.openfang/.env`).
+- Reads the API key from the environment (loaded from `~/.mohini/.env`).
 - Hits the provider's models/health endpoint.
 - Reports `OK` (key accepted) or `FAILED (401/403)` (key rejected).
 - Exits with code 1 on failure.
@@ -962,7 +962,7 @@ openfang config test-key <PROVIDER>
 **Example:**
 
 ```bash
-openfang config test-key groq
+mohini config test-key groq
 # Testing groq (GROQ_API_KEY)... OK
 ```
 
@@ -970,12 +970,12 @@ openfang config test-key groq
 
 ## Quick Chat
 
-### openfang chat
+### mohini chat
 
 Quick alias for starting a chat session.
 
 ```
-openfang chat [<AGENT>]
+mohini chat [<AGENT>]
 ```
 
 **Arguments:**
@@ -986,7 +986,7 @@ openfang chat [<AGENT>]
 
 **Behavior:**
 
-- **Daemon mode:** Finds the agent by name or ID among running agents. If no agent name is given, uses the first available agent. If no agents exist, suggests `openfang agent new`.
+- **Daemon mode:** Finds the agent by name or ID among running agents. If no agent name is given, uses the first available agent. If no agents exist, suggests `mohini agent new`.
 - **Standalone mode (no daemon):** Boots an in-process kernel and auto-spawns an agent from templates. Searches for an agent matching the given name, then falls back to `assistant`, then to the first available template.
 
 This is the simplest way to start chatting -- it works with or without a daemon.
@@ -995,73 +995,73 @@ This is the simplest way to start chatting -- it works with or without a daemon.
 
 ```bash
 # Chat with the default agent
-openfang chat
+mohini chat
 
 # Chat with a specific agent by name
-openfang chat coder
+mohini chat coder
 
 # Chat with a specific agent by UUID
-openfang chat a1b2c3d4-e5f6-7890-abcd-ef1234567890
+mohini chat a1b2c3d4-e5f6-7890-abcd-ef1234567890
 ```
 
 ---
 
 ## Migration
 
-### openfang migrate
+### mohini migrate
 
 Migrate configuration and agents from another agent framework.
 
 ```
-openfang migrate --from <FRAMEWORK> [--source-dir <PATH>] [--dry-run]
+mohini migrate --from <FRAMEWORK> [--source-dir <PATH>] [--dry-run]
 ```
 
 **Options:**
 
 | Option | Description |
 |---|---|
-| `--from <FRAMEWORK>` | Source framework. One of: `openclaw`, `langchain`, `autogpt`. |
-| `--source-dir <PATH>` | Path to the source workspace. Auto-detected if not set (e.g. `~/.openclaw`, `~/.langchain`, `~/Auto-GPT`). |
+| `--from <FRAMEWORK>` | Source framework. One of: `legacy_import`, `langchain`, `autogpt`. |
+| `--source-dir <PATH>` | Path to the source workspace. Auto-detected if not set (e.g. `~/.legacy_import`, `~/.langchain`, `~/Auto-GPT`). |
 | `--dry-run` | Show what would be imported without making changes. |
 
 **Behavior:**
 
-- Converts agent configurations, YAML manifests, and settings from the source framework into OpenFang format.
-- Saves imported data to `~/.openfang/`.
+- Converts agent configurations, YAML manifests, and settings from the source framework into Mohini format.
+- Saves imported data to `~/.mohini/`.
 - Writes a `migration_report.md` summarizing what was imported.
 
 **Example:**
 
 ```bash
-# Dry run migration from OpenClaw
-openfang migrate --from openclaw --dry-run
+# Dry run migration from LegacyImport
+mohini migrate --from legacy_import --dry-run
 
-# Migrate from OpenClaw (auto-detect source)
-openfang migrate --from openclaw
+# Migrate from LegacyImport (auto-detect source)
+mohini migrate --from legacy_import
 
 # Migrate from LangChain with explicit source
-openfang migrate --from langchain --source-dir /home/user/.langchain
+mohini migrate --from langchain --source-dir /home/user/.langchain
 
 # Migrate from AutoGPT
-openfang migrate --from autogpt
+mohini migrate --from autogpt
 ```
 
 ---
 
 ## MCP Server
 
-### openfang mcp
+### mohini mcp
 
 Start an MCP (Model Context Protocol) server over stdio.
 
 ```
-openfang mcp
+mohini mcp
 ```
 
 **Behavior:**
 
-- Exposes running OpenFang agents as MCP tools via JSON-RPC 2.0 over stdin/stdout with Content-Length framing.
-- Each agent becomes a callable tool named `openfang_agent_<name>` (hyphens replaced with underscores).
+- Exposes running Mohini agents as MCP tools via JSON-RPC 2.0 over stdin/stdout with Content-Length framing.
+- Each agent becomes a callable tool named `mohini_agent_<name>` (hyphens replaced with underscores).
 - Connects to a running daemon via HTTP if available; otherwise boots an in-process kernel.
 - Protocol version: `2024-11-05`.
 - Maximum message size: 10MB (security limit).
@@ -1085,8 +1085,8 @@ Add to your MCP client configuration:
 ```json
 {
   "mcpServers": {
-    "openfang": {
-      "command": "openfang",
+    "mohini": {
+      "command": "mohini",
       "args": ["mcp"]
     }
   }
@@ -1099,7 +1099,7 @@ Add to your MCP client configuration:
 
 The CLI uses a two-step mechanism to detect a running daemon:
 
-1. **Read `daemon.json`:** On startup, the daemon writes `~/.openfang/daemon.json` containing the listen address (e.g. `127.0.0.1:4200`). The CLI reads this file to learn where the daemon is.
+1. **Read `daemon.json`:** On startup, the daemon writes `~/.mohini/daemon.json` containing the listen address (e.g. `127.0.0.1:4200`). The CLI reads this file to learn where the daemon is.
 
 2. **Health check:** The CLI sends `GET http://<listen_addr>/api/health` with a 2-second timeout. If the health check succeeds, the daemon is considered running and the CLI uses HTTP to communicate with it.
 
@@ -1108,19 +1108,19 @@ If either step fails (no `daemon.json`, stale file, health check timeout), the C
 **Daemon lifecycle:**
 
 ```
-openfang start          # Starts daemon, writes daemon.json
+mohini start          # Starts daemon, writes daemon.json
                         # Other CLI instances detect daemon.json
-openfang status         # Connects to daemon via HTTP
+mohini status         # Connects to daemon via HTTP
 Ctrl+C                  # Daemon shuts down, daemon.json removed
 
-openfang doctor --repair  # Cleans up stale daemon.json from crashes
+mohini doctor --repair  # Cleans up stale daemon.json from crashes
 ```
 
 ---
 
 ## Environment File
 
-OpenFang loads `~/.openfang/.env` into the process environment on every CLI invocation. System environment variables take priority over `.env` values.
+Mohini loads `~/.mohini/.env` into the process environment on every CLI invocation. System environment variables take priority over `.env` values.
 
 The `.env` file stores API keys and secrets:
 
@@ -1153,188 +1153,188 @@ Manage keys with the `config set-key` / `config delete-key` commands rather than
 # 1. Set your API key
 export GROQ_API_KEY="gsk_your_key_here"
 
-# 2. Initialize OpenFang
-openfang init --quick
+# 2. Initialize Mohini
+mohini init --quick
 
 # 3. Start the daemon
-openfang start
+mohini start
 ```
 
 ### Daily usage
 
 ```bash
 # Quick chat (auto-spawns agent if needed)
-openfang chat
+mohini chat
 
 # Chat with a specific agent
-openfang chat coder
+mohini chat coder
 
 # Check what's running
-openfang status
+mohini status
 
 # Open the web dashboard
-openfang dashboard
+mohini dashboard
 ```
 
 ### Agent management
 
 ```bash
 # Spawn from a template
-openfang agent new assistant
+mohini agent new assistant
 
 # Spawn from a custom manifest
-openfang agent spawn ./agents/custom-agent/agent.toml
+mohini agent spawn ./agents/custom-agent/agent.toml
 
 # List running agents
-openfang agent list
+mohini agent list
 
 # Chat with an agent by UUID
-openfang agent chat <UUID>
+mohini agent chat <UUID>
 
 # Kill an agent
-openfang agent kill <UUID>
+mohini agent kill <UUID>
 ```
 
 ### Workflow automation
 
 ```bash
 # Create a workflow
-openfang workflow create ./review-pipeline.json
+mohini workflow create ./review-pipeline.json
 
 # List workflows
-openfang workflow list
+mohini workflow list
 
 # Run a workflow
-openfang workflow run <WORKFLOW_ID> "Review the latest PR"
+mohini workflow run <WORKFLOW_ID> "Review the latest PR"
 ```
 
 ### Event triggers
 
 ```bash
 # Create a trigger that fires on agent spawn
-openfang trigger create <AGENT_ID> '{"agent_spawned":{"name_pattern":"*"}}' \
+mohini trigger create <AGENT_ID> '{"agent_spawned":{"name_pattern":"*"}}' \
   --prompt "New agent spawned: {{event}}" \
   --max-fires 100
 
 # List all triggers
-openfang trigger list
+mohini trigger list
 
 # List triggers for a specific agent
-openfang trigger list --agent-id <AGENT_ID>
+mohini trigger list --agent-id <AGENT_ID>
 
 # Delete a trigger
-openfang trigger delete <TRIGGER_ID>
+mohini trigger delete <TRIGGER_ID>
 ```
 
 ### Skill management
 
 ```bash
-# Search FangHub
-openfang skill search "code review"
+# Search SkillHub
+mohini skill search "code review"
 
 # Install a skill
-openfang skill install code-reviewer
+mohini skill install code-reviewer
 
 # List installed skills
-openfang skill list
+mohini skill list
 
 # Create a new skill
-openfang skill create
+mohini skill create
 
 # Remove a skill
-openfang skill remove code-reviewer
+mohini skill remove code-reviewer
 ```
 
 ### Channel setup
 
 ```bash
 # Interactive channel picker
-openfang channel setup
+mohini channel setup
 
 # Direct channel setup
-openfang channel setup telegram
+mohini channel setup telegram
 
 # Check channel status
-openfang channel list
+mohini channel list
 
 # Test a channel
-openfang channel test telegram
+mohini channel test telegram
 
 # Enable/disable channels
-openfang channel enable discord
-openfang channel disable slack
+mohini channel enable discord
+mohini channel disable slack
 ```
 
 ### Configuration
 
 ```bash
 # View config
-openfang config show
+mohini config show
 
 # Get a specific value
-openfang config get default_model.provider
+mohini config get default_model.provider
 
 # Change provider
-openfang config set default_model.provider anthropic
-openfang config set default_model.model claude-sonnet-4-20250514
-openfang config set default_model.api_key_env ANTHROPIC_API_KEY
+mohini config set default_model.provider anthropic
+mohini config set default_model.model claude-sonnet-4-20250514
+mohini config set default_model.api_key_env ANTHROPIC_API_KEY
 
 # Manage API keys
-openfang config set-key anthropic
-openfang config test-key anthropic
-openfang config delete-key openai
+mohini config set-key anthropic
+mohini config test-key anthropic
+mohini config delete-key openai
 
 # Open in editor
-openfang config edit
+mohini config edit
 ```
 
 ### Migration from other frameworks
 
 ```bash
 # Preview migration
-openfang migrate --from openclaw --dry-run
+mohini migrate --from legacy_import --dry-run
 
 # Run migration
-openfang migrate --from openclaw
+mohini migrate --from legacy_import
 
 # Migrate from LangChain
-openfang migrate --from langchain --source-dir ~/.langchain
+mohini migrate --from langchain --source-dir ~/.langchain
 ```
 
 ### MCP integration
 
 ```bash
 # Start MCP server for Claude Desktop or other MCP clients
-openfang mcp
+mohini mcp
 ```
 
 ### Diagnostics
 
 ```bash
 # Run all diagnostic checks
-openfang doctor
+mohini doctor
 
 # Auto-repair issues
-openfang doctor --repair
+mohini doctor --repair
 
 # Machine-readable diagnostics
-openfang doctor --json
+mohini doctor --json
 ```
 
 ### Shell completions
 
 ```bash
 # Generate and install completions for your shell
-openfang completion bash >> ~/.bashrc
-openfang completion zsh > "${fpath[1]}/_openfang"
-openfang completion fish > ~/.config/fish/completions/openfang.fish
+mohini completion bash >> ~/.bashrc
+mohini completion zsh > "${fpath[1]}/_mohini"
+mohini completion fish > ~/.config/fish/completions/mohini.fish
 ```
 
 ---
 
 ## Supported LLM Providers
 
-The following providers are recognized by `openfang config set-key` and `openfang doctor`:
+The following providers are recognized by `mohini config set-key` and `mohini doctor`:
 
 | Provider | Environment Variable | Default Model |
 |---|---|---|
