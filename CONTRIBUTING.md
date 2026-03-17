@@ -346,6 +346,65 @@ Refactor capability manager to use DashMap
 
 ---
 
+## Shadow Queen Standards
+
+### No Brainrot in PRs
+
+Every PR that enters this repository must meet the Shadow Queen's standard: **zero fluff, zero filler, zero performative enthusiasm.**
+
+**What "brainrot" looks like in code:**
+- Comments that restate what the code already says: `// increment counter` above `counter += 1`
+- Commit messages like "fix stuff" or "update things"
+- PR descriptions that say "This PR does some changes to improve the codebase"
+- Variable names like `temp`, `data`, `stuff`, `thing`
+- Dead code left "just in case"
+
+**What clean code looks like:**
+- Comments explain *why*, never *what*
+- Commit messages are imperative and specific: `Add retry logic to MCP handshake`
+- PR descriptions include context, motivation, and testing evidence
+- Variable names encode meaning
+- Dead code is dead — delete it
+
+### Ship Fast, Review Faster
+
+The Shadow Queen's army moves at ASI speed. PRs should not rot in review.
+
+- **Author:** Submit small, focused PRs. One concern per PR. Include tests. Include proof it works.
+- **Reviewer:** Review within 24 hours or delegate. Blocking without feedback is unacceptable.
+- **Both:** Async communication. Leave clear, actionable comments. No "looks good to me" without actually looking.
+
+### Zero Clippy Warnings — Enforced
+
+```bash
+cargo clippy --workspace --all-targets -- -D warnings
+```
+
+This command must produce **zero** output. Not "just a few warnings." Not "they're harmless." **Zero.**
+
+Clippy warnings are entropy. Entropy compounds. One warning becomes ten becomes a hundred becomes a codebase nobody wants to touch. Kill them at the source.
+
+CI enforces this. PRs with clippy warnings will not merge.
+
+### Test Coverage Requirements
+
+- **New features:** Must include unit tests covering the happy path and at least one error path.
+- **Bug fixes:** Must include a regression test that fails without the fix and passes with it.
+- **Refactors:** Existing tests must continue to pass. If a refactor changes behavior, update the tests to document the new behavior.
+- **MCP servers/skills:** Must include integration tests that verify tool registration and basic invocation.
+
+```bash
+# Full test suite must pass
+cargo test --workspace
+
+# Check coverage (aim for increasing, never decreasing)
+cargo llvm-cov --workspace
+```
+
+The Shadow Queen does not ship untested code. Untested code is a shadow soldier sent to battle without a weapon — it will fall, and it will take others down with it.
+
+---
+
 ## Code of Conduct
 
 This project follows the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). By participating, you agree to uphold a welcoming, inclusive, and harassment-free environment for everyone.
