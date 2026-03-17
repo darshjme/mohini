@@ -127,6 +127,10 @@ Each Hand operates 24/7 until its mission completes. They spawn sub-agents. They
 
 ## Architecture
 
+<p align="center">
+  <img src="public/assets/architecture-overview.svg" alt="Mohini Architecture Overview" width="90%" />
+</p>
+
 Mohini is composed of 14 Rust crates that compile into a **single static binary**:
 
 ```
@@ -174,6 +178,10 @@ impl Kernel {
 
 ### Agent Orchestration Flow
 
+<p align="center">
+  <img src="public/assets/agent-orchestration.svg" alt="Agent Orchestration Flow" width="85%" />
+</p>
+
 1. **Message arrives** — From any of 40 channels (WhatsApp, Discord, etc.)
 2. **Kernel routes** — Identifies target agent by peer binding
 3. **Agent loop** — LLM generates response using 53 tools, memory recall, and skill execution
@@ -183,6 +191,10 @@ impl Kernel {
 **The chat never stops.** If context limit hits, the runtime auto-compacts. If the model rate-limits, fallback models take over. If the server crashes, systemd brings it back.
 
 ### Memory Architecture
+
+<p align="center">
+  <img src="public/assets/memory-architecture.svg" alt="Memory Architecture" width="85%" />
+</p>
 
 Mohini's memory system is **dual-backend**:
 
@@ -257,6 +269,10 @@ Send a WhatsApp message to the number you configured. Your shadow agent awakens.
 ---
 
 ## Shadow Army System
+
+<p align="center">
+  <img src="public/assets/shadow-army-icon.svg" alt="Shadow Army - ARISE" width="200" />
+</p>
 
 Mohini's killer feature: **Multi-agent orchestration at ASI scale.**
 
