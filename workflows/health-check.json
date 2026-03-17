@@ -1,0 +1,100 @@
+{
+  "name": "System Health Check",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "minutes", "minutesInterval": 5 }]
+        }
+      },
+      "id": "schedule",
+      "name": "Every 5 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "command": "echo '{\"cpu\":'$(top -bn1 | grep 'Cpu(s)' | awk '{print 100-$8}' | cut -d. -f1)',\"mem\":'$(free | awk '/Mem/{printf \"%.0f\", $3/$2*100}'),\"disk\":'$(df / | awk 'NR==2{print $5}' | tr -d '%'),\"load\":\"'$(cat /proc/loadavg | cut -d' ' -f1-3)'\",\"openclaw\":'$(curl -sf -o /dev/null -w '%{http_code}' http://localhost:18789/health 2>/dev/null || echo 0)'}'"
+      },
+      "id": "collect-metrics",
+      "name": "Collect Metrics",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const metrics = JSON.parse($input.first().json.stdout);\nconst alerts = [];\n\nif (metrics.cpu > 90) alerts.push(`CPU critical: ${metrics.cpu}%`);\nif (metrics.mem > 85) alerts.push(`Memory critical: ${metrics.mem}%`);\nif (metrics.disk > 90) alerts.push(`Disk critical: ${metrics.disk}%`);\nif (metrics.openclaw !== 200) alerts.push(`Gateway DOWN (HTTP ${metrics.openclaw})`);\n\nreturn [{ json: { ...metrics, alerts, hasAlerts: alerts.length > 0 } }];"
+      },
+      "id": "evaluate",
+      "name": "Evaluate Thresholds",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [710, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [{ "value1": "={{ $json.hasAlerts }}", "value2": true }]
+        }
+      },
+      "id": "has-alerts",
+      "name": "Alerts?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [940, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:18789/api/sessions/spawn",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer {{ $env.OPENCLAW_API_TOKEN }}" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "task", "value": "ALERT: System health issues detected: {{ $json.alerts.join(', ') }}. Investigate and take corrective action. CPU: {{ $json.cpu }}%, MEM: {{ $json.mem }}%, DISK: {{ $json.disk }}%." },
+            { "name": "model", "value": "anthropic/claude-sonnet-4-20250514" },
+            { "name": "label", "value": "health-alert-responder" }
+          ]
+        }
+      },
+      "id": "alert-agent",
+      "name": "Spawn Alert Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1170, 200]
+    },
+    {
+      "parameters": {
+        "fileName": "/root/openclaw/workspace/memory/resource-log.jsonl",
+        "options": { "append": true },
+        "text": "={{ JSON.stringify({ ts: new Date().toISOString(), ...JSON.parse($node['Collect Metrics'].json.stdout) }) }}\n"
+      },
+      "id": "log-metrics",
+      "name": "Log Metrics",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [1170, 400]
+    }
+  ],
+  "connections": {
+    "Every 5 Minutes": { "main": [[{ "node": "Collect Metrics", "type": "main", "index": 0 }]] },
+    "Collect Metrics": { "main": [[{ "node": "Evaluate Thresholds", "type": "main", "index": 0 }]] },
+    "Evaluate Thresholds": { "main": [[{ "node": "Alerts?", "type": "main", "index": 0 }]] },
+    "Alerts?": {
+      "main": [
+        [{ "node": "Spawn Alert Agent", "type": "main", "index": 0 }],
+        [{ "node": "Log Metrics", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Asia/Kolkata" },
+  "tags": [{ "name": "mohini" }, { "name": "health" }]
+}

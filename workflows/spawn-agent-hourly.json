@@ -1,0 +1,95 @@
+{
+  "name": "Spawn Agent Hourly",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "hoursInterval": 1 }]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every Hour",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:18789/api/sessions/spawn",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer {{ $env.OPENCLAW_API_TOKEN }}" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "task", "value": "Hourly check: review memory/heartbeat-state.json, scan for pending alerts in memory/alerts.log, check system resources (CPU/RAM/disk), report anomalies." },
+            { "name": "model", "value": "anthropic/claude-sonnet-4-20250514" },
+            { "name": "label", "value": "hourly-patrol" }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "retry": { "maxTries": 3, "waitBetweenTries": 5000 }
+        }
+      },
+      "id": "spawn-agent",
+      "name": "Spawn Patrol Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [{ "value1": "={{ $json.statusCode }}", "operation": "equal", "value2": 200 }]
+        }
+      },
+      "id": "check-success",
+      "name": "Spawn OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "fileName": "/root/openclaw/workspace/memory/n8n-spawn-log.jsonl",
+        "options": { "append": true },
+        "text": "={{ JSON.stringify({ ts: new Date().toISOString(), workflow: 'spawn-agent-hourly', status: 'success', sessionId: $json.body?.sessionId }) }}\n"
+      },
+      "id": "log-success",
+      "name": "Log Success",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [920, 200]
+    },
+    {
+      "parameters": {
+        "fileName": "/root/openclaw/workspace/memory/n8n-errors.log",
+        "options": { "append": true },
+        "text": "={{ new Date().toISOString() }} ERROR: spawn-agent-hourly failed: {{ $json.error || $json.statusCode }}\n"
+      },
+      "id": "log-error",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [920, 400]
+    }
+  ],
+  "connections": {
+    "Every Hour": { "main": [[{ "node": "Spawn Patrol Agent", "type": "main", "index": 0 }]] },
+    "Spawn Patrol Agent": { "main": [[{ "node": "Spawn OK?", "type": "main", "index": 0 }]] },
+    "Spawn OK?": {
+      "main": [
+        [{ "node": "Log Success", "type": "main", "index": 0 }],
+        [{ "node": "Log Error", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Asia/Kolkata" },
+  "tags": [{ "name": "mohini" }, { "name": "scheduled" }]
+}

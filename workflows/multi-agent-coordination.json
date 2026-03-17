@@ -1,0 +1,102 @@
+{
+  "name": "Multi-Agent Coordination",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "coordinate",
+        "options": { "rawBody": true }
+      },
+      "id": "webhook",
+      "name": "Coordination Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const request = $input.first().json.body;\nconst task = request.task || 'No task specified';\nconst agentCount = request.agents || 3;\nconst model = request.model || 'anthropic/claude-sonnet-4-20250514';\n\n// Split task into subtasks (simple heuristic: by sentence)\nconst subtasks = task.split(/[.;]/).filter(s => s.trim().length > 10).slice(0, agentCount);\n\n// If fewer subtasks than agents, duplicate the task\nwhile (subtasks.length < agentCount) {\n  subtasks.push(`Part ${subtasks.length + 1}: ${task}`);\n}\n\nreturn subtasks.map((st, i) => ({\n  json: {\n    subtask: st.trim(),\n    index: i,\n    model,\n    label: `coord-agent-${i}`,\n    totalAgents: agentCount\n  }\n}));"
+      },
+      "id": "split-tasks",
+      "name": "Split Into Subtasks",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:18789/api/sessions/spawn",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer {{ $env.OPENCLAW_API_TOKEN }}" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "task", "value": "={{ $json.subtask }}" },
+            { "name": "model", "value": "={{ $json.model }}" },
+            { "name": "label", "value": "={{ $json.label }}" }
+          ]
+        },
+        "options": { "batching": { "batch": { "batchSize": 5, "batchInterval": 1000 } } }
+      },
+      "id": "spawn-agents",
+      "name": "Spawn Agents (Parallel)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [710, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = $input.all();\nconst sessions = results.map(r => r.json.body?.sessionId || 'unknown');\nreturn [{ json: { spawnedSessions: sessions, count: sessions.length, ts: new Date().toISOString() } }];"
+      },
+      "id": "aggregate",
+      "name": "Aggregate Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [940, 300]
+    },
+    {
+      "parameters": {
+        "fileName": "/root/openclaw/workspace/memory/n8n-spawn-log.jsonl",
+        "options": { "append": true },
+        "text": "={{ JSON.stringify({ ts: $json.ts, workflow: 'multi-agent-coordination', sessions: $json.spawnedSessions, count: $json.count }) }}\n"
+      },
+      "id": "log",
+      "name": "Log Coordination",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [1170, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ status: 'ok', sessions: $json.spawnedSessions, count: $json.count }) }}"
+      },
+      "id": "respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1170, 450]
+    }
+  ],
+  "connections": {
+    "Coordination Request": { "main": [[{ "node": "Split Into Subtasks", "type": "main", "index": 0 }]] },
+    "Split Into Subtasks": { "main": [[{ "node": "Spawn Agents (Parallel)", "type": "main", "index": 0 }]] },
+    "Spawn Agents (Parallel)": { "main": [[{ "node": "Aggregate Results", "type": "main", "index": 0 }]] },
+    "Aggregate Results": {
+      "main": [
+        [
+          { "node": "Log Coordination", "type": "main", "index": 0 },
+          { "node": "Respond", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Asia/Kolkata" },
+  "tags": [{ "name": "mohini" }, { "name": "orchestration" }]
+}

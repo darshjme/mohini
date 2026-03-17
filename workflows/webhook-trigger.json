@@ -1,0 +1,82 @@
+{
+  "name": "Webhook Trigger → Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trigger",
+        "options": {
+          "rawBody": true
+        },
+        "authentication": "headerAuth",
+        "headerAuth": {
+          "name": "X-Webhook-Secret",
+          "value": "={{ $env.WEBHOOK_SECRET }}"
+        }
+      },
+      "id": "webhook",
+      "name": "External Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\nconst event = body.event || 'unknown';\nconst payload = body.payload || {};\n\n// Map external events to agent tasks\nconst taskMap = {\n  'github.push': `New push to ${payload.repo || 'repo'}: review changes, run tests, update docs if needed.`,\n  'github.issue': `New issue #${payload.number || '?'} on ${payload.repo || 'repo'}: \"${payload.title || 'untitled'}\". Triage and respond.`,\n  'payment.received': `Payment received: $${payload.amount || '?'} from ${payload.from || 'unknown'}. Update invoice tracker.`,\n  'alert.security': `Security alert: ${payload.message || 'unknown threat'}. Investigate immediately.`,\n  'custom': payload.task || 'Process incoming webhook event.'\n};\n\nconst task = taskMap[event] || `Process webhook event '${event}': ${JSON.stringify(payload).slice(0, 500)}`;\nconst priority = ['alert.security'].includes(event) ? 'high' : 'normal';\nconst model = priority === 'high' ? 'anthropic/claude-opus-4-6' : 'anthropic/claude-sonnet-4-20250514';\n\nreturn [{ json: { event, task, model, priority, label: `webhook-${event.replace('.', '-')}` } }];"
+      },
+      "id": "route-event",
+      "name": "Route Event to Task",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:18789/api/sessions/spawn",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer {{ $env.OPENCLAW_API_TOKEN }}" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "task", "value": "={{ $json.task }}" },
+            { "name": "model", "value": "={{ $json.model }}" },
+            { "name": "label", "value": "={{ $json.label }}" }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "retry": { "maxTries": 3, "waitBetweenTries": 5000 }
+        }
+      },
+      "id": "spawn-agent",
+      "name": "Spawn Handler Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [710, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ status: 'accepted', event: $node['Route Event to Task'].json.event, sessionId: $json.body?.sessionId }) }}"
+      },
+      "id": "respond",
+      "name": "Respond 202",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [940, 300]
+    }
+  ],
+  "connections": {
+    "External Webhook": { "main": [[{ "node": "Route Event to Task", "type": "main", "index": 0 }]] },
+    "Route Event to Task": { "main": [[{ "node": "Spawn Handler Agent", "type": "main", "index": 0 }]] },
+    "Spawn Handler Agent": { "main": [[{ "node": "Respond 202", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Asia/Kolkata" },
+  "tags": [{ "name": "mohini" }, { "name": "webhook" }]
+}

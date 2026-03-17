@@ -1,0 +1,67 @@
+{
+  "name": "Memory Decay Maintenance",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "hoursInterval": 6 }]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every 6 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "command": "python3 /root/openclaw/workspace/scripts/memory-decay.py --update-scores"
+      },
+      "id": "update-decay",
+      "name": "Update Decay Scores",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "command": "python3 /root/openclaw/workspace/scripts/memory-decay.py --compact --threshold 0.05"
+      },
+      "id": "compact",
+      "name": "Compact Expired Memories",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [710, 300]
+    },
+    {
+      "parameters": {
+        "command": "python3 /root/openclaw/workspace/scripts/memory-decay.py --dedup --similarity 0.95"
+      },
+      "id": "dedup",
+      "name": "Deduplicate Similar",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [940, 300]
+    },
+    {
+      "parameters": {
+        "fileName": "/root/openclaw/workspace/memory/n8n-spawn-log.jsonl",
+        "options": { "append": true },
+        "text": "={{ JSON.stringify({ ts: new Date().toISOString(), workflow: 'memory-decay', decay_updated: $node['Update Decay Scores'].json.stdout, compacted: $node['Compact Expired Memories'].json.stdout, deduped: $node['Deduplicate Similar'].json.stdout }) }}\n"
+      },
+      "id": "log-result",
+      "name": "Log Results",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [1170, 300]
+    }
+  ],
+  "connections": {
+    "Every 6 Hours": { "main": [[{ "node": "Update Decay Scores", "type": "main", "index": 0 }]] },
+    "Update Decay Scores": { "main": [[{ "node": "Compact Expired Memories", "type": "main", "index": 0 }]] },
+    "Compact Expired Memories": { "main": [[{ "node": "Deduplicate Similar", "type": "main", "index": 0 }]] },
+    "Deduplicate Similar": { "main": [[{ "node": "Log Results", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Asia/Kolkata" },
+  "tags": [{ "name": "mohini" }, { "name": "memory" }]
+}
