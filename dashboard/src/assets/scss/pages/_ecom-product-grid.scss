@@ -1,0 +1,151 @@
+
+.meta-content{
+	margin-left: 40px;
+	.form-check{
+		padding-left: 0;
+    	padding-right: 0;
+
+		.form-check-input{
+			opacity: 0;
+			position: relative;
+			z-index: 2;
+			margin-left: 0;
+			margin-top: 0;
+			cursor: pointer;
+	
+		}
+		span{
+			height: 1rem;
+			margin-right: 15px;
+			width: 1rem;
+			display: block;
+			background-color: #24262B;
+			position: relative;
+			border-radius: 50%;
+			z-index: 1;
+			&:after{
+				content: "";
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 28px;
+				height: 28px;
+				background-color: transparent;
+				border: 1px solid var(--border);
+				border-radius: 50%;
+				transform: translate(-50%, -50%) scale(0);
+				z-index: -1;
+			}
+		}
+		
+	}  
+	.form-check .form-check-input:checked + span:after{
+		transform:translate(-50%, -50%) scale(1);
+	}
+		
+}
+.gallery-slider{
+	margin-top: 5px;
+	img{
+		border: 1px solid var(--border);
+		border-radius: $radius;
+		cursor: pointer;
+	}
+}
+
+
+.filter-sidebar{
+	position: sticky;
+	top: 7rem;
+	@include respond ('phone-land'){
+		position: relative;
+		top:0;
+		
+		.card{
+			box-shadow: unset;
+		}
+	}
+	.ft-title {
+		border-bottom: 1px solid var(--border);
+		padding-bottom: 8px;
+		margin-bottom: 12px;
+	}
+}
+.product-card{
+	position: relative;
+	overflow: hidden;
+
+	&:hover{
+		.dz-product-bx{
+			.dz-media-1{
+				opacity: 1;
+			}
+			.dz-side-view{
+				right: 12px;
+				opacity: 1;
+			}
+		}
+		
+	}
+	.dz-product-bx{
+		display: block;
+		position: relative;
+		height: auto;
+		
+		overflow: hidden;
+		.dz-media{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+		.dz-media-1{
+			opacity: 0;
+			width: 100%;
+			height: 100%;
+			position: relative;
+			transition: opacity 0.3s linear;
+		
+		}
+		
+		.dz-side-view{
+			-webkit-transition: all 0.5s ease-in-out;
+				transition: all 0.5s ease-in-out;
+				position: absolute;
+				z-index: 1;
+				-webkit-transition: all 0.4s ease-in-out;
+				transition: all 0.4s ease-in-out;
+				top: 15px;
+				right: -40px;
+				display: -ms-grid;
+				display: grid;
+				opacity: 0;
+				
+			
+			a{
+				width: 35px;
+				height: 35px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 0;
+				padding: 0;
+				border: none;
+				background-color: transparent;
+				background-color: #fff;
+				border: 1px solid #e9e9e9;
+				border-radius: 100%;
+				&:hover{
+					color:var(--text);
+				}
+
+			}
+
+		}
+											
+		
+	
+	}
+}

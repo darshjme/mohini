@@ -1,0 +1,28 @@
+.inner-content{
+	position: relative;
+	z-index: 2;
+
+	.error-head{
+		margin: 0 auto 20px;
+		font-weight: 400;
+		font-size: 140px;
+		line-height: 1;
+		font-style: normal;
+		text-align: center;
+		color: #FFFFFF;
+	}
+	.error-para{
+		font-family: 'Poppins';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 35px;
+		line-height: 1.5;
+		color: #EFEFEF;
+		margin-bottom: 5px;
+
+	}
+	p{
+		font-size: 18px;
+		color:$white;
+	}
+}

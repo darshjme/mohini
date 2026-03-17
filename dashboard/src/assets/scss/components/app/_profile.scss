@@ -1,0 +1,314 @@
+.photo-content{
+    position: relative;
+    .photo-btn{
+        position: absolute;
+        #{$ic-pos-right}: 19px;
+        top: 19px;
+
+    }
+    .cover-photo{
+        background: linear-gradient(11deg, #000000db, transparent), url(../images/profile/cover.jpg);
+        background-size: cover;
+        background-position: center;
+        min-height: 15.625rem;
+        width: 100%;
+        border-top-left-radius: $radius;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: $radius;
+        border-bottom-left-radius: 0;
+
+    }
+
+}
+.profile .profile-photo {
+	max-width: 9.25rem;
+	position: relative;
+	z-index: 1;
+	margin-#{$ic-pos-right}: 5px;
+   
+    img{
+        border-radius: $radius;
+        border: 6px solid var(--card);
+        @include respond ('phone'){
+            border-width: 3px;
+        }
+    }
+	
+	@include respond('tab-land') {
+		max-width: 8.25rem;
+        margin-top: 0;
+	}
+	@include respond('phone') {
+		width: 5rem;
+		margin-#{$ic-pos-left}: auto;
+		margin-#{$ic-pos-right}: auto;
+        margin-bottom: 0.25rem;
+        margin-top: -1.6rem;
+	}
+}
+
+.profile-info{
+    padding: 15px 19px;
+    z-index: 2;
+    margin-top: -5.8rem;
+    position: relative;
+    @include respond('phone'){
+        margin-top:-9.5rem;
+    }
+
+   
+   
+
+    .prf-col{
+        min-width: 15.625rem;
+        padding: 0.625rem 3.125rem 0;
+    }
+}
+.profile-interest{
+    .row{
+        margin: 0 -0.0437rem;
+        .int-col{
+            padding: 0 0.0437rem;
+            .interest-cat{
+                margin-bottom: 0.0875rem;
+                position: relative;
+                display: block;
+                &:after{
+                    background: $black;
+                    bottom: 0;
+                    content: "";
+                    #{$ic-pos-left}: 0;
+                    opacity: 0.5;
+                    position: absolute;
+                    #{$ic-pos-right}: 0;
+                    top: 0;
+                    z-index: 0;
+                }
+                
+                p{
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    padding: 0.3125rem;
+                    #{$ic-pos-left}: 0;
+                    margin: 0;
+                    z-index: 1;
+                    color:white;
+                    font-size: 0.075rem;
+                }
+            }
+            
+        }
+    }
+}
+.profile-tab{
+    .nav-item{
+        .nav-link{
+            font-size: 1rem;
+            margin-#{$ic-pos-right}: 1.875rem;
+            transition: all 0.5s ease-in-out;
+            border: none;
+            border-bottom: 0.0125rem solid transparent;
+            color: $l-ctl;
+
+            &:hover, &.active{
+                border: 0;
+                background: transparent;
+                background: transparent;
+                border-bottom: 0.0125rem solid var(--primary);
+                color: var(--primary);
+            }
+			@include respond ('phone'){
+				margin-#{$ic-pos-right}:0rem;
+			}
+        }
+        
+    }
+}
+.profile-info{
+	display:flex;
+	@include respond('phone') {
+		display:block;
+	}
+	.profile-details {
+		display: flex;
+		width: 100%;
+       
+        h2{
+            line-height: 0.8;
+        }
+       
+		@include respond('phone') {
+            .profile-name{
+                text-align: center;
+            }
+            margin-#{$ic-pos-left}: 0px;
+            justify-content: center;
+			
+		}
+	}
+}
+
+.post-input{
+   // margin-bottom: 1.875rem;
+    .form-control{
+        height: 4.6875rem;
+        font-weight: 400;
+        margin: 0.9375rem 0;
+    }
+	.btn-social{
+		font-size: 1.25rem;
+		height: 3.4375rem;
+		display:inline-block;
+		padding: 0;
+		text-align:center;
+		border-radius:$radius;
+		color:$white;
+		width: 3.4375rem;
+		line-height: 3.375rem;
+		margin-bottom: 5px;
+		&.facebook{
+			background-color: #3B5998;
+		}
+		&.google-plus{
+			background-color: #DE4E43;
+		}
+		&.linkedin{
+			background-color: #007BB6;
+		}
+		&.instagram{
+			background-color: #8A5A4E;
+		}
+		&.twitter{
+			background-color: #1EA1F3;
+		}
+		&.youtube{
+			background-color: #CE201F;
+		}
+		&.whatsapp{
+			background-color: #01C854;
+		}
+		i{
+			margin:0!important;
+		}
+	}
+    
+}  
+.profile-uoloaded-post{
+    
+    img{
+        margin-bottom: 1.25rem;
+    }
+    a{
+        h4{
+            margin-bottom: 0.625rem;
+            color: $l-ctd;
+        }
+    }
+}
+
+.profile-info-1{
+    padding: 15px 19px;
+    margin-#{$ic-pos-left}: 165px;
+    margin-top: -73px;
+    z-index: 2;
+    position: relative;
+
+    @include custommq($max:100rem){
+        margin-#{$ic-pos-left}: 143px;
+        margin-top:-69px;
+
+    }
+    @include respond ('tab-land'){
+        margin-#{$ic-pos-left}: 133px;
+       margin-top: -58px;
+
+    }
+    @include respond ('tab-port'){
+        margin-#{$ic-pos-left}:134px;
+    }
+    @include respond ('phone'){
+        margin-#{$ic-pos-left}: 0;
+        margin-top:-11px;
+    }
+   
+    .social-bx > div > div > div{
+         background-color: var(--light);
+         border: 1px dashed var(--border);
+         padding: 10px;
+         margin-bottom: 12px;
+         border-radius: 6px;
+     
+    }
+   
+
+}
+.adrees-bx{
+    border-bottom: 1px dashed var(--border);
+    a{
+        display: inline-block;
+        text-align: center;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: $radius;
+        background-color: var(--rgba-primary-1);
+        color: var(--primary);
+        margin-#{$ic-pos-right}: 10px;
+    }
+}
+.proile-social-bx{
+    a{
+        display: inline-block;
+        text-align: center;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: $radius;
+        background-color: var(--rgba-primary-1);
+        color: var(--primary);
+        margin-#{$ic-pos-right}: 10px;
+        &:hover{
+            background-color: var(--primary);
+            color:$white;
+        }
+    }
+}
+.products{
+	display:flex;
+	align-items:center;
+    border-bottom: 1px dashed var(--border);
+    padding: 15px 0;
+    
+	img{
+		width:45px;
+		height:45px;
+		border-radius:$radius;
+		margin-#{$ic-pos-right}:9px;
+	}
+}
+.app-icon{
+	width: 40px;
+	height: 40px;
+	background-color: var(--rgba-primary-1);
+	line-height: 40px;
+	display: inline-block;
+	text-align: center;
+	border-radius: $radius;
+	cursor: pointer;
+	i{
+		color:var(--primary);
+	}
+}
+.profile-info-3{
+    padding-#{$ic-pos-left}:16px;
+    padding-#{$ic-pos-right}: 28px;
+    @include custommq($max:100rem){
+        margin-bottom: 4px;
+    }
+    @include respond ('phone'){
+        margin-bottom: 0;
+        margin-top: 10px;
+    }
+}

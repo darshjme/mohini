@@ -1,0 +1,296 @@
+
+.project{
+	.nav-tabs{
+		border-color:var(--border);	
+		.nav-item{
+			.nav-link{
+				font-size:1rem;
+				font-weight:500;
+				color:#717579;
+				border:0;
+				&.active{
+					font-weight:600;	
+					color:var(--text-dark);
+					background-color:var(--card);
+					border-bottom:0.125rem solid var(--primary);
+					
+					
+				}
+				@include respond ('phone'){
+					font-size:0.9375rem;
+					padding: .6375rem 0.6375rem;
+				}
+			}	
+		}
+		&.style-1{
+		
+			   .nav-item{
+				   .nav-link{
+					   &.active{
+						   background-color: var(--body-bg)!important;
+					   }
+				   }
+			   }
+			
+	   }
+	}	
+	&.style-1{
+		flex: 1;
+		.nav-tabs{
+			.nav-item{
+				flex: 1;
+				.nav-link{
+					text-align: center;
+				}
+			}
+		}
+	}
+	
+}
+	
+	
+
+.project-image{
+	img{
+		height:2.813rem;
+		width:2.813rem;
+		border-radius:$radius;
+		margin-#{$ic-pos-right}:0.625rem;
+	}
+	@include custommq ($max:100rem){
+		img{
+			height:1.875rem;
+			width:1.875rem;
+			margin-#{$ic-pos-right}:0.625rem;
+		}
+		svg{
+			width:1.875rem;	
+		}
+		span{
+			font-size:1rem!important;	
+		}	
+	}
+	@include respond('phone'){
+		span{
+			white-space:nowrap;	
+		}	
+		small{
+			white-space:nowrap;	
+		}
+	}
+	h6{
+		text-align: justify;
+	}
+}
+.customers{	
+	@include custommq ($max:100rem){
+		h3{
+			font-size:1rem!important;		
+		}
+	}	
+	@include respond('phone'){
+		margin-bottom:1.25rem;	
+	}
+}
+.project-btn{
+	a{
+		font-weight:600!important;	
+		padding: 0.625rem 0.75rem;
+	}	
+}
+.bg-progress{
+	background:#E4F5FF;	
+	color:#2DB3FF!important;
+}
+.progect-pagination{
+	.pagination{
+		.page-indicator{
+			.page-link{
+				padding: 0.875rem 1.3125rem;
+				font-size: 1rem;
+				border-radius: 0.625rem;	
+				color:var(--primary);
+				margin-#{$ic-pos-left}: 0rem;
+				&:hover{
+					color:$white	
+				}
+				@include respond ('phone'){
+					padding: 0rem 0.625rem;
+					line-height: 1.875rem;
+					font-size: 0.875rem;
+				}
+			}	
+		}	
+		.page-item{
+			display:flex;	
+			font-size: 1rem;
+			border: 0.0625rem solid var(--primary);
+			border-radius: 0.625rem;	
+			background:var(--rgba-primary-1);
+			color:var(--primary);
+			margin:0 0.3125rem;
+			a{
+				padding: 0.875rem 1.3125rem;	
+				font-size:1.125rem;
+				font-weight:500;
+				&.active{
+					background:var(--primary);
+					color:$white;
+					border-radius:0.625rem;
+				}
+				@include respond ('phone'){
+					padding: 0.375rem 0.625rem;
+					font-size: 0.875rem;
+						
+				}
+			}
+		}
+	}	
+}
+.card{
+	&.project-card{
+
+		margin-bottom: 0.975rem;
+	}
+
+}
+
+
+/* project-card.scss */
+
+.project-list-group{
+	.card{
+		margin-bottom: 17px;
+		border: 1px solid;
+		border-style: dashed;
+		border-width: 2px;
+		border-color: transparent;
+		&:hover{
+			border-color: #cccccc;
+		}
+	}
+}
+.project-media{
+	img{
+		height:48px;
+		width:48px;
+		border-radius:50px;
+		@include respond ('phone'){
+			height:44px;
+			width:44px;
+		}
+	}
+	.img-placeholder{
+		height:48px;
+		width:48px;
+		border-radius:50px;
+		line-height:48px;
+		font-weight: 600;
+		font-size:20px;
+		text-align:center;
+		display:inline-block;
+	}
+}
+.project-info{
+	padding: 5px 15px;
+	flex-flow: wrap;
+	display: flex;
+	align-items: center;
+	@include custommq($max: 1600px) {
+		font-size: 13px;
+		h5{
+			font-size:15px;
+		}
+	}
+	@include respond ('phone'){
+		padding: 10px 0px;
+	}
+}
+
+.project-nav{
+	margin-bottom:20px;
+	display: flex;
+	flex-wrap:wrap;
+    justify-content: space-between;
+	align-items: center;
+	padding-bottom: 20px;
+	@include respond ('tab-land'){
+		 margin-bottom: 20px;
+		 padding-bottom: 20px;
+	}
+	@include respond ('phone-land'){
+		display:block;
+	}
+	@include respond ('phone'){
+		margin-bottom: 15px;
+		padding-bottom: 15px;
+	}
+}
+
+.power-ic{
+	i{
+		font-size: 34px;
+		height: 48px;
+		width: 48px;
+		text-align: center;
+		line-height: 48px;
+		border-radius: 50px;
+		color: white;
+		font-weight: bold;
+		background:var(--primary);
+	}
+	@include respond ('phone'){
+		i{
+			font-size: 24px;
+			height: 44px;
+			width: 44px;
+			line-height:44px;
+		}
+	}
+}
+
+.project-status {
+    justify-content: space-between;
+}
+
+.project-card{
+	.dz-media{
+		height:80px;
+		width:80px;
+		min-width:80px;
+		border-radius:$radius;
+		overflow:hidden;
+		img{
+			height:100%;
+		}
+	}
+	.border-bx{
+		border: 1px solid;
+		padding: 7px 13px;
+		border-radius:$radius;
+		border-color:var(--border);
+		border-style: dashed;
+	}
+}
+.dt-icon{
+	height:45px;
+	width:45px;
+	min-width: 45px;
+	border-radius:$radius;
+	line-height:45px;
+	text-align:center;
+}
+
+.users-lg {
+    display: flex;
+	li{
+		margin-right: -10px;
+		img{
+			height: 40px;
+			width: 40px;
+			border-radius: 45px;
+			border: 2px solid var(--card);
+		}
+	}
+}
+

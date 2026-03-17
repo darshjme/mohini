@@ -1,0 +1,45 @@
+.bootstrap-select{
+    margin-bottom: 0;
+
+   .btn {
+		border: 1px solid var(--border);
+		background-color: var(--card);
+		font-weight:400;
+		color: var(--text);
+        font-size:0.875rem;
+        line-height:1.5;
+		border-radius: 8px;
+       
+       &:active,
+       &:focus,
+       &:hover {
+			outline: none !important;
+			outline-offset: 0;
+			
+       }
+   }
+    .dropdown-menu{
+		border-color: var(--border) !important;
+		box-shadow:$shadow;
+		
+		.dropdown-item{
+			padding: 0.25rem 1rem;
+		}
+		
+		
+	}
+   
+}
+.input-group > .bootstrap-select:not(:first-child) .dropdown-toggle{
+    border-top-#{$ic-pos-left}-radius: 0;
+    border-bottom-#{$ic-pos-left}-radius: 0;
+}
+.input-group > .bootstrap-select:not(:last-child) .dropdown-toggle{
+    border-top-#{$ic-pos-right}-radius: 0;
+    border-bottom-#{$ic-pos-right}-radius: 0;
+}
+.bootstrap-select .btn:active, .bootstrap-select .btn:focus, .bootstrap-select .btn:hover{
+    background-color: var(--card);
+    border-color:var(--border);
+    color:var(--text)!important;
+}

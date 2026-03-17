@@ -1,0 +1,129 @@
+/* ═══════════════════════════════════════════════════════════
+   Mohini Agent OS Dashboard — Custom Theme 🪷
+   Colors: Mohini Blue #4A90D9 | Divine Gold #D4A843 | Lotus Pink #E8729A
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --mohini-blue: #4A90D9;
+  --mohini-gold: #D4A843;
+  --mohini-pink: #E8729A;
+  --mohini-dark: #0D1117;
+  --mohini-dark-secondary: #161B22;
+  --mohini-dark-card: #1C2128;
+  --mohini-text: #E6EDF3;
+  --mohini-text-muted: #8B949E;
+  --mohini-border: #30363D;
+}
+
+/* Force dark mode */
+body {
+  background-color: var(--mohini-dark) !important;
+  color: var(--mohini-text) !important;
+}
+
+/* Primary button overrides */
+.btn-primary, .btn-mohini {
+  background-color: var(--mohini-blue) !important;
+  border-color: var(--mohini-blue) !important;
+}
+.btn-primary:hover, .btn-mohini:hover {
+  background-color: #3A7BC8 !important;
+  border-color: #3A7BC8 !important;
+}
+
+/* Sidebar */
+.deznav {
+  background-color: var(--mohini-dark-secondary) !important;
+}
+.deznav .metismenu > li > a {
+  color: var(--mohini-text) !important;
+}
+.deznav .metismenu > li.mm-active > a,
+.deznav .metismenu > li:hover > a {
+  color: var(--mohini-gold) !important;
+}
+
+/* Header */
+.nav-header, .header {
+  background-color: var(--mohini-dark-secondary) !important;
+  border-bottom: 1px solid var(--mohini-border) !important;
+}
+
+/* Cards */
+.card, .shadow-card {
+  background-color: var(--mohini-dark-card) !important;
+  border: 1px solid var(--mohini-border) !important;
+  border-radius: 12px;
+}
+.card-header {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--mohini-border) !important;
+}
+
+/* Tables */
+.table-mohini th {
+  color: var(--mohini-gold) !important;
+  border-color: var(--mohini-border) !important;
+}
+.table-mohini td {
+  color: var(--mohini-text) !important;
+  border-color: var(--mohini-border) !important;
+}
+.table-hover tbody tr:hover {
+  background-color: rgba(74, 144, 217, 0.08) !important;
+}
+
+/* Text color utilities */
+.text-mohini-blue { color: var(--mohini-blue) !important; }
+.text-mohini-gold { color: var(--mohini-gold) !important; }
+.text-mohini-pink { color: var(--mohini-pink) !important; }
+
+/* Progress bar */
+.bg-mohini-gold { background-color: var(--mohini-gold) !important; }
+.bg-mohini-blue { background-color: var(--mohini-blue) !important; }
+.bg-mohini-pink { background-color: var(--mohini-pink) !important; }
+
+/* Badge tweaks */
+.badge { font-weight: 500; }
+
+/* Content area */
+.content-body {
+  background-color: var(--mohini-dark) !important;
+}
+
+/* Page titles */
+.page-titles h4 {
+  color: var(--mohini-gold) !important;
+}
+
+/* Modal dark mode */
+.modal-content {
+  background-color: var(--mohini-dark-card) !important;
+  border: 1px solid var(--mohini-border) !important;
+  color: var(--mohini-text) !important;
+}
+.modal-header { border-color: var(--mohini-border) !important; }
+.modal-footer { border-color: var(--mohini-border) !important; }
+
+/* Form controls dark */
+.form-control, .form-select {
+  background-color: var(--mohini-dark) !important;
+  border-color: var(--mohini-border) !important;
+  color: var(--mohini-text) !important;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--mohini-blue) !important;
+  box-shadow: 0 0 0 0.2rem rgba(74, 144, 217, 0.25) !important;
+}
+
+/* Footer */
+.footer {
+  background-color: var(--mohini-dark-secondary) !important;
+  border-top: 1px solid var(--mohini-border) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--mohini-dark); }
+::-webkit-scrollbar-thumb { background: var(--mohini-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--mohini-blue); }

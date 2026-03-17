@@ -1,0 +1,328 @@
+[data-theme-version="dark"] {
+    #chartBar {
+        line {
+            stroke: $d-border;
+        }
+    }
+
+    #redial .apexcharts-datalabels-group {
+        stroke: $white;
+    }
+
+    .morris_chart_height text tspan {
+        fill: $white;
+    }
+
+    .ct-grid {
+        stroke: rgba(255, 255, 255, 0.1);
+    }
+
+    .project .nav-tabs .nav-item .nav-link.active {
+        background-color: $dark-card;
+    }
+
+    .btn-link g [fill] {
+        fill: #fff;
+    }
+
+    .light-login {
+        display: inline-block;
+    }
+
+    .dark-login {
+        display: none;
+    }
+
+    .badge-outline-light {
+        color: #f5f5f5;
+    }
+
+    .badge-outline-dark,
+    .btn-outline-dark {
+        border-color: #f5f5f5;
+        color: $white;
+    }
+
+    .btn-light {
+        color: #f5f5f5;
+    }
+
+    .sidebar-right-inner {
+        .btn-light {
+            color: var(--text);
+        }
+    }
+
+    .btn-dark {
+        color: $white;
+    }
+
+    #overiewChart,
+    #marketChart,
+    #lineBar,
+    #chartTimeline {
+        line {
+            stroke: $d-border;
+        }
+    }
+
+    .apexcharts-text tspan {
+        fill: white;
+    }
+
+    .chartTimeline3 .apexcharts-series .apexcharts-backgroundBar {
+        fill: $d-bg;
+    }
+
+    .svg-details {
+        fill: $white;
+    }
+
+    .logo-compact {
+
+        filter: invert(1);
+
+    }
+
+    .companies-media img {
+        filter: brightness(8.5);
+    }
+
+    .seller-slider,
+    .best-selling-slider {
+        .card {
+            background: white;
+        }
+    }
+    .product .product-imfo h6, .product .product-imfo .h6{
+        color: black;
+    }
+    .active-map-main:after{
+        background: $d-border;
+    }
+    .active-country .country-list{
+        border-color: $d-border;
+    }
+    --secondary:#ffff;
+    .search-area.style-1 .input-group-text, .search-area.style-1 .form-control{
+        background-color: $d-bg;
+    }
+    .transaction a{
+        background-color: $d-bg;
+    }
+    .transaction a svg{
+        path{
+            stroke:white;
+        }
+    }
+    .transaction-tbl.dataTable thead tr th,
+    .custome-d{
+        background-color: $d-bg;
+    }
+    .custome-d{
+        svg{
+            rect{
+                fill:white;
+            }
+        }
+    }
+    .ttl-project .pr-data::after{
+        background-color: $d-border;
+    }
+    .apexcharts-canvas{
+        line{
+            stroke:$d-border;
+        }
+    }
+    .bg-purple-light,
+    .bg-cream-light{
+        background-color: $d-bg;
+    }
+    .avatar.borderd{
+        border-color: $d-border;
+    }
+    .mix-chart-tab .nav-item .nav-link{
+        background-color: #2e384c;
+    }
+    .mix-chart-tab .nav-item .nav-link.active{
+        background-color: var(--primary);
+    }
+    .card{
+        box-shadow: none;
+    }
+    .widget-timeline-status .timeline > li:not(:last-child):after{
+        background-color: white;
+    }
+    .success-tab .nav-item .nav-link span{
+        color: white;
+    }
+    .header-right .notification_dropdown .nav-link{
+        background-color: $d-bg;
+        border-color: $d-border;
+    }
+    .ic-sidenav .metismenu > li.mm-active > a{
+        box-shadow: 0 10px 20px rgb(24, 34, 55);
+    }
+    .widget-timeline-icons .timeline-media{
+        background-color: $d-bg;
+    }
+    .widget-timeline-icons .timeline > li:not(:last-child):before{
+        border-color: $d-border;
+    }
+    .companies-inner .companies-media{
+        background-color: $dark-card;
+    }
+    .dropzone{
+        background-color: $d-bg;
+        border-color: $d-border;
+    }
+    .kanbanimg1 li a,
+    .kanbanimg1 img{
+        border-color: $d-border;
+    }
+    .btn-outline-secondary{
+        --bs-btn-color:#c0c7d1;
+        border-color: $d-border;
+    }
+	.light.badge-danger {
+	  background-color: rgba(255, 94, 94, 0.15);
+	  border-color: transparent;
+	}
+	.bootstrap-select>.dropdown-toggle:after {
+		color: #fff;
+	}
+	.bootstrap-select .dropdown-toggle .filter-option {
+		color: #7e7e7e ;
+	}
+	.example.style-1 .asColorPicker-trigger {
+		background: $dark-card;
+	}
+	.ai-slider .noUi-handle {
+		border: 3px solid #182237;
+	}
+	.ai-slider .noUi-connects {
+		background-color: $d-border;
+		height: 5px;
+	}
+	.alert-light {
+		color: #282828;
+	}
+	.alert-secondary {
+	  background: rgba(44, 44, 44, 0.5);
+	  border-color: rgba(44, 44, 44, 0.5);
+	  color: #fff;
+	}
+	.badge-outline-secondary {
+		border: 0.0625rem solid rgba(44, 44, 44, 0.5);
+		 color: #fff;
+		background: rgba(44, 44, 44, 0.5);
+	}
+	.table th,
+	.table td {
+		border-color: rgba(255, 255, 255, 0.1);
+		color: #717274;
+	}
+	.new-select btn{
+		color: #fff
+	}
+	.ck.ck-reset_all * {
+		color: #fff !important;
+	}
+	.ck.ck-dropdown__panel {
+		background-color: $dark-card;
+	}
+	.ck.ck-labeled-field-view>.ck.ck-labeled-field-view__input-wrapper>.ck.ck-label {
+		color: #7e7e7e !important;
+	}
+	.ck.ck-input {
+		background: $dark-card;
+	}
+	.ck.ck-dropdown__panel {
+		border: 1px solid  $d-border;
+	}
+	.ck .ck-insert-table-dropdown-grid-box {
+		border: 1px solid $d-border;
+	}
+	.draggable.draggable-mirror {
+	  background: $dark-card;
+	  border: 2px dashed $d-border !important;
+	}
+	.bg-light {
+		--bs-bg-opacity: 1;
+		background-color: $d-bg !important;
+	}
+	.ttl-project .pr-data span {
+		color: #fefefe;
+	}
+	.apexcharts-legend-text {
+		color: #fefefe !important;
+	}
+	
+	.table th,  .table td {
+		color: #fefefe ;
+	}
+
+    .cmscalender{
+        .react-datepicker {
+            background-color: $dark-card;
+            border-color: $d-border;
+            color: $white;
+            .react-datepicker__header {
+                color: $white;
+                background-color: $dark-card;			
+                .react-datepicker__day-name{
+                    color: $white;
+                }
+            }
+            .react-datepicker__day {
+                color: $white;
+            }
+        }
+    }
+
+    // .custom-react-select  {
+	// 	.css-13cymwt-control {
+	// 		background-color:  $dark-card;
+	// 		border-color: $d-border !important;			
+	// 	}
+	// 	.css-1dimb5e-singleValue {
+	// 		color: $white;
+	// 	}
+	// }
+    .custom-react-select{		
+        & > div:nth-child(4){
+            & > div{
+                background-color: $dark-card;
+                & > div{
+                    background-color: $dark-card;
+                   
+                    &:hover{
+                        background-color: var(--rgba-primary-1);
+                        color: #fff;
+                    }
+                }
+            }
+        }
+        & > div {
+            &:nth-child(3){
+               
+                background-color: $dark-card;               
+                border-color:$d-border !important;
+               
+            }
+            
+            & > div{
+                &:first-child{
+                    div{
+                        
+                        color: $white;
+                    }
+                }
+                
+            }
+        }
+       
+        
+    }
+
+}

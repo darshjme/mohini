@@ -1,0 +1,182 @@
+.badge{
+    line-height: 1.5;
+    border-radius: 0.625rem;
+    padding: 0.35rem 0.825rem;
+    border: 0.0625rem solid transparent;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 5px;
+}
+.badge-rounded{
+    border-radius: 1.25rem;
+    padding:0.1875rem 0.8125rem ;
+}
+.badge-circle{
+    border-radius: 50%;
+    padding: 0;
+    min-width: unset;
+    width: 1.75rem;
+    height: 1.75rem;
+    line-height: 1.75rem;
+    display: inline-block;
+    text-align: center;
+}
+.badge-xxl{
+    display: block;
+    padding: 1.375rem 1.5625rem;
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 1.125rem 0;
+    overflow: hidden;
+    border-radius:$radius;
+}
+.badge-lg {
+    font-size: 0.875rem;
+    padding: 0rem 0.625rem;
+    line-height: 1.875rem;
+}
+.badge-xl {
+    font-size: 1rem;
+    padding: 0rem 0.9375rem;
+    line-height: 2.1875rem;
+}
+.badge-xs {
+    font-size: 0.625rem;
+    padding: 0rem 0.3125rem;
+    line-height: 1.125rem;
+}
+.badge-sm {
+	font-size: 0.75rem;
+    padding: 0.413rem;
+    line-height: 0.6875rem;
+    border-radius: $radius-sm;
+}
+.badge-outline{
+	&-primary{
+		border: 0.0625rem solid var(--primary);
+		color: var(--primary);
+	}
+	&-secondary{
+		border: 0.0625rem solid $secondary;
+		color: $secondary;	
+	}
+	&-success{
+		border: 0.0625rem solid $success;
+		color: $success;
+	}
+	&-info{
+		border: 0.0625rem solid $info;
+		color: $info;
+	}
+	&-warning{
+		border: 0.0625rem solid $warning;
+		color: $warning;
+	}
+	&-danger{
+		border: 0.0625rem solid $danger;
+		color: $danger;
+	}
+	&-light{
+		border: 0.0625rem solid $border;
+		color: $dark;
+	}
+	&-dark{
+		border: 0.0625rem solid $dark;
+		color: $dark;
+	}
+}
+.light{
+	&.badge-default{
+		background: #ADB6C7;
+	}
+	&.badge-success{
+		background-color: $success-light;
+		color: $success;
+	}
+	&.badge-info {
+		background-color: $info-light;
+		color:$info;		
+	}
+	&.badge-primary {
+		background-color: var(--rgba-primary-1);
+		color:var(--primary);	
+	}
+	&.badge-secondary {
+		background: $secondary-light;
+		color:$secondary;
+	}
+	&.badge-warning {
+		background: $warning-light;
+		color:$warning;	
+	}
+	&.badge-danger {
+		background: $danger-light;
+		color: $danger;
+	}
+	&.badge-dark {
+		background: #000;
+		color: $white;
+	}
+}
+
+
+
+.badge-default{
+    background: #ADB6C7;
+}
+.badge-success {
+    background-color: $success;
+}
+.badge-secondary {
+    background-color: $secondary;
+}
+.badge-info {
+    background-color: $info;
+}
+.badge-primary {
+    background-color: var(--primary);
+}
+.badge-warning {
+    background-color: $warning;
+}
+.badge-danger {
+    background-color: $danger;
+}
+.badge-dark {
+    background-color: $dark;
+}
+.badge-light {
+    background-color: var(--light);
+    color:var(--text-dark)!important;
+}
+
+.bootstrap-label{
+    .label{
+        display: inline-block;
+        margin-#{$ic-pos-right}: 1rem;
+
+        &:last-child{
+            margin-#{$ic-pos-right}: 0;
+        }
+    }
+}
+.badge-demo{
+    .badge{
+        margin-#{$ic-pos-right}: 0.3125rem;
+        margin-bottom: 0.3125rem;
+
+        &:last-child{
+            margin-#{$ic-pos-right}: 0;
+        }
+    }
+}
+.bootstrap-badge-buttons{
+    button{
+        margin-#{$ic-pos-right}: .2rem;
+        margin-bottom: 1rem;
+
+        &:last-child{
+            margin-#{$ic-pos-right}: 0;
+        }
+    }
+}

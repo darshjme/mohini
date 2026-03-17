@@ -1,0 +1,70 @@
+.header-left {
+	//search-area
+    .search-area {
+        width: 45.625rem;
+        border-radius: 50%;
+
+        .form-control {
+            height: 3rem;
+			border-#{$ic-pos-left}: 0;
+            border-color: var(--border);
+            border-top-#{$ic-pos-left}-radius: $radius;
+            border-bottom-#{$ic-pos-left}-radius: $radius;
+            background: var(--card);
+			color: var(--text);
+			font-size: 15px;
+
+            &:hover,
+            &:focus {
+                border-color: var(--border);
+            }
+
+            &::placeholder {
+                color: var(--text-dark);
+            }
+        }
+
+        .input-group-text {
+			border-#{$ic-pos-right}: 0;
+            height: 3rem;
+            border-radius: $radius;
+            background: var(--card);
+            padding: 0 0.8125rem;
+            border-color: var(--border);
+            font-size: 2rem;
+
+            i {
+                font-size: 1.30rem;
+				color: #080808;
+            }
+        }
+
+        @include custommq ($max: 100rem) {
+            width: 15.625rem;
+        }
+
+        @include respond ('tab-land') {
+            display: none;
+        }
+    }
+	&>li {
+        &:not(:first-child) {
+            padding-#{$ic-pos-left}: 1.25rem;
+
+            @include respond('tab-land') {
+                padding-#{$ic-pos-left}: 1rem;
+            }
+
+            @include respond('phone') {
+                padding-#{$ic-pos-left}: 0.4rem;
+            }
+        }
+    }
+
+    .invoices-btn {
+        @include respond ('phone') {
+            display: none;
+        }
+    }
+}
+

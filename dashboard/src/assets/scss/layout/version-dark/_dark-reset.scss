@@ -1,0 +1,72 @@
+[data-theme-version="dark"] {
+    background: $d-bg;
+    
+	--nav-headbg : #{$dark-card};
+	--sidebar-bg : #{$dark-card};
+	--headerbg : #{$dark-card};
+	 --primary: #3862CE; 
+	
+	 --card : #{$dark-card};
+    --text-dark : #{$d-text-dark};
+    --text-gray : #{$d-text-gray};
+    --text : #{$d-text};
+    --body-bg : #{$d-bg};
+    --light : #{$d-bg};
+    --border:#{$d-border};
+    --border : #{$d-border};
+    --border-dark:#{$d-border};
+    --bs-tertiary-bg: #{$d-bg};
+    --bs-border-color: #{$d-border};
+	
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        color: $white;
+    }
+    a.link {
+        color: $d-ctd;
+    }
+    a.link:focus,
+    a.link:hover {
+        color: $info;
+    }
+
+    &[data-primary="color_1"],
+	&[data-primary="color_3"]{
+		 --primary: #3862CE; 
+        --rgba-primary-1: rgba(56, 98, 206, 0.1);
+        --rgba-primary-2: rgba(56, 98, 206, 0.2);
+        --rgba-primary-3: rgba(56, 98, 206, 0.3);
+        --rgba-primary-4: rgba(56, 98, 206, 0.4);
+        --rgba-primary-5: rgba(56, 98, 206, 0.5);
+        --rgba-primary-6: rgba(56, 98, 206, 0.6);
+        --rgba-primary-7: rgba(56, 98, 206, 0.7);
+        --rgba-primary-8: rgba(56, 98, 206, 0.8);
+        --rgba-primary-9: rgba(56, 98, 206, 0.9);
+	}
+
+    a {
+        &:hover {
+            color: $white;
+        }
+    }
+	
+	
+    //Generating border classess
+    @each $value in $borders {
+        @if $value == "" {
+            .border {
+                border: 0.0625rem solid $d-border !important;
+            }
+        } @else {
+            .border-#{$value} {
+                border-#{$value}: 0.0625rem solid $d-border !important;
+            }
+        }
+    }
+
+
+}

@@ -1,0 +1,233 @@
+.success-tab {
+    padding: 0 20px;
+    margin-bottom: 20px;
+    gap: 7px;
+    display: flex;
+
+
+    .nav-item {
+        .nav-link {
+            height: 70px;
+            width: 90px;
+            border: 2px dotted var(--border);
+            box-shadow: none;
+
+            span {
+                color: $body-color;
+                white-space: nowrap;
+                font-weight: 500;
+                display: block;
+            }
+
+            i {
+                font-size: 20px;
+                color: $body-color;
+            }
+
+            img {
+                width: 100%;
+            }
+
+            &.active {
+                background-color: transparent;
+                border-style: solid;
+                border-color: var(--primary);
+
+                svg {
+                    path {
+                        fill: var(--primary);
+                    }
+
+                }
+
+                span {
+                    color: var(--primary);
+                }
+            }
+            @include respond ('phone'){
+                height: 60px;
+                width: 70px;
+            }
+        }
+
+        @include respond ('phone') {
+            margin-right: 12px;
+            margin-bottom: 12px;
+        }
+    }
+    @include respond ('phone') {
+        margin-bottom: 0;
+    }
+}
+
+
+//dashboard-3 //
+
+.c-con {
+    h4 {
+        img {
+            width: 22px;
+            margin-left: 8px;
+        }
+    }
+}
+
+.c-con-prise {
+    margin-top: 18px;
+
+    h3 {
+        font-weight: 600;
+    }
+}
+
+.c-con-3d {
+    position: relative;
+
+    img {
+        position: absolute;
+        right: 0px;
+        top: -28px;
+        width: 172px;
+
+        @include custommq($max: 1600px) {
+            right: -7px;
+            top: -10px;
+            width: 150px;
+        }
+
+        @include custommq($max: 1500px) {
+            width: 111px;
+        }
+
+        @include respond ('laptop') {
+            width: 73px;
+        }
+
+        @include respond ('tab-land') {
+            width: 145px;
+        }
+
+        @include custommq($max: 626px) {
+            width: 100px;
+        }
+    }
+}
+
+.crm-cart {
+    height: 200px;
+    overflow: hidden;
+
+    .card-header {
+        span {
+            i {
+                transform: scale(0.8);
+            }
+        }
+    }
+
+    .crm-cart-data {
+        p {
+            font-size: 24px;
+            margin-bottom: 0;
+            color: black;
+            font-weight: 600;
+        }
+    }
+
+    .crm-cart-data {
+        p {
+            font-size: 24px;
+            margin-bottom: 0;
+            color: black;
+            font-weight: 600;
+        }
+    }
+
+    #columnChart {
+        margin-top: -35px;
+    }
+}
+
+.icon-box {
+    height: 2.5rem;
+    width: 2.5rem;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    line-height: 2.375rem;
+    border-radius: $radius;
+}
+
+.depostit-card {
+    overflow: hidden;
+    z-index: 1;
+
+    .depostit-card-media {
+        position: relative;
+        z-index: 2;
+
+        h3 {
+            font-weight: 600;
+            margin: 0;
+            line-height: 1.346;
+        }
+
+        h6 {
+            font-weight: 400;
+            margin: 0;
+        }
+
+        &.style-1 {
+            padding: unset;
+            margin-bottom: 2rem;
+        }
+    }
+
+    .progress-box {
+        margin-top: 0.625rem;
+
+        .progress {
+            height: 0.613rem;
+            margin-top: 0.588rem;
+            background-color: #E6EAEE;
+        }
+    }
+}
+
+.same-card {
+    .depostit-card-media {
+        padding: 18px 20px;
+    }
+}
+
+.add-visit {
+    h6 {
+        font-size: 14px;
+        font-weight: 400;
+    }
+}
+
+.heading-data {
+    background: #fffef8;
+
+    td {
+        background: var(--rgba-secondary-1) !important;
+        color: var(--primary);
+
+        svg {
+            path {
+                fill: var(--primary);
+            }
+        }
+    }
+}
+.cat-name{
+    white-space: nowrap;
+}
+.success-tbl{
+    tr{
+        td{
+            white-space: nowrap;
+        }
+    }
+}

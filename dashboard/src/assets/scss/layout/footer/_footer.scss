@@ -1,0 +1,20 @@
+.footer {
+    background-color: var(--body-bg);
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    
+	.copyright {
+        padding: 20px 20px;
+		border-top: 1px solid var(--border);
+		
+		p {
+            text-align: center;
+            margin: 0;
+			color:var(--text);
+			
+        }
+        a{
+            color: var(--primary);
+        }
+    }
+}

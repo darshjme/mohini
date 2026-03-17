@@ -1,0 +1,100 @@
+/////////////////
+// Header
+/////////////////
+.header {
+    height: var(--dz-header-height);
+    z-index: 1;
+    position: var(--dz-header-pos);
+    padding: 0rem;
+    background:var(--headerbg);
+    z-index: 3;
+    top: 0;
+    width: 100%;
+    padding-#{$ic-pos-left}: var(--dz-sidebar-width);
+    transition: all .2s ease;
+	
+	
+    .header-content {
+        position: relative;
+        height: 100%;
+        padding-#{$ic-pos-left}: 1.9375rem;
+        padding-#{$ic-pos-right}: 1.875rem;
+        align-items: center;
+        display: flex;
+		border-bottom: 1px solid var(--border);
+		
+        @include custommq($max: 47.9375rem) {
+            padding-#{$ic-pos-left}: 3.75rem;
+			padding-#{$ic-pos-right}: 0.938rem;
+        }
+		@include respond ('phone'){
+			padding-#{$ic-pos-right}:0.538rem;
+		}
+        .nav-control{
+            #{$ic-pos-right}: auto;
+            #{$ic-pos-left}: 1rem;
+        }
+		
+    }
+    .navbar {
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        .navbar-collapse {
+            height: 100%;
+            width: 100%;
+        }
+    }
+    @include respond('phone-land'){
+        padding-#{$ic-pos-left}: 5rem;
+    }
+}
+
+[data-header-position="fixed"] {
+    --dz-header-pos : fixed;
+    .content-body {
+        padding-top: var(--dz-header-height);
+    }
+}
+.ic-theme-mode{
+    background-color: var(--card);
+    transition: all 0.5s ease-in-out;
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: $radius;
+    box-shadow: 0 10px 20px rgba(197, 202, 220, 0.1);
+    padding: 3px;
+	display: flex;
+	
+	&:after{
+		content: "";
+		background-color: #E9EFF6;
+		border-radius: $radius-sm;
+		height: calc(100% - 8px);
+		width: calc(50% - 6px);
+		position: absolute;
+		left: 4px;
+		top: 4px;
+		transition-property: all;
+		transition-timing-function: linear;
+		transition-duration: .2s;
+	}
+	&.active{
+		&:after{
+			left: calc(50% + 2px);
+		}
+	}
+	span{
+		padding: 10px 27px;
+		position: relative;
+		z-index: 1;
+		width: 50%;
+		font-size: 15px;
+	}
+}
+
+[data-theme-version=dark]{
+	.ic-theme-mode span:not(.dark){
+		color: #fff;
+	}
+}
