@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 80">
+  <defs>
+    <linearGradient id="cardBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#161b22"/>
+      <stop offset="100%" stop-color="#0d1117"/>
+    </linearGradient>
+  </defs>
+  <style>
+    @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+    .card { animation: fadeIn 0.6s ease-out forwards; }
+    .label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    .val { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+  </style>
+  <rect width="840" height="80" fill="#0d1117" rx="8"/>
+
+  <!-- Card 1: Skills -->
+  <g class="card" style="animation-delay: 0s">
+    <rect x="12" y="10" width="195" height="60" rx="10" fill="url(#cardBg)" stroke="#58a6ff" stroke-width="1"/>
+    <text x="50" y="38" class="val" font-size="24" font-weight="700" fill="#e6edf3">104</text>
+    <text x="50" y="56" class="label" font-size="11" fill="#8b949e">bundled skills</text>
+    <rect x="28" y="26" width="14" height="14" rx="3" fill="none" stroke="#58a6ff" stroke-width="1.2"/>
+    <path d="M32 33 L34 35 L39 30" stroke="#58a6ff" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Card 2: Channels -->
+  <g class="card" style="animation-delay: 0.15s">
+    <rect x="219" y="10" width="195" height="60" rx="10" fill="url(#cardBg)" stroke="#3fb950" stroke-width="1"/>
+    <text x="257" y="38" class="val" font-size="24" font-weight="700" fill="#e6edf3">40</text>
+    <text x="257" y="56" class="label" font-size="11" fill="#8b949e">channels</text>
+    <rect x="235" y="26" width="14" height="14" rx="3" fill="none" stroke="#3fb950" stroke-width="1.2"/>
+    <path d="M239 30 L246 30 M239 33 L244 33 M239 36 L242 36" stroke="#3fb950" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Card 3: Models -->
+  <g class="card" style="animation-delay: 0.3s">
+    <rect x="426" y="10" width="195" height="60" rx="10" fill="url(#cardBg)" stroke="#a371f7" stroke-width="1"/>
+    <text x="464" y="38" class="val" font-size="24" font-weight="700" fill="#e6edf3">188</text>
+    <text x="464" y="56" class="label" font-size="11" fill="#8b949e">models</text>
+    <rect x="442" y="26" width="14" height="14" rx="3" fill="none" stroke="#a371f7" stroke-width="1.2"/>
+    <circle cx="449" cy="33" r="3.5" fill="none" stroke="#a371f7" stroke-width="1"/>
+    <circle cx="449" cy="33" r="1.2" fill="#a371f7"/>
+  </g>
+
+  <!-- Card 4: Tests -->
+  <g class="card" style="animation-delay: 0.45s">
+    <rect x="633" y="10" width="195" height="60" rx="10" fill="url(#cardBg)" stroke="#f78166" stroke-width="1"/>
+    <text x="671" y="38" class="val" font-size="24" font-weight="700" fill="#e6edf3">2,285+</text>
+    <text x="671" y="56" class="label" font-size="11" fill="#8b949e">tests passing</text>
+    <rect x="649" y="26" width="14" height="14" rx="3" fill="none" stroke="#f78166" stroke-width="1.2"/>
+    <path d="M653 33 L655 35 L660 30" stroke="#f78166" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
