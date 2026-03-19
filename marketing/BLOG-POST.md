@@ -250,7 +250,7 @@ mohini init
 mohini serve --channel terminal --model ollama/llama3.2
 ```
 
-**Repository:** https://github.com/mohini-ai/mohini
+**Repository:** https://github.com/darshjme/mohini
 **Documentation:** https://mohini.ai/docs
 **Discord:** https://discord.gg/mohini
 **License:** Apache-2.0 OR MIT

@@ -12,7 +12,7 @@ Open-source infrastructure for autonomous AI agents. 14 Rust crates. 40 channels
 
 ### CTA Buttons
 - **[Get Started →]** → /docs/quickstart
-- **[Star on GitHub ⭐]** → https://github.com/mohini-ai/mohini
+- **[Star on GitHub ⭐]** → https://github.com/darshjme/mohini
 
 ### Hero Code Block
 ```bash
@@ -171,7 +171,7 @@ mohini serve
 
 ### From Source
 ```bash
-git clone https://github.com/mohini-ai/mohini
+git clone https://github.com/darshjme/mohini
 cd mohini
 cargo build --release
 ./target/release/mohini serve
@@ -181,7 +181,7 @@ cargo build --release
 ```bash
 docker run -d --name mohini \
   -v ./mohini.toml:/etc/mohini/mohini.toml \
-  ghcr.io/mohini-ai/mohini:latest
+  ghcr.io/darshjme/mohini:latest
 ```
 
 ---
@@ -191,7 +191,7 @@ docker run -d --name mohini \
 ### Ready to deploy your agent army?
 
 **[Get Started →]** → /docs/quickstart
-**[Star on GitHub ⭐]** → https://github.com/mohini-ai/mohini
+**[Star on GitHub ⭐]** → https://github.com/darshjme/mohini
 **[Join Discord 💬]** → https://discord.gg/mohini
 **[Read the Docs 📖]** → https://mohini.ai/docs
 

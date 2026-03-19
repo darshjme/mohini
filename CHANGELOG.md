@@ -163,4 +163,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prometheus metrics for monitoring
 - Config hot-reload without restart
 
-[0.1.0]: https://github.com/mohini-ai/mohini/releases/tag/v0.1.0
+[0.1.0]: https://github.com/darshjme/mohini/releases/tag/v0.1.0

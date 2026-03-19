@@ -28,7 +28,7 @@ Thank you for your interest in contributing to Mohini. This guide covers everyth
 ### Clone and Build
 
 ```bash
-git clone https://github.com/mohini-ai/mohini.git
+git clone https://github.com/darshjme/mohini.git
 cd mohini
 cargo build
 ```
@@ -415,6 +415,6 @@ Please report unacceptable behavior to the maintainers.
 
 ## Questions?
 
-- Open a [GitHub Discussion](https://github.com/mohini-ai/mohini/discussions) for questions.
-- Open a [GitHub Issue](https://github.com/mohini-ai/mohini/issues) for bugs or feature requests.
+- Open a [GitHub Discussion](https://github.com/darshjme/mohini/discussions) for questions.
+- Open a [GitHub Issue](https://github.com/darshjme/mohini/issues) for bugs or feature requests.
 - Check the [docs/](docs/) directory for detailed guides on specific topics.

@@ -120,7 +120,7 @@ convert icon.svg -resize 256x256 -define icon:auto-resize=256,128,64,48,32,16 ic
 Options:
 - **GitHub Pages**: Point `mohini.sh` to a GitHub Pages site that redirects `/` to `scripts/install.sh` and `/install.ps1` to `scripts/install.ps1` from the repo's latest release.
 - **Cloudflare Workers / Vercel**: Serve the install scripts with proper `Content-Type: text/plain` headers.
-- **Raw GitHub redirect**: Use `mohini.sh` as a CNAME to `raw.githubusercontent.com/mohini-ai/mohini/main/scripts/install.sh` (less reliable).
+- **Raw GitHub redirect**: Use `mohini.sh` as a CNAME to `raw.githubusercontent.com/darshjme/mohini/main/scripts/install.sh` (less reliable).
 
 The install scripts reference:
 - `https://mohini.sh` → serves `scripts/install.sh`
@@ -128,7 +128,7 @@ The install scripts reference:
 
 Until the domain is set up, users can install via:
 ```bash
-curl -sSf https://raw.githubusercontent.com/mohini-ai/mohini/main/scripts/install.sh | sh
+curl -sSf https://raw.githubusercontent.com/darshjme/mohini/main/scripts/install.sh | sh
 ```
 
 ---
@@ -237,7 +237,7 @@ After the release workflow completes (~15-30 min):
 - [ ] SHA256 checksum files present for each CLI archive
 
 ### Auto-Updater Manifest
-Visit: `https://github.com/mohini-ai/mohini/releases/latest/download/latest.json`
+Visit: `https://github.com/darshjme/mohini/releases/latest/download/latest.json`
 
 - [ ] JSON is valid
 - [ ] Contains `signature` fields (not empty strings)
@@ -246,11 +246,11 @@ Visit: `https://github.com/mohini-ai/mohini/releases/latest/download/latest.json
 
 ### Docker Image
 ```bash
-docker pull ghcr.io/mohini-ai/mohini:latest
-docker pull ghcr.io/mohini-ai/mohini:0.1.0
+docker pull ghcr.io/darshjme/mohini:latest
+docker pull ghcr.io/darshjme/mohini:0.1.0
 
 # Verify both architectures
-docker run --rm ghcr.io/mohini-ai/mohini:latest --version
+docker run --rm ghcr.io/darshjme/mohini:latest --version
 ```
 
 ### Desktop App Auto-Update (test with v0.1.1)

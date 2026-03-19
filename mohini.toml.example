@@ -1,5 +1,5 @@
-# OpenFang Agent OS — Example Configuration
-# Copy to ~/.openfang/config.toml and customize.
+# Mohini Agent OS — Example Configuration
+# Copy to ~/.mohini/config.toml and customize.
 
 # API server settings
 # api_key = ""                               # Set to enable Bearer auth (recommended)
@@ -13,7 +13,7 @@ api_key_env = "ANTHROPIC_API_KEY"         # Environment variable holding API key
 
 [memory]
 decay_rate = 0.05                         # Memory confidence decay rate
-# sqlite_path = "~/.openfang/data/openfang.db"   # Optional: custom DB path
+# sqlite_path = "~/.mohini/data/mohini.db"        # Optional: custom DB path
 
 [network]
 listen_addr = "127.0.0.1:4200"           # OFP listen address

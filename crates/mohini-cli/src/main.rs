@@ -81,7 +81,7 @@ const AFTER_HELP: &str = "\
   3. mohini chat              Start chatting!
 
 \x1b[1;36mMore:\x1b[0m
-  Docs:       https://github.com/mohini-ai/mohini
+  Docs:       https://github.com/darshjme/mohini
   Dashboard:  http://127.0.0.1:4200/ (when daemon is running)";
 
 /// Mohini — the open-source Agent Operating System.
@@ -1388,7 +1388,7 @@ fn write_config_if_missing(
     } else {
         let default_config = format!(
             r#"# Mohini Agent OS configuration
-# See https://github.com/mohini-ai/mohini for documentation
+# See https://github.com/darshjme/mohini for documentation
 
 # For Docker, change to "0.0.0.0:4200" or set MOHINI_LISTEN env var.
 api_listen = "127.0.0.1:4200"
@@ -2115,7 +2115,7 @@ fn cmd_doctor(json: bool, repair: bool) {
                 let (provider, api_key_env, model) = detect_best_provider();
                 let default_config = format!(
                     r#"# Mohini Agent OS configuration
-# See https://github.com/mohini-ai/mohini for documentation
+# See https://github.com/darshjme/mohini for documentation
 
 # For Docker, change to "0.0.0.0:4200" or set MOHINI_LISTEN env var.
 api_listen = "127.0.0.1:4200"

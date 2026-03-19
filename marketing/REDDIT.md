@@ -50,7 +50,7 @@ The core challenge is real-time coordination of multiple AI agents across dozens
 - `rust-version = "1.75"` MSRV
 - Apache-2.0 OR MIT dual-licensed
 
-**Repo:** https://github.com/mohini-ai/mohini
+**Repo:** https://github.com/darshjme/mohini
 
 Interested in feedback on the crate architecture, the WASM sandboxing approach, and the MMP protocol design. PRs welcome.
 
@@ -98,6 +98,6 @@ mohini serve --model ollama/llama3.2 --channel terminal
 
 **The system is written in Rust** (14 crates), runs as a single binary, and I've had it running 24/7 on a single server for months without memory leaks or crashes.
 
-**Repo:** https://github.com/mohini-ai/mohini
+**Repo:** https://github.com/darshjme/mohini
 
 Looking for feedback from the local LLM community. What models are you running? What integrations would be most useful?

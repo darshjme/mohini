@@ -1118,7 +1118,7 @@ complex_threshold = 500
 
     let config = format!(
         r#"# Mohini Agent OS configuration
-# See https://github.com/mohini-ai/mohini for documentation
+# See https://github.com/darshjme/mohini for documentation
 
 api_listen = "127.0.0.1:4200"
 

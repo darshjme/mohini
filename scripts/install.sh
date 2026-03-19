@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-REPO="mohini-ai/mohini"
+REPO="darshjme/mohini"
 INSTALL_DIR="${MOHINI_INSTALL_DIR:-$HOME/.mohini/bin}"
 
 detect_platform() {

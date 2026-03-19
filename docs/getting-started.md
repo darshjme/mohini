@@ -18,7 +18,7 @@ This guide walks you through installing Mohini, configuring your first LLM provi
 
 ### Option 1: Desktop App (Windows / macOS / Linux)
 
-Download the installer for your platform from the [latest release](https://github.com/mohini-ai/mohini/releases/latest):
+Download the installer for your platform from the [latest release](https://github.com/darshjme/mohini/releases/latest):
 
 | Platform | File |
 |---|---|
@@ -49,13 +49,13 @@ Downloads the latest CLI binary, verifies its SHA256 checksum, and adds it to yo
 Requires Rust 1.75+:
 
 ```bash
-cargo install --git https://github.com/mohini-ai/mohini mohini-cli
+cargo install --git https://github.com/darshjme/mohini mohini-cli
 ```
 
 Or build from source:
 
 ```bash
-git clone https://github.com/mohini-ai/mohini.git
+git clone https://github.com/darshjme/mohini.git
 cd mohini
 cargo install --path crates/mohini-cli
 ```
@@ -63,20 +63,20 @@ cargo install --path crates/mohini-cli
 ### Option 5: Docker
 
 ```bash
-docker pull ghcr.io/mohini-ai/mohini:latest
+docker pull ghcr.io/darshjme/mohini:latest
 
 docker run -d \
   --name mohini \
   -p 4200:4200 \
   -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY \
   -v mohini-data:/data \
-  ghcr.io/mohini-ai/mohini:latest
+  ghcr.io/darshjme/mohini:latest
 ```
 
 Or use Docker Compose:
 
 ```bash
-git clone https://github.com/mohini-ai/mohini.git
+git clone https://github.com/darshjme/mohini.git
 cd mohini
 # Set your API keys in environment or .env file
 docker compose up -d

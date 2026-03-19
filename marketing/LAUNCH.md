@@ -72,7 +72,7 @@ mohini serve --channel whatsapp --model claude-opus-4
 
 **License:** Apache-2.0 OR MIT (dual-licensed)
 
-**Repo:** https://github.com/mohini-ai/mohini
+**Repo:** https://github.com/darshjme/mohini
 
 I've been running this 24/7 on a single AMD EPYC server for months. It handles my WhatsApp, manages sub-agent swarms, runs autonomous research loops, and hasn't crashed once (systemd helps, but Rust's memory safety is the real reason).
 

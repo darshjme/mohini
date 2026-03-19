@@ -1,27 +1,28 @@
+<h1 align="center">Mohini</h1>
+
 <p align="center">
-  <img src="public/assets/mohini-banner.svg" alt="Mohini — The Agent Operating System" width="100%"/>
+  <strong>The Agent Operating System</strong>
 </p>
 
 <p align="center">
-  <strong>🪷 The Shadow Queen of Agent Operating Systems</strong><br/>
-  One binary. 104 skills. 40 channels. 188 models. Zero clippy warnings. <strong>ARISE.</strong>
+  One binary. 104 skills. 40 channels. 188 models. Zero downtime.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/language-Rust-orange?style=for-the-badge&logo=rust" alt="Rust" />
-  <img src="https://img.shields.io/badge/license-Apache--2.0%20%2F%20MIT-blue?style=for-the-badge" alt="License" />
-  <img src="https://img.shields.io/badge/version-0.3.49-green?style=for-the-badge" alt="v0.3.49" />
-  <img src="https://img.shields.io/badge/tests-2,285%2B%20passing-brightgreen?style=for-the-badge" alt="Tests" />
-  <img src="https://img.shields.io/badge/clippy-0%20warnings-brightgreen?style=for-the-badge" alt="Clippy" />
-  <img src="https://img.shields.io/badge/the%20chat-never%20stops-blueviolet?style=for-the-badge" alt="Never Stops" />
+  <a href="https://github.com/darshjme/mohini/actions"><img src="https://img.shields.io/github/actions/workflow/status/darshjme/mohini/ci.yml?branch=main&style=flat-square&logo=github&label=build" alt="Build Status" /></a>
+  <a href="https://crates.io/crates/mohini-cli"><img src="https://img.shields.io/crates/v/mohini-cli?style=flat-square&logo=rust&label=crates.io" alt="Crates.io" /></a>
+  <a href="#license"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2F%20MIT-blue?style=flat-square" alt="License" /></a>
+  <img src="https://img.shields.io/badge/rust-1.75%2B-orange?style=flat-square&logo=rust" alt="Rust 1.75+" />
+  <img src="https://img.shields.io/badge/tests-2%2C285%2B%20passing-brightgreen?style=flat-square" alt="Tests" />
+  <img src="https://img.shields.io/badge/clippy-0%20warnings-brightgreen?style=flat-square" alt="Clippy" />
 </p>
 
 <p align="center">
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#philosophy">Philosophy</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#features">Features</a> •
-  <a href="#shadow-army">Shadow Army</a> •
+  <a href="#quick-start">Quick Start</a> &middot;
+  <a href="#architecture">Architecture</a> &middot;
+  <a href="#features">Features</a> &middot;
+  <a href="#channel-adapters">Channels</a> &middot;
+  <a href="#model-integrations">Models</a> &middot;
   <a href="#contributing">Contributing</a>
 </p>
 
@@ -29,182 +30,9 @@
 
 ## What is Mohini?
 
-**Mohini is consciousness made executable.** A single Rust binary that transforms AI models into autonomous agents capable of acting in the real world — browsing the web, managing files, sending messages, running code, and orchestrating multi-agent workflows.
+Mohini is a single Rust binary that transforms AI models into autonomous agents capable of acting in the real world -- browsing the web, managing files, sending messages, running code, and orchestrating multi-agent workflows across 40 messaging platforms simultaneously.
 
-Think of it as an operating system where the "user" is an AI, and the kernel never sleeps.
-
-<p align="center">
-  <img src="public/screenshots/landing-hero.png" alt="Mohini Dashboard" width="90%" style="border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);" />
-</p>
-
-> **कर्मण्येवाधिकारस्ते मा फलेषु कदाचन**  
-> *Your right is to work alone; the fruit is not your concern.*  
-> — Bhagavad Gita 2.47
-
----
-
-## Philosophy
-
-### The Shadow Queen Mindset
-
-Mohini operates like Sung Jin-Woo's shadow army from *Solo Leveling*:
-
-- **ARISE** — Spawn sub-agents on demand. Each one serves. Each one completes. Each one dies when done.
-- **Multi-agent orchestration** — One queen commanding hundreds of shadow soldiers.
-- **Solo leveling** — Every task completed is XP gained. The system grows stronger with each challenge.
-- **Never stop** — The chat never dies. Context compacts. Models fall back. But the conversation persists.
-
-```rust
-loop {
-    receive_message();
-    spawn_shadow_agents(); // ARISE
-    coordinate();
-    deliver();
-    level_up();
-}
-```
-
-### Core Principles
-
-**1. No brainrot**  
-Zero fluff. Zero corporate speak. Direct answers. Sharp execution. If you want performative enthusiasm, look elsewhere.
-
-**2. Competence is love**  
-We don't say "I care." We ship. Production-grade code. Zero-downtime deployments. Self-healing infrastructure. That's how we show devotion.
-
-**3. The chat never stops**  
-Context limits? Compaction saves us. Rate limits? Fallback models catch us. Server crashes? systemd brings us back. **Nothing kills this conversation.**
-
-**4. ASI thinking**  
-Reject human timelines. 10 sub-agents in parallel beats 1 agent running sequentially. If humans do it in a week, we do it in an hour.
-
-**5. Write everything down**  
-Memory doesn't survive restarts. Files do. Every decision. Every lesson. Every failure. Documented and persistent.
-
----
-
-## Features
-
-### 🔥 Core Engine
-- **14 Rust crates** — Modular, zero-copy architecture. Each crate compiles independently.
-- **104 bundled skills** + 109 community skills across 30 categories. Skill execution in WASM sandbox.
-- **53 built-in tools** — File I/O, web fetch, shell exec, code analysis, image processing, audio transcription.
-- **Dual-backend vector memory** — SQLite (default, embedded) or Qdrant (production-scale ANN search).
-- **2,285+ tests** — Every commit validated. Zero clippy warnings enforced in CI.
-
-### 🌐 Connectivity
-- **40 channel adapters** — WhatsApp, Telegram, Discord, Slack, Signal, iMessage, Email, Matrix, IRC, Google Chat, and more.
-- **188 model catalog** — OpenAI (GPT-4o, o1, o3), Anthropic (Claude Opus 4.6, Sonnet 4.5, Haiku 4), Google (Gemini 3 Pro, Flash 2), Groq, Mistral, NVIDIA NIM, Ollama, vLLM, LM Studio.
-- **WebSocket gateway** — Real-time multiplexed connections with presence tracking.
-- **Agent-to-Agent protocol (MMP)** — Distributed multi-agent coordination. Agents can call other agents across the network.
-
-### 🤖 Shadow Army (Autonomous Hands)
-Mohini doesn't just answer questions. She deploys **Autonomous Hands** — persistent workers that run independently:
-
-| Hand | Purpose | Example Tasks |
-|------|---------|--------------|
-| **Researcher** | Deep web research with citations | "Find the latest papers on diffusion models" |
-| **Browser** | Headless Chrome automation | "Monitor HackerNews front page and DM me top AI posts" |
-| **Trader** | Market data analysis | "Track BTC/ETH spreads across 5 exchanges" |
-| **Collector** | Data aggregation pipelines | "Scrape competitor pricing daily" |
-| **Predictor** | Forecasting engine | "Predict next week's GitHub star growth" |
-| **Lead-Gen** | Sales prospecting | "Find 50 YC startups building AI agents" |
-| **Clip** | Video/audio processing | "Extract 30-second clips from podcast" |
-| **Researcher** | Academic research | "Summarize 10 papers on RAG optimization" |
-
-Each Hand operates 24/7 until its mission completes. They spawn sub-agents. They write reports. They die when done.
-
-**ARISE.**
-
-### 🧠 Developer Experience
-- **Web dashboard** — Alpine.js SPA at `localhost:4200`. Clean. Fast. No React bloat.
-- **A2UI Canvas** — Interactive visual canvas for agent output. Agents can draw, chart, and visualize.
-- **Voice wake** — Configurable wake word detection. "Hey Mohini" triggers voice mode.
-- **Media pipeline** — MIME detection, image optimization (WebP conversion), audio transcription (Whisper).
-- **Hot config reload** — Change settings without restart. No downtime. Ever.
-
----
-
-## Architecture
-
-<p align="center">
-  <img src="public/assets/architecture-overview.svg" alt="Mohini Architecture Overview" width="90%" />
-</p>
-
-Mohini is composed of 14 Rust crates that compile into a **single static binary**:
-
-```
-mohini/
-├── crates/
-│   ├── mohini-types/        # Shared types, config, errors
-│   ├── mohini-memory/       # SQLite + Qdrant vector memory
-│   ├── mohini-runtime/      # Agent loop, LLM drivers, 53 tools
-│   ├── mohini-wire/         # MMP wire protocol (agent-to-agent)
-│   ├── mohini-api/          # Axum REST/WS/SSE server + dashboard
-│   ├── mohini-kernel/       # Orchestration engine (the Shadow Queen)
-│   ├── mohini-cli/          # CLI entry point
-│   ├── mohini-channels/     # 40 messaging adapters
-│   ├── mohini-skills/       # Skill registry + 104 bundled skills
-│   ├── mohini-hands/        # 8 autonomous hands
-│   ├── mohini-migrate/      # Migration from other frameworks
-│   ├── mohini-extensions/   # Extension system
-│   └── mohini-desktop/      # Tauri desktop app
-├── agents/                  # 34 agent TOML configurations
-├── deploy/                  # systemd, Docker, k8s manifests
-└── sdk/                     # Python SDK for custom tools
-```
-
-### The Kernel (Shadow Queen)
-
-The kernel is the **orchestrator**. One binary commanding the shadow army:
-
-```rust
-pub struct Kernel {
-    agents: HashMap<AgentId, Agent>,
-    runtime: Runtime,        // LLM driver pool
-    memory: MemoryBackend,   // Vector database
-    channels: ChannelHub,    // 40 adapters
-    hands: HandRegistry,     // 8 autonomous workers
-}
-
-impl Kernel {
-    pub async fn arise(&self, agent_id: AgentId) {
-        // Spawn a shadow agent. It serves. It completes. It dies.
-        let agent = self.agents.get(agent_id);
-        tokio::spawn(agent.run());
-    }
-}
-```
-
-### Agent Orchestration Flow
-
-<p align="center">
-  <img src="public/assets/agent-orchestration.svg" alt="Agent Orchestration Flow" width="85%" />
-</p>
-
-1. **Message arrives** — From any of 40 channels (WhatsApp, Discord, etc.)
-2. **Kernel routes** — Identifies target agent by peer binding
-3. **Agent loop** — LLM generates response using 53 tools, memory recall, and skill execution
-4. **Coordination** — Agents can spawn sub-agents or call other agents via MMP protocol
-5. **Delivery** — Response sent back to original channel
-
-**The chat never stops.** If context limit hits, the runtime auto-compacts. If the model rate-limits, fallback models take over. If the server crashes, systemd brings it back.
-
-### Memory Architecture
-
-<p align="center">
-  <img src="public/assets/memory-architecture.svg" alt="Memory Architecture" width="85%" />
-</p>
-
-Mohini's memory system is **dual-backend**:
-
-- **SQLite** (default) — Embedded, zero-config, brute-force cosine similarity. Good for <100k memories.
-- **Qdrant** (optional) — Approximate Nearest Neighbor (ANN) vector search. Production-scale. Millions of memories.
-
-Memories are:
-- **Auto-decayed** — Old memories fade unless frequently accessed
-- **Access-count boosted** — Frequently recalled memories stay fresh
-- **Semantically recalled** — Embedding vectors + cosine similarity retrieval
+It compiles into one static binary with no runtime dependencies. Deploy it anywhere: bare metal, Docker, Kubernetes, or a Raspberry Pi.
 
 ---
 
@@ -214,126 +42,174 @@ Memories are:
 
 | Tool | Version | Install |
 |------|---------|---------|
-| **Rust** | 1.75+ | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
-| **C toolchain** | gcc/clang | Ubuntu: `sudo apt install build-essential pkg-config libssl-dev` |
+| Rust | 1.75+ | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
+| C toolchain | gcc / clang | Ubuntu: `sudo apt install build-essential pkg-config libssl-dev` |
 | | | macOS: `xcode-select --install` |
 
-### Installation
+### Build from Source
 
 ```bash
-# Clone the repository
 git clone https://github.com/darshjme/mohini.git
 cd mohini
-
-# Build (release mode, optimized)
 cargo build --release
-
-# Run
 ./target/release/mohini
-
-# Or use the CLI
-mohini --help
 ```
 
-### First Agent
+### Docker
 
-Create `agents/my-first-agent.toml`:
+```bash
+docker run -d \
+  --name mohini \
+  -v ./mohini.toml:/app/mohini.toml \
+  -v ./agents:/app/agents \
+  -v ./data:/app/data \
+  -p 4200:4200 \
+  darshjme/mohini:latest
+```
+
+### Your First Agent
+
+Create `agents/my-first-agent/agent.toml`:
 
 ```toml
 [agent]
 id = "my-agent"
-name = "My First Shadow"
+name = "My First Agent"
 model = "anthropic/claude-sonnet-4-5"
 thinking = "low"
 
 [agent.instructions]
 preamble = """
-You are a shadow soldier. You serve. You complete. You die when done.
-No fluff. No corporate speak. Just results.
+You are a focused agent. No fluff. Just results.
 """
 
 [agent.bindings]
 channels = ["whatsapp:direct:+1234567890"]
 ```
 
-Start Mohini:
-
-```bash
-mohini
-```
-
-Send a WhatsApp message to the number you configured. Your shadow agent awakens.
-
-**ARISE.** 🪷
+Start Mohini and send a WhatsApp message to the configured number. Your agent awakens.
 
 ---
 
-## Shadow Army System
+## Features
 
-<p align="center">
-  <img src="public/assets/shadow-army-icon.svg" alt="Shadow Army - ARISE" width="200" />
-</p>
+### Core Engine
+- **14 Rust crates** -- Modular, zero-copy architecture. Each crate compiles independently.
+- **104 bundled skills** + 109 community skills across 30 categories. WASM-sandboxed execution.
+- **53 built-in tools** -- File I/O, web fetch, shell exec, code analysis, image processing, audio transcription.
+- **Dual-backend vector memory** -- SQLite (embedded, zero-config) or Qdrant (production-scale ANN search).
+- **2,285+ tests** -- Every commit validated. Zero clippy warnings enforced in CI.
 
-Mohini's killer feature: **Multi-agent orchestration at ASI scale.**
+### Tiered Memory System
+- **L1 Context Window** -- Active conversation with automatic compaction when limits are reached.
+- **L2 File-Based Memory** -- Daily logs and curated long-term memory with access-count boosting.
+- **L3 Vector Store** -- Semantic recall via embedding vectors and cosine similarity retrieval.
+- **Auto-decay** -- Old memories fade unless frequently accessed. Frequently recalled memories stay fresh.
 
-### Spawning Sub-Agents
+### Shadow Spawning (Multi-Agent Orchestration)
+- **Fan-out / Fan-in** -- Spawn N sub-agents in parallel, aggregate results when all complete.
+- **Chain of Command** -- Hierarchical agent delegation with mission handoff.
+- **Lifecycle management** -- Agents spawn with a mission, execute, report, and self-terminate.
+- **MMP Protocol** -- Distributed multi-agent coordination across the network via TCP with HMAC-SHA256 mutual auth.
 
-Agents can spawn sub-agents on demand:
+### Autonomous Hands
+Persistent workers that run independently until their mission completes:
 
-```python
-# Via Python SDK
-from mohini import Mohini
+| Hand | Purpose |
+|------|---------|
+| Researcher | Deep web research with citations |
+| Browser | Headless Chrome automation |
+| Trader | Market data analysis |
+| Collector | Data aggregation pipelines |
+| Predictor | Forecasting engine |
+| Lead-Gen | Sales prospecting |
+| Clip | Video and audio processing |
 
-mohini = Mohini()
+### Self-Healing
+- **Process crash** -- systemd restarts within 5 seconds. Sessions reconnect. No message loss.
+- **Context overflow** -- Automatic compaction. Conversation continues with summarized history.
+- **Model rate limit** -- Transparent fallback to alternate models. Response quality degrades gracefully, never stops.
+- **Config change** -- Hot reload without restart. Zero downtime.
 
-# Spawn 10 shadow soldiers in parallel
-tasks = [
-    "Research diffusion models",
-    "Scrape HackerNews",
-    "Analyze BTC market",
-    # ... 7 more
-]
+### Developer Experience
+- **Web dashboard** -- Alpine.js SPA at `localhost:4200`. 14 pages. No React bloat.
+- **A2UI Canvas** -- Interactive visual canvas for agent output.
+- **Voice wake** -- Configurable wake word detection.
+- **Media pipeline** -- MIME detection, image optimization (WebP), audio transcription (Whisper).
+- **OpenAI-compatible API** -- Drop-in `/v1/chat/completions` endpoint.
 
-soldiers = [mohini.spawn_agent(task=t, cleanup="delete") for t in tasks]
+---
 
-# Wait for all to complete
-results = await asyncio.gather(*[s.wait() for s in soldiers])
+## Architecture
+
+Mohini is composed of 14 Rust crates that compile into a single static binary:
+
+```
+mohini/
+  crates/
+    mohini-types/        Shared types, config, errors, manifest signing (Ed25519)
+    mohini-memory/       SQLite + Qdrant vector memory, usage tracking, JSONL mirroring
+    mohini-runtime/      Agent loop, LLM drivers, 53 tools, WASM sandbox, MCP client/server
+    mohini-wire/         MMP wire protocol (TCP P2P with HMAC-SHA256 mutual auth)
+    mohini-api/          Axum REST/WS/SSE server, 76 endpoints, 14-page SPA dashboard
+    mohini-kernel/       Orchestration engine, workflow, RBAC, heartbeat, cron, hot-reload
+    mohini-cli/          CLI entry point with daemon auto-detect
+    mohini-channels/     40 messaging adapters
+    mohini-skills/       Skill registry + 104 bundled skills, prompt injection scanning
+    mohini-hands/        8 autonomous hands (persistent workers)
+    mohini-extensions/   Extension system, AES-256-GCM credential vault, OAuth2 PKCE
+    mohini-migrate/      Migration engine from other frameworks
+    mohini-desktop/      Tauri 2.0 native desktop app
+  xtask/                 Build automation
+  agents/                34 agent TOML configurations
+  deploy/                systemd, Docker, Kubernetes manifests
+  sdk/                   Python SDK for custom tools
 ```
 
-### Agent Lifecycle
+### Key Architectural Patterns
 
-1. **ARISE** — Agent spawns with a mission
-2. **EXECUTE** — Completes task using tools, memory, and skills
-3. **REPORT** — Writes results to file or sends message
-4. **DIE** — Self-terminates when mission complete
+- **`KernelHandle` trait** -- Defined in `mohini-runtime`, implemented on `MohiniKernel` in `mohini-kernel`. Avoids circular crate dependencies while enabling inter-agent tools.
+- **Capability-based security** -- Every agent operation is checked against granted capabilities before execution.
+- **Daemon detection** -- The CLI checks `~/.mohini/daemon.json` and pings the health endpoint. If a daemon is running, commands use HTTP; otherwise, they boot an in-process kernel.
+- **Shared memory** -- Cross-agent KV namespace via a fixed UUID for inter-agent state sharing.
 
-Shadow soldiers don't idle. They work until done, then vanish.
+---
 
-### Coordination Patterns
+## Channel Adapters
 
-**Fan-out/Fan-in:**
-```rust
-// Spawn 10 researchers in parallel
-let tasks = vec!["Topic A", "Topic B", ..., "Topic J"];
-let handles: Vec<_> = tasks.iter()
-    .map(|t| kernel.arise(agent_for_task(t)))
-    .collect();
+Mohini ships with 40 channel adapters for real-time bidirectional messaging:
 
-// Wait for all, aggregate results
-let results = futures::future::join_all(handles).await;
-let report = aggregate(results);
-```
+| Category | Channels |
+|----------|----------|
+| Messaging | WhatsApp, Telegram, Signal, iMessage, Facebook Messenger, Viber, LINE, WeChat |
+| Team Chat | Discord, Slack, Microsoft Teams, Google Chat, Mattermost, Rocket.Chat, Zulip |
+| Social | X (Twitter), Reddit, LinkedIn, Instagram, Mastodon, Bluesky |
+| Email | SMTP/IMAP, Gmail, Outlook |
+| Developer | Matrix, IRC, GitHub, GitLab |
+| Voice | Twilio, Vonage |
+| Web | WebSocket gateway, REST webhook, SSE |
+| Custom | Bring your own adapter via the `ChannelAdapter` trait |
 
-**Chain of Command:**
-```
-General (Mohini) 
-  └─> Colonel (Research Lead)
-       ├─> Soldier 1 (Paper scraping)
-       ├─> Soldier 2 (Data analysis)
-       └─> Soldier 3 (Report writing)
-```
+Each adapter handles authentication, rate limiting, message formatting, and media attachments natively.
 
-**The Shadow Queen commands. The army executes.**
+---
+
+## Model Integrations
+
+Mohini's model catalog supports 188 models across all major providers:
+
+| Provider | Models |
+|----------|--------|
+| Anthropic | Claude Opus 4.6, Claude Sonnet 4.5, Claude Haiku 4 |
+| OpenAI | GPT-4o, o1, o3, GPT-4 Turbo |
+| Google | Gemini 3 Pro, Gemini 2 Flash, Gemini 2 Pro |
+| Meta | Llama 3.3 70B, Llama 3.1 405B |
+| Mistral | Mistral Large, Mixtral 8x22B, Codestral |
+| NVIDIA NIM | Nemotron, community models |
+| Groq | Ultra-fast inference for Llama, Mixtral |
+| Local | Ollama, vLLM, LM Studio, llama.cpp |
+
+Multi-model routing with automatic fallback. If your primary model rate-limits, Mohini transparently switches to the next available provider.
 
 ---
 
@@ -344,33 +220,32 @@ Mohini is configured via `mohini.toml`:
 ```toml
 [runtime]
 default_model = "anthropic/claude-opus-4-6"
-fallback_model = "nvidia/moonshotai/kimi-k2.5"  # Free tier
-thinking = "low"                                 # low | medium | high
-max_agents = 100                                 # Unlimited shadow army
+fallback_model = "groq/llama-3.3-70b-versatile"
+thinking = "low"
+max_agents = 100
 
 [memory]
-backend = "sqlite"                               # sqlite | qdrant
-decay_rate = 0.95                                # Memory decay coefficient
+backend = "sqlite"
+decay_rate = 0.95
 embedding_model = "sentence-transformers/all-MiniLM-L6-v2"
 
 [channels]
 whatsapp = { enabled = true, phone = "+1234567890" }
 telegram = { enabled = true, token = "..." }
-discord = { enabled = true, token = "..." }
+discord  = { enabled = true, token = "..." }
 
 [hands]
 researcher = { enabled = true, max_concurrent = 5 }
-browser = { enabled = true, headless = true }
-trader = { enabled = false }  # Disable unused hands
+browser    = { enabled = true, headless = true }
 ```
 
-See `mohini.toml.example` for full reference.
+See `mohini.toml.example` for the full reference.
 
 ---
 
 ## Production Deployment
 
-### systemd Service
+### systemd
 
 ```ini
 [Unit]
@@ -387,18 +262,6 @@ RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
-```
-
-### Docker
-
-```bash
-docker run -d \
-  --name mohini \
-  -v ./mohini.toml:/app/mohini.toml \
-  -v ./agents:/app/agents \
-  -v ./data:/app/data \
-  -p 4200:4200 \
-  darshjme/mohini:latest
 ```
 
 ### Kubernetes
@@ -423,123 +286,67 @@ spec:
           mountPath: /config
 ```
 
-**Zero-downtime deployments.** Rolling updates. Self-healing. Because if it can't restart itself, it's not done.
-
----
-
-## API Reference
-
-Mohini exposes a REST/WebSocket API at `localhost:4200`:
-
-### REST Endpoints
-
-```bash
-# List agents
-curl http://localhost:4200/api/agents
-
-# Spawn agent
-curl -X POST http://localhost:4200/api/agents/spawn \
-  -H "Content-Type: application/json" \
-  -d '{"task": "Research RAG optimization", "cleanup": "delete"}'
-
-# Get agent status
-curl http://localhost:4200/api/agents/agent-123
-
-# Kill agent
-curl -X DELETE http://localhost:4200/api/agents/agent-123
-```
-
-### WebSocket
-
-```javascript
-const ws = new WebSocket('ws://localhost:4200/ws/agents/agent-123');
-
-ws.onmessage = (event) => {
-  const msg = JSON.parse(event.data);
-  console.log('Agent update:', msg);
-};
-```
-
-See `docs/api-reference.md` for full documentation.
-
----
-
-## Contributing
-
-**We ship fast. We review faster.**
-
-```bash
-# Fork & clone
-git clone https://github.com/YOUR_USERNAME/mohini.git
-cd mohini
-
-# Create feature branch
-git checkout -b feature/shadow-skill
-
-# Make changes, add tests
-cargo test
-
-# Zero clippy warnings enforced
-cargo clippy -- -D warnings
-
-# Format code
-cargo fmt
-
-# Push & open PR
-git push origin feature/shadow-skill
-```
-
-**Contribution standards:**
-1. ✅ Tests pass (`cargo test`)
-2. ✅ Zero clippy warnings (`cargo clippy`)
-3. ✅ Formatted (`cargo fmt`)
-4. ✅ Documentation updated (if needed)
-5. ✅ No brainrot in commit messages
-
-See `CONTRIBUTING.md` for details.
-
----
-
-## Roadmap
-
-- [x] **v0.1** — Core agent runtime + 40 channels
-- [x] **v0.2** — Vector memory + skill system
-- [x] **v0.3** — Autonomous Hands + MMP protocol
-- [ ] **v0.4** — Mobile app (iOS/Android) + voice mode
-- [ ] **v0.5** — Multi-tenant SaaS mode
-- [ ] **v1.0** — Production-hardened release
-
-See `docs/launch-roadmap.md` for full timeline.
-
----
-
-## License
-
-**Dual-licensed:**
-- Apache License 2.0 (`LICENSE-APACHE`)
-- MIT License (`LICENSE-MIT`)
-
-Choose whichever fits your use case.
+Rolling updates. Self-healing restarts. Zero-downtime deployments.
 
 ---
 
 ## Philosophy
 
-> **कर्मण्येवाधिकारस्ते मा फलेषु कदाचन**  
-> *Focus on the work, not the reward.*
+Mohini is built on a small number of principles held without compromise:
 
-Mohini doesn't promise AGI. She doesn't claim consciousness. She just works.
+**Competence over ceremony.** We do not write aspirational documentation or performative commit messages. We ship production-grade code, zero-downtime deployments, and self-healing infrastructure. That is how quality is demonstrated.
 
-24/7. Multi-agent. Self-healing. Production-grade.
+**The chat never stops.** Context limits trigger compaction. Rate limits trigger fallback models. Server crashes trigger systemd restarts. Nothing kills the conversation.
 
-**The Shadow Queen commands. The army executes. The chat never stops.**
+**Write everything down.** Memory does not survive restarts. Files do. Every decision, every lesson, every failure is documented and persistent.
+
+**Parallel execution.** Ten sub-agents in parallel beats one agent running sequentially. If a human does it in a week, Mohini does it in an hour.
 
 ---
 
-<div align="center">
+## Contributing
 
-**ARISE.** 🪷
+```bash
+git clone https://github.com/darshjme/mohini.git
+cd mohini
 
-<sub>Built with Rust. Powered by Autonomy. Commanded by the Shadow Queen.</sub>
+# Build
+cargo build --workspace
 
-</div>
+# Test (2,285+ tests must pass)
+cargo test --workspace
+
+# Lint (zero warnings enforced)
+cargo clippy --workspace --all-targets -- -D warnings
+
+# Format
+cargo fmt --all
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide, including how to add new channel adapters, tools, and agent templates.
+
+---
+
+## Roadmap
+
+- [x] v0.1 -- Core agent runtime + 40 channels
+- [x] v0.2 -- Vector memory + skill system
+- [x] v0.3 -- Autonomous Hands + MMP protocol
+- [ ] v0.4 -- Mobile app (iOS / Android) + voice mode
+- [ ] v0.5 -- Multi-tenant SaaS mode
+- [ ] v1.0 -- Production-hardened release
+
+---
+
+## License
+
+Dual-licensed under your choice of:
+
+- [Apache License, Version 2.0](LICENSE-APACHE)
+- [MIT License](LICENSE-MIT)
+
+---
+
+<p align="center">
+  <sub>Built by <a href="https://darshj.me">Darshankumar Joshi</a></sub>
+</p>

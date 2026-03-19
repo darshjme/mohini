@@ -91,7 +91,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 ### Docker container won't start
 
 **Common causes**:
-- No API key provided: `docker run -e GROQ_API_KEY=... ghcr.io/mohini-ai/mohini`
+- No API key provided: `docker run -e GROQ_API_KEY=... ghcr.io/darshjme/mohini`
 - Port already in use: change the port mapping `-p 3001:4200`
 - Permission denied on volume mount: check directory permissions
 
@@ -470,7 +470,7 @@ Yes. Each agent can use a different provider via its manifest `[model]` section.
 cd mohini && git pull && cargo install --path crates/mohini-cli
 
 # Docker
-docker pull ghcr.io/mohini-ai/mohini:latest
+docker pull ghcr.io/darshjme/mohini:latest
 ```
 
 ### Can agents talk to each other?

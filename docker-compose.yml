@@ -1,12 +1,12 @@
-# NOTE: The GHCR image (ghcr.io/rightnow-ai/mohini) is not yet public.
+# NOTE: The GHCR image (ghcr.io/darshjme/mohini) is not yet public.
 # For now, build from source using `docker compose up --build`.
-# See: https://github.com/mohini-ai/mohini/issues/12
+# See: https://github.com/darshjme/mohini/issues/12
 
 version: "3.8"
 services:
   mohini:
     build: .
-    # image: ghcr.io/rightnow-ai/mohini:latest  # Uncomment when GHCR is public
+    # image: ghcr.io/darshjme/mohini:latest  # Uncomment when GHCR is public
     ports:
       - "4200:4200"
     volumes:

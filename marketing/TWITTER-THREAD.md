@@ -129,7 +129,7 @@ Community code can't touch your filesystem or network unless you explicitly gran
 
 Mohini is Apache-2.0 / MIT dual-licensed.
 
-⭐ Star: https://github.com/mohini-ai/mohini
+⭐ Star: https://github.com/darshjme/mohini
 📖 Docs: https://mohini.ai/docs
 💬 Discord: https://discord.gg/mohini
 

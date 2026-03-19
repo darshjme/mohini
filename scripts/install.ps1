@@ -8,7 +8,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-$Repo = "mohini-ai/mohini"
+$Repo = "darshjme/mohini"
 $DefaultInstallDir = Join-Path $env:USERPROFILE ".mohini\bin"
 $InstallDir = if ($env:MOHINI_INSTALL_DIR) { $env:MOHINI_INSTALL_DIR } else { $DefaultInstallDir }
 
@@ -53,7 +53,7 @@ function Get-Architecture {
         { $_ -in "ARM64", "AARCH64", "ARM" }     { return "aarch64" }
         default {
             Write-Host "  Unsupported architecture: $arch (detection may have failed)" -ForegroundColor Red
-            Write-Host "  Try: cargo install --git https://github.com/mohini-ai/mohini mohini-cli" -ForegroundColor Yellow
+            Write-Host "  Try: cargo install --git https://github.com/darshjme/mohini mohini-cli" -ForegroundColor Yellow
             exit 1
         }
     }
