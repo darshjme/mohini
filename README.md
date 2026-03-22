@@ -5,6 +5,7 @@
 <p align="center">
   <a href="https://github.com/darshjme/mohini/actions"><img src="https://img.shields.io/github/actions/workflow/status/darshjme/mohini/ci.yml?branch=main&style=flat-square&logo=github&label=build" alt="Build Status" /></a>
   <a href="https://crates.io/crates/mohini-cli"><img src="https://img.shields.io/crates/v/mohini-cli?style=flat-square&logo=rust&label=crates.io" alt="Crates.io" /></a>
+  <a href="https://github.com/darshjme/mohini/stargazers"><img src="https://img.shields.io/github/stars/darshjme/mohini?style=flat-square&logo=github&color=yellow" alt="GitHub Stars" /></a>
   <a href="#license"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2F%20MIT-blue?style=flat-square" alt="License" /></a>
   <img src="https://img.shields.io/badge/rust-1.75%2B-orange?style=flat-square&logo=rust" alt="Rust 1.75+" />
   <img src="https://img.shields.io/badge/tests-2%2C285%2B%20passing-brightgreen?style=flat-square" alt="Tests" />
@@ -38,6 +39,13 @@ Fourteen crates compile to one static binary with no runtime dependencies. Deplo
 ---
 
 ## Quick Start
+
+### Install via Cargo
+
+```bash
+cargo install mohini-cli
+mohini --version
+```
 
 ### Prerequisites
 
